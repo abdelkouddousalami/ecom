@@ -36,9 +36,7 @@
             transition: all 0.3s ease;
         }
         
-        .wishlist-btn.in-wishlist .heart-icon:before {
-            content: '♥';
-        }
+
         
         /* Notification animation */
         @keyframes heartbeat {
@@ -392,9 +390,16 @@
         </div>
         
         <!-- Scroll Down Indicator -->
+        <style>
+        @media (max-width: 640px) {
+            .scroll-down-svg-mobile {
+                margin-bottom: -50px !important;
+            }
+        }
+        </style>
         <div class="absolute z-20" style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 30;">
             <div class="animate-bounce">
-                <svg onclick="scrollToNextSection()" class="w-8 h-8 text-white cursor-pointer hover:text-blue-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg onclick="scrollToNextSection()" class="w-8 h-8 text-white cursor-pointer hover:text-blue-400 transition-colors duration-300 scroll-down-svg-mobile" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                 </svg>
             </div>
@@ -405,9 +410,17 @@
             <div class="w-full px-4 sm:px-6 lg:px-8">
                 <div class="w-full">
                     <!-- Title centered in hero section -->
-                    <div class="pt-5 text-center">
+                    <div class="pt-5 text-center" >
+                        <style>
+                        @media (max-width: 640px) {
+                            .hero-title-container-mobile {
+                                margin-top: -145px !important;
+                            }
+                        }
+                        </style>
+                        <div class="pt-5 text-center hero-title-container-mobile">
                         <h1 class="hero-title font-black leading-none" style="font-size: 50px; margin-top: 20px; font-family: 'Playfair Display', 'Cinzel', 'Cormorant Garamond', serif; font-weight: 700; letter-spacing: 2px;">
-                            <span style="color: white !important;">Welcome to </span><span style="color: white !important; font-style: italic;">l3oc</span><span style="color: #1f2937 !important;">haq store</span>
+                            <span style="color: white !important;">Welcome to </span><span style="color: white !important; font-style: italic;">l3oc</span><span style="color: #e63946 !important;">haq store</span>
                         </h1>
                         <!-- Store Description -->
                         <div class="hero-description mt-6 mx-auto" style="width: 70%;">
@@ -464,15 +477,15 @@
     <!-- Categories Section -->
     <section class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
+            <div class="text-left mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style="font-family: 'Playfair Display', serif;">Shop by Category</h2>
                 <p class="text-gray-600 text-lg">Discover our premium collection of jewelry and accessories</p>
             </div>
-            
-            <div class="categories-select-container flex justify-center items-center gap-8">
-                <!-- Bracelets Select -->
-                <div class="group cursor-pointer">
-                    <select class="category-select" style="background-color: #ffffff !important; color: #000000 !important; font-size: 16px !important; font-weight: 600 !important; padding: 16px 32px !important; border-radius: 25px !important; border: 2px solid #60a5fa !important; outline: none !important; cursor: pointer !important; font-family: 'Playfair Display', serif !important;" onmouseover="this.style.backgroundColor='#dbeafe'" onmouseout="this.style.backgroundColor='#ffffff'">
+
+            <div class="categories-select-container flex flex-row items-start gap-8">
+                <!-- Filters aligned left, same width -->
+                <div class="group cursor-pointer w-72">
+                    <select class="category-select w-full" style="background-color: #ffffff !important; color: #000000 !important; font-size: 16px !important; font-weight: 600 !important; padding: 16px 32px !important; border-radius: 25px !important; border: 2px solid #60a5fa !important; outline: none !important; cursor: pointer !important; font-family: 'Playfair Display', serif !important;" onmouseover="this.style.backgroundColor='#dbeafe'" onmouseout="this.style.backgroundColor='#ffffff'">
                         <option value="" style="background-color: white !important; color: black !important;">Select Bracelets</option>
                         <option value="gold-bracelets" style="background-color: white !important; color: black !important;">Gold Bracelets</option>
                         <option value="silver-bracelets" style="background-color: white !important; color: black !important;">Silver Bracelets</option>
@@ -481,9 +494,8 @@
                     </select>
                 </div>
 
-                <!-- Watches Select -->
-                <div class="group cursor-pointer">
-                    <select class="category-select" style="background-color: #ffffff !important; color: #000000 !important; font-size: 16px !important; font-weight: 600 !important; padding: 16px 32px !important; border-radius: 25px !important; border: 2px solid #9ca3af !important; outline: none !important; cursor: pointer !important; font-family: 'Playfair Display', serif !important;" onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='#ffffff'">
+                <div class="group cursor-pointer w-72">
+                    <select class="category-select w-full" style="background-color: #ffffff !important; color: #000000 !important; font-size: 16px !important; font-weight: 600 !important; padding: 16px 32px !important; border-radius: 25px !important; border: 2px solid #9ca3af !important; outline: none !important; cursor: pointer !important; font-family: 'Playfair Display', serif !important;" onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='#ffffff'">
                         <option value="" style="background-color: white !important; color: black !important;">Select Watches</option>
                         <option value="luxury-watches" style="background-color: white !important; color: black !important;">Luxury Watches</option>
                         <option value="sport-watches" style="background-color: white !important; color: black !important;">Sport Watches</option>
@@ -492,9 +504,8 @@
                     </select>
                 </div>
 
-                <!-- Packs Select -->
-                <div class="group cursor-pointer">
-                    <select class="category-select" style="background-color: #ffffff !important; color: #000000 !important; font-size: 16px !important; font-weight: 600 !important; padding: 16px 32px !important; border-radius: 25px !important; border: 2px solid #34d399 !important; outline: none !important; cursor: pointer !important; font-family: 'Playfair Display', serif !important;" onmouseover="this.style.backgroundColor='#d1fae5'" onmouseout="this.style.backgroundColor='#ffffff'">
+                <div class="group cursor-pointer w-72">
+                    <select class="category-select w-full" style="background-color: #ffffff !important; color: #000000 !important; font-size: 16px !important; font-weight: 600 !important; padding: 16px 32px !important; border-radius: 25px !important; border: 2px solid #34d399 !important; outline: none !important; cursor: pointer !important; font-family: 'Playfair Display', serif !important;" onmouseover="this.style.backgroundColor='#d1fae5'" onmouseout="this.style.backgroundColor='#ffffff'">
                         <option value="" style="background-color: white !important; color: black !important;">Select Packs</option>
                         <option value="jewelry-sets" style="background-color: white !important; color: black !important;">Jewelry Sets</option>
                         <option value="gift-packages" style="background-color: white !important; color: black !important;">Gift Packages</option>
@@ -699,10 +710,22 @@
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <style>
+            @media (max-width: 640px) {
+                .footer-grid {
+                    text-align: left !important;
+                }
+                .footer-grid > div, .footer-grid h3, .footer-grid h4, .footer-grid p, .footer-grid ul, .footer-grid li {
+                    text-align: left !important;
+                    justify-content: flex-start !important;
+                    align-items: flex-start !important;
+                }
+            }
+            </style>
             <div class="footer-grid grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Company Info -->
                 <div>
-                    <h3 class="text-2xl font-bold mb-4">MarketPlace</h3>
+                    <img src="{{ asset('images/logos/logo.png') }}" alt="l3ochaq Store Logo" class="h-12 w-auto mb-4 object-contain">
                     <p class="text-gray-400 mb-4">Your trusted online shopping destination with quality products and excellent service.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white transition duration-300">
@@ -917,9 +940,7 @@
         });
         
         // Stylish notification function
-        function showNotification(message, type = 'success', icon = '🛒') {
-            console.log('showNotification called:', message, type, icon);
-            
+        function showNotification(message, type = 'success') {
             // Remove any existing notification
             const existingNotification = document.querySelector('.custom-notification');
             if (existingNotification) {
@@ -929,10 +950,10 @@
             // Create notification element
             const notification = document.createElement('div');
             notification.className = 'custom-notification';
-            
+
             const bgColor = type === 'success' ? '#3b82f6' : 
                            type === 'removed' ? '#6b7280' : '#3b82f6';
-            
+
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -943,9 +964,6 @@
                 padding: 16px 24px;
                 border-radius: 12px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-                display: flex;
-                align-items: center;
-                gap: 12px;
                 min-width: 320px;
                 transform: translateX(100%) scale(0.8);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -953,29 +971,24 @@
                 font-weight: 600;
                 font-size: 14px;
                 border: 2px solid rgba(255,255,255,0.2);
+                text-align: left;
             `;
-            
-            notification.innerHTML = `
-                <span style="font-size: 24px; animation: heartbeat 1s ease-in-out infinite;">${icon}</span>
-                <span>${message}</span>
-            `;
-            
+
+            notification.innerHTML = `<span>${message}</span>`;
+
             document.body.appendChild(notification);
-            console.log('Notification added to DOM');
-            
+
             // Slide in animation with bounce
             setTimeout(() => {
                 notification.style.transform = 'translateX(0) scale(1)';
-                console.log('Slide in animation triggered');
             }, 100);
-            
+
             // Auto remove after 3 seconds with slide out animation
             setTimeout(() => {
                 notification.style.transform = 'translateX(100%) scale(0.8)';
                 setTimeout(() => {
                     if (notification.parentNode) {
                         notification.remove();
-                        console.log('Notification removed');
                     }
                 }, 400);
             }, 3000);
@@ -990,7 +1003,7 @@
             if (existingItem) {
                 existingItem.quantity += quantity;
                 console.log('Updating cart quantity');
-                showNotification('Quantité mise à jour dans le panier!', 'success', '🛒');
+                showNotification('Quantité mise à jour dans le panier!', 'success');
             } else {
                 cart.push({
                     id: productId,
@@ -998,7 +1011,7 @@
                     added_at: new Date().toISOString()
                 });
                 console.log('Adding new product to cart');
-                showNotification('Produit ajouté au panier!', 'success', '🛒');
+                showNotification('Produit ajouté au panier!', 'success');
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -1008,32 +1021,30 @@
         function addToWishlist(productId) {
             let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
             const wishlistBtn = document.querySelector(`[data-product-id="${productId}"]`);
-            
             // Check if product already in wishlist
             const existingIndex = wishlist.findIndex(item => item.id == productId);
             if (existingIndex > -1) {
                 wishlist.splice(existingIndex, 1);
-                showNotification('Produit retiré des favoris!', 'removed', '💔');
-                
+                showNotification('Produit retiré des favoris!', 'removed' );
                 // Update button appearance
                 if (wishlistBtn) {
                     wishlistBtn.classList.remove('in-wishlist');
-                    wishlistBtn.innerHTML = '<span class="heart-icon">♡</span> Favoris';
+                    wishlistBtn.style.backgroundColor = '';
+                    wishlistBtn.style.color = '';
                 }
             } else {
                 wishlist.push({
                     id: productId,
                     added_at: new Date().toISOString()
                 });
-                showNotification('Produit ajouté aux favoris!', 'success', '❤️');
-                
+                showNotification('Produit ajouté aux favoris!', 'success');
                 // Update button appearance
                 if (wishlistBtn) {
                     wishlistBtn.classList.add('in-wishlist');
-                    wishlistBtn.innerHTML = '<span class="heart-icon">♥</span> En Favoris';
+                    wishlistBtn.style.backgroundColor = '#fee2e2'; // light red background
+                    wishlistBtn.style.color = '#e63946'; // attractive red text
                 }
             }
-            
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
             updateWishlistCount();
         }
@@ -1074,17 +1085,17 @@
         function updateWishlistButtons() {
             const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
             const wishlistBtns = document.querySelectorAll('.wishlist-btn');
-            
             wishlistBtns.forEach(btn => {
                 const productId = parseInt(btn.getAttribute('data-product-id'));
                 const isInWishlist = wishlist.some(item => item.id == productId);
-                
                 if (isInWishlist) {
                     btn.classList.add('in-wishlist');
-                    btn.innerHTML = '<span class="heart-icon">♥</span> En Favoris';
+                    btn.style.backgroundColor = '#fee2e2';
+                    btn.style.color = '#e63946';
                 } else {
                     btn.classList.remove('in-wishlist');
-                    btn.innerHTML = '<span class="heart-icon">♡</span> Favoris';
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
                 }
             });
         }

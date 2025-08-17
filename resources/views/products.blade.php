@@ -218,9 +218,9 @@
         <div class="absolute top-20 right-20 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-float-delayed"></div>
         <div class="absolute bottom-10 left-1/4 w-12 h-12 bg-white bg-opacity-10 rounded-full animate-float"></div>
         
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center h-full flex flex-col justify-center items-center pt-20">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center h-full flex flex-col justify-center items-center pt-20" style="margin-top:-50px">
             <!-- Breadcrumb -->
-            <div class="mb-6 animate-fade-in-up-delay-1" style="margin-top: 20px;">
+            <div class="mb-6 animate-fade-in-up-delay-1" style="margin-top: -50px !important;">
                 <nav class="flex justify-center" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-3">
                         <li class="inline-flex items-center">
@@ -331,9 +331,9 @@
     <!-- Products Grid -->
     <section class="py-24 bg-gradient-to-b from-gray-50 to-white">
         <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($products as $product)
-                <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 group overflow-hidden cursor-pointer transform hover:-translate-y-3 hover:scale-105 animate-fade-in mx-4 my-6" onclick="window.location.href='{{ route('product.show', $product->slug) }}'">
+                <div class="product-card bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 group overflow-hidden cursor-pointer w-full p-6" onclick="window.location.href='{{ route('product.show', $product->slug) }}'">
                     <!-- Product Images with Slider -->
                     <div class="relative h-72 overflow-hidden group rounded-t-3xl">
                         @if($product->images && $product->images->count() > 0)
