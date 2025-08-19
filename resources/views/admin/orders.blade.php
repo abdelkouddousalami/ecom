@@ -135,19 +135,88 @@ function updateOrderStatus(selectElement) {
     const orderId = selectElement.dataset.orderId;
     const newStatus = selectElement.value;
     
-    fetch(`/admin/orders/${orderId}/status`, {
-        method: 'PATCH',
+    console.log('=== DEBUGGING ORDER STATUS UPDATE ===');
+    console.log('Order ID:', orderId);
+    console.log('New Status:', newStatus);
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    console.log('CSRF token element:', csrfToken);
+    console.log('CSRF token value:', csrfToken ? csrfToken.getAttribute('content') : 'NOT FOUND');
+    
+    // First, let's test if our debug route works
+    console.log('Testing debug route first...');
+    fetch('/admin/debug-json', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+            'Accept': 'application/json'
         },
         body: JSON.stringify({
-            status: newStatus
+            test: 'debug test',
+            orderId: orderId,
+            newStatus: newStatus
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
+    .then(response => {
+        console.log('DEBUG ROUTE - Response status:', response.status);
+        console.log('DEBUG ROUTE - Content type:', response.headers.get('content-type'));
+        
+        if (!response.ok) {
+            throw new Error(`Debug route failed: ${response.status}`);
+        }
+        
+        return response.json();
+    })
+    .then(debugData => {
+        console.log('DEBUG ROUTE - Success:', debugData);
+        console.log('Now testing the actual order update...');
+        
+        // Now test the actual order status update
+        return fetch(`/admin/orders/${orderId}/status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                status: newStatus
+            })
+        });
+    })
+    .then(response => {
+        console.log('ORDER UPDATE - Response status:', response.status);
+        console.log('ORDER UPDATE - Response URL:', response.url);
+        console.log('ORDER UPDATE - Content type:', response.headers.get('content-type'));
+        
+        // Get the response text to see what we're actually receiving
+        return response.text().then(text => {
+            console.log('ORDER UPDATE - Raw response:', text.substring(0, 500));
+            
+            // Check if it's HTML or JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                try {
+                    const jsonData = JSON.parse(text);
+                    return { isJson: true, data: jsonData, status: response.status };
+                } catch (e) {
+                    console.error('Failed to parse JSON:', e);
+                    return { isJson: false, text: text, status: response.status };
+                }
+            } else {
+                console.error('Response is not JSON, content-type:', contentType);
+                return { isJson: false, text: text, status: response.status };
+            }
+        });
+    })
+    .then(result => {
+        console.log('ORDER UPDATE - Final result:', result);
+        
+        if (result.isJson && result.data.success) {
+            console.log('Order updated successfully!');
+            
             // Update select appearance based on new status
             selectElement.className = selectElement.className.replace(
                 /bg-(yellow|blue|purple|indigo|green|red)-100 text-(yellow|blue|purple|indigo|green|red)-800/g, 
@@ -177,16 +246,15 @@ function updateOrderStatus(selectElement) {
             }
             
             selectElement.className += ' ' + statusClass;
-            
-            // Show success notification
             showNotification('Order status updated successfully!', 'success');
         } else {
-            showNotification('Error updating order status', 'error');
+            console.error('Order update failed:', result);
+            showNotification(result.data?.message || 'Unknown error occurred', 'error');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showNotification('Error updating order status', 'error');
+        console.error('Error during order status update:', error);
+        showNotification('Error updating order status: ' + error.message, 'error');
     });
 }
 

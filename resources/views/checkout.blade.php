@@ -48,69 +48,7 @@
 <body class="bg-gray-50" style="font-family: 'Playfair Display', serif;">
     
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="/" class="flex-shrink-0">
-                        <img src="{{ asset('images/logos/logo.png') }}" 
-                             alt="l3ochaq Store Logo" 
-                             class="h-8 w-auto object-contain">
-                    </a>
-                </div>
-
-                <!-- Navigation Links (Center) -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Home</a>
-                    <a href="/products" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Products</a>
-                    <a href="/orders" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Mes Commandes</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a>
-                </div>
-
-                <!-- Right side icons -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <!-- Favorites -->
-                    <div class="relative">
-                        <a href="/wishlist" class="text-gray-700 hover:text-blue-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-100 block">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                            <span class="wishlist-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-lg hidden">0</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Cart (Panier) -->
-                    <div class="relative">
-                        <a href="/cart" class="text-gray-700 hover:text-blue-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-100 block">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                            <span class="cart-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-lg hidden">0</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center space-x-2">
-                    <!-- Mobile Cart Icon -->
-                    <a href="/cart" class="text-gray-700 hover:text-blue-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-100">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                        <span class="cart-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-lg hidden">0</span>
-                    </a>
-                    
-                    <!-- Mobile Menu Toggle -->
-                    <button class="text-gray-700 hover:text-blue-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <x-navbar active-page="cart" />
 
     <!-- Breadcrumb -->
     <div class="bg-white border-b border-gray-200">
@@ -130,23 +68,23 @@
     </div>
 
     <!-- Page Header -->
-    <div class="bg-blue-600 text-white py-12">
+    <div class="bg-blue-600 text-white py-8 lg:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold text-center">Finaliser votre commande</h1>
-            <p class="text-blue-100 text-center mt-2">Saisissez vos informations de livraison et de paiement</p>
+            <h1 class="text-2xl lg:text-4xl font-bold text-center">Finaliser votre commande</h1>
+            <p class="text-blue-100 text-center mt-2 text-sm lg:text-base">Saisissez vos informations de livraison et de paiement</p>
         </div>
     </div>
 
     <!-- Checkout Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 gap-8" style="grid-template-columns: 2fr 1fr;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             <!-- Checkout Form -->
-            <div class="space-y-8">
+            <div class="lg:col-span-2 space-y-6 lg:space-y-8 order-2 lg:order-1">
                 
                 <!-- Billing Information -->
-                <div class="checkout-section bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                        <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="checkout-section bg-white rounded-xl shadow-lg p-4 lg:p-6 border border-gray-200">
+                    <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6 flex items-center">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6 mr-2 lg:mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         Informations de facturation
@@ -156,43 +94,43 @@
                             <div>
                                 <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-2">Prénom *</label>
                                 <input type="text" id="first_name" name="first_name" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                       class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-2">Nom *</label>
                                 <input type="text" id="last_name" name="last_name" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                       class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                             </div>
                         </div>
                         
                         <div>
                             <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                             <input type="email" id="email" name="email" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                   class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                         </div>
                         
                         <div>
                             <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Téléphone *</label>
                             <input type="tel" id="phone" name="phone" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                   class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                         </div>
                         
                         <div>
                             <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Adresse *</label>
                             <input type="text" id="address" name="address" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                   class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="city" class="block text-sm font-semibold text-gray-700 mb-2">Ville *</label>
                                 <input type="text" id="city" name="city" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                       class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                             </div>
                             <div>
                                 <label for="postal_code" class="block text-sm font-semibold text-gray-700 mb-2">Code postal *</label>
                                 <input type="text" id="postal_code" name="postal_code" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                                       class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                             </div>
                         </div>
                     </form>
@@ -200,43 +138,43 @@
             </div>
 
             <!-- Order Summary -->
-            <div>
-                <div class="checkout-section bg-white rounded-xl shadow-lg p-6 border border-gray-200 sticky top-24" style="width: calc(100% + 100px); margin-left: auto;">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="lg:col-span-1 order-1 lg:order-2">
+                <div class="checkout-section bg-white rounded-xl shadow-lg p-4 lg:p-6 border border-gray-200 lg:sticky lg:top-24">
+                    <h3 class="text-lg lg:text-xl font-bold text-gray-900 mb-4 lg:mb-6 flex items-center">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6 mr-2 lg:mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         Résumé de votre commande
                     </h3>
                     
                     <!-- Items List -->
-                    <div id="checkout-items" class="space-y-3 mb-6 max-h-60 overflow-y-auto">
+                    <div id="checkout-items" class="space-y-3 mb-4 lg:mb-6 max-h-48 lg:max-h-60 overflow-y-auto">
                         <!-- Items will be loaded here -->
                     </div>
                     
                     <!-- Order Totals -->
-                    <div class="space-y-4 mb-6">
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
-                            <span class="text-gray-700 font-medium">Sous-total:</span>
-                            <span id="checkout-subtotal" class="font-bold text-gray-900">0 DH</span>
+                    <div class="space-y-3 lg:space-y-4 mb-4 lg:mb-6">
+                        <div class="flex justify-between items-center py-2 lg:py-3 border-b border-gray-200">
+                            <span class="text-gray-700 font-medium text-sm lg:text-base">Sous-total:</span>
+                            <span id="checkout-subtotal" class="font-bold text-gray-900 text-sm lg:text-base">0 DH</span>
                         </div>
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
-                            <span class="text-gray-700 font-medium">Livraison:</span>
-                            <span id="checkout-shipping" class="font-bold text-green-600">Gratuite</span>
+                        <div class="flex justify-between items-center py-2 lg:py-3 border-b border-gray-200">
+                            <span class="text-gray-700 font-medium text-sm lg:text-base">Livraison:</span>
+                            <span id="checkout-shipping" class="font-bold text-green-600 text-sm lg:text-base">Gratuite</span>
                         </div>
-                        <div class="flex justify-between items-center py-4 bg-blue-50 rounded-xl px-4 border-2 border-blue-200">
-                            <span class="text-lg font-bold text-gray-900">Total:</span>
-                            <span id="checkout-total" class="text-2xl font-bold text-blue-600">0 DH</span>
+                        <div class="flex justify-between items-center py-3 lg:py-4 bg-blue-50 rounded-xl px-3 lg:px-4 border-2 border-blue-200">
+                            <span class="text-base lg:text-lg font-bold text-gray-900">Total:</span>
+                            <span id="checkout-total" class="text-lg lg:text-2xl font-bold text-blue-600">0 DH</span>
                         </div>
                     </div>
                     
                     <!-- Order Button -->
                     <div class="space-y-3">
-                        <button type="button" onclick="processOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-sm">
+                        <button type="button" onclick="processOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 lg:py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-sm lg:text-sm">
                             
                             Confirmer la commande
                         </button>
-                        <a href="/cart" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-300 hover:shadow-lg text-center block">
+                        <a href="/cart" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 lg:py-3 px-4 rounded-xl transition-all duration-300 hover:shadow-lg text-center block text-sm lg:text-sm">
                             
                             Retour au panier
                         </a>
@@ -250,7 +188,7 @@
         let products = @json($products ?? []); // Pass products data from controller
 
         // Stylish notification function
-        function showNotification(message, type = 'success', icon = '🛒') {
+        function showNotification(message, type = 'success') {
             // Remove any existing notification
             const existingNotification = document.querySelector('.custom-notification');
             if (existingNotification) {
@@ -268,27 +206,37 @@
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
-                right: 20px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-100%) scale(0.8);
                 z-index: 9999;
                 background: ${bgColor};
                 color: white;
-                padding: 16px 24px;
+                padding: 12px 20px;
                 border-radius: 12px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.15);
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                min-width: 320px;
-                transform: translateX(100%) scale(0.8);
+                max-width: calc(100vw - 40px);
+                width: auto;
+                min-width: 280px;
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 font-family: system-ui, -apple-system, sans-serif;
                 font-weight: 600;
                 font-size: 14px;
                 border: 2px solid rgba(255,255,255,0.2);
+                
+                @media (min-width: 768px) {
+                    top: 20px;
+                    right: 20px;
+                    left: auto;
+                    transform: translateX(100%) scale(0.8);
+                    min-width: 320px;
+                }
             `;
             
             notification.innerHTML = `
-                <span style="font-size: 24px; animation: heartbeat 1s ease-in-out infinite;">${icon}</span>
+                <span style="font-size: 24px; animation: heartbeat 1s ease-in-out infinite;">•</span>
                 <span>${message}</span>
             `;
             
@@ -296,12 +244,20 @@
             
             // Slide in animation with bounce
             setTimeout(() => {
-                notification.style.transform = 'translateX(0) scale(1)';
+                if (window.innerWidth >= 768) {
+                    notification.style.transform = 'translateX(0) scale(1)';
+                } else {
+                    notification.style.transform = 'translateX(-50%) translateY(0) scale(1)';
+                }
             }, 100);
             
             // Auto remove after 4 seconds with slide out animation
             setTimeout(() => {
-                notification.style.transform = 'translateX(100%) scale(0.8)';
+                if (window.innerWidth >= 768) {
+                    notification.style.transform = 'translateX(100%) scale(0.8)';
+                } else {
+                    notification.style.transform = 'translateX(-50%) translateY(-100%) scale(0.8)';
+                }
                 setTimeout(() => {
                     if (notification.parentNode) {
                         notification.remove();
@@ -330,19 +286,19 @@
                     totalPrice += itemTotal;
 
                     const itemHTML = `
-                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                            <div class="w-12 h-12 rounded-lg overflow-hidden bg-white border border-gray-200">
-                                <img src="/images/products/${product.image}" 
+                        <div class="flex items-center space-x-2 lg:space-x-3 p-2 lg:p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg overflow-hidden bg-white border border-gray-200 flex-shrink-0">
+                                <img src="/${product.image}" 
                                      alt="${product.name}" 
                                      class="w-full h-full object-cover"
                                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNiAyMEwyNCAxMkwzMiAyMFYzMkgxNlYyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
                             </div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-900 text-sm">${product.name}</h4>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-semibold text-gray-900 text-xs lg:text-sm truncate">${product.name}</h4>
                                 <p class="text-xs text-gray-600">${product.price} DH × ${item.quantity}</p>
                             </div>
-                            <div class="text-right">
-                                <span class="font-bold text-blue-600">${itemTotal} DH</span>
+                            <div class="text-right flex-shrink-0">
+                                <span class="font-bold text-blue-600 text-xs lg:text-sm">${itemTotal} DH</span>
                             </div>
                         </div>
                     `;
@@ -361,13 +317,13 @@
             for (let input of inputs) {
                 if (!input.value.trim()) {
                     input.focus();
-                    showNotification(`Veuillez remplir le champ: ${input.previousElementSibling.textContent}`, 'error', '⚠️');
+                    showNotification(`Veuillez remplir le champ: ${input.previousElementSibling.textContent}`, 'error');
                     return false;
                 }
                 
                 if (input.type === 'email' && !input.value.includes('@')) {
                     input.focus();
-                    showNotification('Veuillez entrer une adresse email valide', 'error', '⚠️');
+                    showNotification('Veuillez entrer une adresse email valide', 'error');
                     return false;
                 }
             }
@@ -381,7 +337,7 @@
 
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             if (cart.length === 0) {
-                showNotification('Votre panier est vide!', 'error', '⚠️');
+                showNotification('Votre panier est vide!', 'error');
                 return;
             }
 
@@ -421,21 +377,21 @@
                     localStorage.removeItem('cart');
                     
                     // Show success message
-                    showNotification('🎉 Commande confirmée avec succès!', 'success', '✅');
+                    showNotification('Commande confirmée avec succès!', 'success');
                     
                     // Redirect to success page after a delay
                     setTimeout(() => {
                         window.location.href = `/order-success/${data.order_id}`;
                     }, 1500);
                 } else {
-                    showNotification(data.message || 'Erreur lors du traitement de la commande', 'error', '❌');
+                    showNotification(data.message || 'Erreur lors du traitement de la commande', 'error');
                     button.disabled = false;
                     button.innerHTML = originalText;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showNotification('Erreur de connexion. Veuillez réessayer.', 'error', '❌');
+                showNotification('Erreur de connexion. Veuillez réessayer.', 'error');
                 button.disabled = false;
                 button.innerHTML = originalText;
             });

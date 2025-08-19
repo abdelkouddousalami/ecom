@@ -6,11 +6,35 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Auth\AuthController;
 
 Route::get('/', [ProductController::class, 'welcome']);
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('product.show');
+
+// Authentication Routes (Hidden URLs)
+Route::middleware('guest')->group(function () {
+    Route::get('/samad', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/samad', [AuthController::class, 'login']);
+    Route::get('/samad1', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/samad1', [AuthController::class, 'register']);
+});
+
+// Redirect old authentication URLs to homepage (security measure)
+Route::get('/login', function() {
+    return redirect('/')->with('info', 'Page not found');
+});
+Route::get('/register', function() {
+    return redirect('/')->with('info', 'Page not found');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [AuthController::class, 'updatePassword'])->name('profile.password');
+});
 
 // Cart and Wishlist View Pages
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart.view');
@@ -44,20 +68,107 @@ Route::prefix('orders')->group(function () {
     Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
+// Test route for cart tracking with analytics check
+Route::get('/test-cart-tracking/{product}', function($productId) {
+    try {
+        $product = \App\Models\Product::findOrFail($productId);
+        
+        // Track cart addition (simulate adding to cart)
+        \App\Models\ProductInteraction::trackCartAddition($product->id, 1);
+        
+        // Get analytics data exactly like the admin panel does
+        $analytics = [
+            'cart_additions' => \App\Models\ProductInteraction::forProduct($product->id)->cartAdditions()->count(),
+            'wishlist_additions' => \App\Models\ProductInteraction::forProduct($product->id)->wishlistAdditions()->count(),
+            'views' => \App\Models\ProductInteraction::forProduct($product->id)->views()->count(),
+        ];
+        
+        // Get total counts
+        $totalCart = \App\Models\ProductInteraction::where('type', 'cart_add')->count();
+        $totalWishlist = \App\Models\ProductInteraction::where('type', 'wishlist_add')->count();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Cart tracking test completed',
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'analytics_for_this_product' => $analytics,
+            'totals' => [
+                'total_cart_additions' => $totalCart,
+                'total_wishlist_additions' => $totalWishlist
+            ]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage()
+        ]);
+    }
+});
+
 // Test route for debugging
 Route::post('/test-orders', function() {
     return response()->json(['success' => true, 'message' => 'Test route works']);
 });
 
+// Test route for AJAX debugging
+Route::post('/admin/test-ajax', function(\Illuminate\Http\Request $request) {
+    return response()->json([
+        'success' => true,
+        'message' => 'AJAX test successful',
+        'csrf_token' => $request->header('X-CSRF-TOKEN'),
+        'data' => $request->all()
+    ]);
+})->name('admin.test-ajax');
+
+// Test order status update route
+Route::patch('/admin/test-order-status/{order}', function(\Illuminate\Http\Request $request, \App\Models\Order $order) {
+    try {
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled'
+        ]);
+
+        $order->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Test order status updated successfully!',
+            'order' => $order->fresh(['id', 'order_number', 'status'])
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Test error: ' . $e->getMessage()
+        ], 500);
+    }
+})->name('admin.test-order-status');
+
+// Debug route to check if basic JSON responses work
+Route::post('/admin/debug-json', function(\Illuminate\Http\Request $request) {
+    return response()->json([
+        'success' => true,
+        'message' => 'JSON response working',
+        'timestamp' => now(),
+        'request_data' => $request->all()
+    ]);
+})->name('admin.debug-json');
+
 Route::get('/order-success/{order}', [OrderController::class, 'success'])->name('order.success');
 
 // Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('index');
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('index');
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Users Management
+    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
+    Route::put('/users/{user}/role', [App\Http\Controllers\Admin\AdminController::class, 'updateUserRole'])->name('users.update-role');
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'deleteUser'])->name('users.delete');
     
     // Products Management
-    Route::get('/products', [AdminController::class, 'products'])->name('products');
+    Route::get('/products', [App\Http\Controllers\Admin\AdminController::class, 'products'])->name('products');
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('create-product');
     Route::post('/products', [AdminController::class, 'storeProduct'])->name('store-product');
     Route::get('/products/{product}/edit', [AdminController::class, 'editProduct'])->name('edit-product');
@@ -68,9 +179,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Categories Management
     Route::get('/categories', [AdminController::class, 'categories'])->name('categories');
     Route::post('/categories', [AdminController::class, 'storeCategory'])->name('store-category');
+    Route::delete('/categories/{category}', [AdminController::class, 'destroyCategory'])->name('delete-category');
     
     // Orders Management
-    Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+    Route::get('/orders', [App\Http\Controllers\Admin\AdminController::class, 'orders'])->name('orders');
     Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('show-order');
     Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('update-order-status');
 });

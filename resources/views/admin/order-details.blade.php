@@ -197,17 +197,49 @@ function updateOrderStatus(selectElement) {
     const orderId = selectElement.dataset.orderId;
     const newStatus = selectElement.value;
     
+    console.log('Updating order:', orderId, 'to status:', newStatus);
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    console.log('CSRF token element:', csrfToken);
+    console.log('CSRF token value:', csrfToken ? csrfToken.getAttribute('content') : 'NOT FOUND');
+    
     fetch(`/admin/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : ''
         },
         body: JSON.stringify({
             status: newStatus
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+        // Check if response is HTML (error page) or JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('text/html')) {
+            console.error('Server returned HTML instead of JSON');
+            return response.text().then(html => {
+                console.error('HTML response:', html.substring(0, 500) + '...');
+                throw new Error('Server error: received HTML instead of JSON');
+            });
+        }
+        
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('Error response text:', text);
+                try {
+                    const errorData = JSON.parse(text);
+                    return Promise.reject(errorData);
+                } catch (e) {
+                    return Promise.reject({ message: `HTTP ${response.status}: ${text}` });
+                }
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             // Update select appearance based on new status
@@ -252,12 +284,13 @@ function updateOrderStatus(selectElement) {
             // Show success notification
             showNotification('Order status updated successfully!', 'success');
         } else {
-            showNotification('Error updating order status', 'error');
+            showNotification(data.message || 'Error updating order status', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Error updating order status', 'error');
+        const errorMessage = error.message || (error.errors ? Object.values(error.errors).flat().join(', ') : 'Error updating order status');
+        showNotification(errorMessage, 'error');
     });
 }
 

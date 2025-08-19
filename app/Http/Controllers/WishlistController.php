@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wishlist;
 use App\Models\Product;
+use App\Models\ProductInteraction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -43,6 +44,9 @@ class WishlistController extends Controller
             'user_id' => $userId,
             'product_id' => $product->id
         ]);
+
+        // Track wishlist addition interaction
+        ProductInteraction::trackWishlistAddition($product->id);
 
         // Get wishlist count
         $wishlistCount = $this->getWishlistCount();
@@ -120,6 +124,10 @@ class WishlistController extends Controller
                 'user_id' => $userId,
                 'product_id' => $request->product_id
             ]);
+            
+            // Track wishlist addition interaction
+            ProductInteraction::trackWishlistAddition($request->product_id);
+            
             $message = 'Product added to wishlist!';
             $inWishlist = true;
         }

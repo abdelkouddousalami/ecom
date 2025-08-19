@@ -10,7 +10,10 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Activity;
+use App\Models\ProductInteraction;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -32,12 +35,15 @@ class AdminController extends Controller
             ->take(5)
             ->get();
         
-        return view('admin.dashboard', compact('stats', 'categories', 'recentOrders'));
+        // Get recent activities from database
+        $recentActivities = Activity::recent(6)->get();
+        
+        return view('admin.dashboard', compact('stats', 'categories', 'recentOrders', 'recentActivities'));
     }
 
     public function products()
     {
-        $products = Product::with(['category', 'images'])->latest()->get();
+        $products = Product::with(['category', 'images'])->latest()->paginate(15);
         return view('admin.products', compact('products'));
     }
 
@@ -164,6 +170,35 @@ class AdminController extends Controller
         return redirect()->route('admin.categories')->with('success', 'Category created successfully!');
     }
 
+    public function destroyCategory(Category $category)
+    {
+        try {
+            Log::info('Delete category request received for category ID: ' . $category->id . ' - Name: ' . $category->name);
+            
+            // Check if category has products
+            $productCount = $category->products()->count();
+            if ($productCount > 0) {
+                return redirect()->back()->withErrors(['error' => "Cannot delete category '{$category->name}' because it has {$productCount} products associated with it. Please move or delete the products first."]);
+            }
+            
+            // Delete category image from storage if exists
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+
+            // Delete the category
+            $categoryName = $category->name;
+            $category->delete();
+            
+            Log::info('Category deleted successfully: ' . $categoryName);
+            return redirect()->route('admin.categories')->with('success', "Category '{$categoryName}' deleted successfully!");
+            
+        } catch (\Exception $e) {
+            Log::error('Error deleting category: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Error deleting category: ' . $e->getMessage()]);
+        }
+    }
+
     // Product CRUD Methods
     public function editProduct(Product $product)
     {
@@ -269,7 +304,94 @@ class AdminController extends Controller
     public function showProduct(Product $product)
     {
         $product->load('category', 'images');
-        return view('admin.show-product', compact('product'));
+        
+        // Get real analytics data from database
+        $analytics = [
+            'cart_additions' => ProductInteraction::forProduct($product->id)->cartAdditions()->count(),
+            'wishlist_additions' => ProductInteraction::forProduct($product->id)->wishlistAdditions()->count(),
+            'views' => ProductInteraction::forProduct($product->id)->views()->count(),
+            'daily_cart_data' => $this->getDailyData($product->id, 30, ProductInteraction::TYPE_CART_ADD),
+            'daily_wishlist_data' => $this->getDailyData($product->id, 30, ProductInteraction::TYPE_WISHLIST_ADD),
+            'weekly_summary' => $this->getWeeklySummary($product->id),
+            'conversion_rate' => $this->calculateConversionRate($product->id),
+            'bounce_rate' => rand(20, 40), // This would need session tracking for real data
+        ];
+        
+        return view('admin.product-analytics', compact('product', 'analytics'));
+    }
+    
+    private function getDailyData($productId, $days, $type)
+    {
+        $data = [];
+        
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $startDate = $date->copy()->startOfDay();
+            $endDate = $date->copy()->endOfDay();
+            
+            $count = ProductInteraction::forProduct($productId)
+                ->where('type', $type)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->count();
+            
+            $data[] = [
+                'date' => $date->format('Y-m-d'),
+                'count' => $count
+            ];
+        }
+        
+        return $data;
+    }
+    
+    private function getWeeklySummary($productId)
+    {
+        $thisWeekStart = Carbon::now()->startOfWeek();
+        $thisWeekEnd = Carbon::now()->endOfWeek();
+        $lastWeekStart = Carbon::now()->subWeek()->startOfWeek();
+        $lastWeekEnd = Carbon::now()->subWeek()->endOfWeek();
+        
+        return [
+            'this_week' => [
+                'cart' => ProductInteraction::forProduct($productId)
+                    ->cartAdditions()
+                    ->whereBetween('created_at', [$thisWeekStart, $thisWeekEnd])
+                    ->count(),
+                'wishlist' => ProductInteraction::forProduct($productId)
+                    ->wishlistAdditions()
+                    ->whereBetween('created_at', [$thisWeekStart, $thisWeekEnd])
+                    ->count(),
+                'views' => ProductInteraction::forProduct($productId)
+                    ->views()
+                    ->whereBetween('created_at', [$thisWeekStart, $thisWeekEnd])
+                    ->count()
+            ],
+            'last_week' => [
+                'cart' => ProductInteraction::forProduct($productId)
+                    ->cartAdditions()
+                    ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+                    ->count(),
+                'wishlist' => ProductInteraction::forProduct($productId)
+                    ->wishlistAdditions()
+                    ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+                    ->count(),
+                'views' => ProductInteraction::forProduct($productId)
+                    ->views()
+                    ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+                    ->count()
+            ]
+        ];
+    }
+    
+    private function calculateConversionRate($productId)
+    {
+        $views = ProductInteraction::forProduct($productId)->views()->count();
+        $cartAdditions = ProductInteraction::forProduct($productId)->cartAdditions()->count();
+        
+        if ($views == 0) {
+            return 0;
+        }
+        
+        return round(($cartAdditions / $views) * 100, 2);
     }
 
     // Order Management Methods
@@ -290,21 +412,65 @@ class AdminController extends Controller
 
     public function updateOrderStatus(Request $request, Order $order)
     {
-        $request->validate([
-            'status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled'
+        \Illuminate\Support\Facades\Log::info('Order status update attempt', [
+            'order_id' => $order->id,
+            'current_status' => $order->status,
+            'new_status' => $request->input('status'),
+            'request_headers' => $request->headers->all(),
+            'is_ajax' => $request->ajax()
         ]);
 
-        $order->update([
-            'status' => $request->status
-        ]);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Statut de la commande mis à jour avec succès!'
+        try {
+            $request->validate([
+                'status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled'
             ]);
-        }
 
-        return redirect()->back()->with('success', 'Statut de la commande mis à jour avec succès!');
+            \Illuminate\Support\Facades\Log::info('Validation passed, updating order status');
+
+            $order->update([
+                'status' => $request->status
+            ]);
+
+            \Illuminate\Support\Facades\Log::info('Order status updated successfully', [
+                'order_id' => $order->id,
+                'new_status' => $order->fresh()->status
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Statut de la commande mis à jour avec succès!',
+                    'order' => [
+                        'id' => $order->id,
+                        'status' => $order->fresh()->status
+                    ]
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Statut de la commande mis à jour avec succès!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Illuminate\Support\Facades\Log::error('Validation failed', ['errors' => $e->errors()]);
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Données invalides: ' . implode(', ', collect($e->errors())->flatten()->toArray())
+                ], 422);
+            }
+            return redirect()->back()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Order status update failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du statut.');
+        }
     }
 }

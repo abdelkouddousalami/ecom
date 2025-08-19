@@ -100,69 +100,7 @@
 <body class="bg-gray-50 min-h-screen">
     
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="/" class="flex-shrink-0">
-                        <img src="{{ asset('images/logos/logo.png') }}" 
-                             alt="l3ochaq Store Logo" 
-                             class="h-8 w-auto object-contain">
-                    </a>
-                </div>
-
-                <!-- Navigation Links (Center) -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Home</a>
-                    <a href="/products" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Products</a>
-                    <a href="/orders" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Mes Commandes</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Contact</a>
-                </div>
-
-                <!-- Right side icons -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <!-- Favorites -->
-                    <div class="relative">
-                        <a href="/wishlist" class="text-gray-600 hover:text-blue-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-50 block">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                            <span class="wishlist-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-sm hidden">0</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Cart (Panier) -->
-                    <div class="relative">
-                        <a href="/cart" class="text-blue-600 relative transition duration-300 p-2 rounded-lg bg-blue-50 hover:bg-blue-100 block">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                            <span class="cart-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-sm hidden">0</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center space-x-2">
-                    <!-- Mobile Cart Icon -->
-                    <a href="/cart" class="text-blue-600 relative transition duration-300 p-2 rounded-lg bg-blue-50">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                        <span class="cart-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-sm hidden">0</span>
-                    </a>
-                    
-                    <!-- Mobile Menu Toggle -->
-                    <button class="text-gray-600 hover:text-blue-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <x-navbar active-page="cart" />
 
     <!-- Enhanced page header with gradient background -->
     <div class="full-width-section header-gradient border-b border-gray-200">
@@ -260,11 +198,14 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <x-footer />
+
     <script>
         let products = @json($products ?? []); // Pass products data from controller
 
         // Stylish notification function
-        function showNotification(message, type = 'success', icon = '🛒') {
+        function showNotification(message, type = 'success') {
             // Remove any existing notification
             const existingNotification = document.querySelector('.custom-notification');
             if (existingNotification) {
@@ -301,7 +242,7 @@
             `;
             
             notification.innerHTML = `
-                <span style="font-size: 24px; animation: heartbeat 1s ease-in-out infinite;">${icon}</span>
+                <span style="font-size: 24px; animation: heartbeat 1s ease-in-out infinite;">•</span>
                 <span>${message}</span>
             `;
             
@@ -352,7 +293,7 @@
                                     <!-- Product Image -->
                                     <div class="relative flex-shrink-0">
                                         <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-200">
-                                            <img src="/images/products/${product.image}" 
+                                            <img src="/${product.image}" 
                                                  alt="${product.name}" 
                                                  class="w-full h-full object-cover"
                                                  onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zMiA0MEw0OCAyNEw2NCA0MFY2NEgzMlY0MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSIzNiIgcj0iNCIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
@@ -444,7 +385,7 @@
             cart = cart.filter(item => item.id != productId);
             localStorage.setItem('cart', JSON.stringify(cart));
             loadCart();
-            showNotification(`${product ? product.name : 'Produit'} retiré du panier!`, 'removed', '🗑️');
+            showNotification(`${product ? product.name : 'Produit'} retiré du panier!`, 'removed');
             return false;
         }
 
@@ -452,7 +393,7 @@
             if (confirm('Êtes-vous sûr de vouloir vider votre panier?')) {
                 localStorage.removeItem('cart');
                 loadCart();
-                showNotification('Panier vidé avec succès!', 'removed', '🧹');
+                showNotification('Panier vidé avec succès!', 'removed');
             }
             return false;
         }
@@ -460,7 +401,7 @@
         function processCheckout() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             if (cart.length === 0) {
-                showNotification('Votre panier est vide!', 'removed', '⚠️');
+                showNotification('Votre panier est vide!', 'removed');
                 return false;
             }
             

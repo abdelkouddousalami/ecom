@@ -17,33 +17,35 @@
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-inter { font-family: 'Inter', sans-serif; }
         
-        /* Professional gradients */
-        .gradient-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .gradient-secondary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .gradient-success {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-        .gradient-warning {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
+        /* Modern solid color scheme */
+        .primary-blue { background-color: #2563eb; }
+        .primary-blue-light { background-color: #3b82f6; }
+        .primary-blue-dark { background-color: #1d4ed8; }
+        .success-green { background-color: #059669; }
+        .warning-orange { background-color: #d97706; }
+        .danger-red { background-color: #dc2626; }
+        .purple-solid { background-color: #7c3aed; }
+        .indigo-solid { background-color: #4f46e5; }
         
-        /* Card shadows */
+        /* Professional card shadows */
         .card-shadow {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
         }
         .card-shadow:hover {
-            box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.15), 0 15px 15px -5px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
         }
         
-        /* Glass effect */
+        .card-shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Modern glass effect without gradients */
         .glass-effect {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
         
         /* Smooth transitions */
@@ -51,24 +53,164 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* Background pattern */
+        /* Clean background */
         body {
-            background: #f3f4f6;
+            background-color: #f8fafc;
             font-family: 'Inter', sans-serif;
         }
         
-        /* Tab styling */
+        /* Tab styling without gradients */
         .tab-active {
             background-color: #2563eb;
             color: white;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
         }
         .tab-inactive {
             color: #6b7280;
-            background-color: transparent;
+            background-color: white;
+            border: 1px solid #e5e7eb;
         }
         .tab-inactive:hover {
             color: #374151;
             background-color: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        /* Modern button styles */
+        .btn-primary {
+            background-color: #2563eb;
+            box-shadow: 0 2px 4px -1px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s ease;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-success {
+            background-color: #059669;
+            border: none;
+        }
+        .btn-success:hover {
+            background-color: #047857;
+        }
+        
+        .btn-warning {
+            background-color: #d97706;
+            border: none;
+        }
+        .btn-warning:hover {
+            background-color: #b45309;
+        }
+        
+        .btn-danger {
+            background-color: #dc2626;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+        
+        /* Stats card colors */
+        .stats-revenue { border-left: 4px solid #059669; }
+        .stats-products { border-left: 4px solid #2563eb; }
+        .stats-orders { border-left: 4px solid #7c3aed; }
+        .stats-pending { border-left: 4px solid #d97706; }
+        
+        /* Icon backgrounds */
+        .icon-bg-green { background-color: #d1fae5; color: #059669; }
+        .icon-bg-blue { background-color: #dbeafe; color: #2563eb; }
+        .icon-bg-purple { background-color: #e0e7ff; color: #7c3aed; }
+        .icon-bg-orange { background-color: #fed7aa; color: #d97706; }
+        .icon-bg-red { background-color: #fee2e2; color: #dc2626; }
+        .icon-bg-indigo { background-color: #e0e7ff; color: #4f46e5; }
+        
+        /* Status badges */
+        .status-pending { background-color: #fef3c7; color: #d97706; }
+        .status-confirmed { background-color: #dbeafe; color: #2563eb; }
+        .status-processing { background-color: #e0e7ff; color: #7c3aed; }
+        .status-shipped { background-color: #e0e7ff; color: #4f46e5; }
+        .status-delivered { background-color: #d1fae5; color: #059669; }
+        .status-cancelled { background-color: #fee2e2; color: #dc2626; }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .card-shadow:hover {
+                transform: none;
+            }
+            .touch-target {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+        
+        /* Responsive table */
+        .responsive-table {
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .responsive-table table {
+                min-width: 600px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Responsive grid */
+        .responsive-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 640px) {
+            .responsive-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .responsive-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Notification animation */
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Hover effects */
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s ease;
+        }
+        
+        /* Modern borders */
+        .border-modern {
+            border: 1px solid #e2e8f0;
+        }
+        .border-modern:hover {
+            border-color: #cbd5e1;
         }
     </style>
 </head>
@@ -77,65 +219,82 @@
     <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Left side - Logo only -->
+                <!-- Left side - Logo -->
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center">
-                        <img src="{{ asset('images/logos/logo.png') }}" 
-                             alt="l3ochaq Store Logo" 
-                             class="h-8 w-auto object-contain">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                            </div>
+                            <span class="hidden sm:block text-lg font-bold text-blue-600">
+                                l3ochaq Admin
+                            </span>
+                        </div>
                     </a>
                 </div>
 
-                <!-- Center - Quick Navigation -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-                       
-                        <span class="font-medium">Dashboard</span>
+                <!-- Center - Navigation (Always Visible) -->
+                <div class="flex items-center space-x-1 overflow-x-auto">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 touch-target whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                        </svg>
+                        <span class="font-medium text-sm sm:text-base">Dashboard</span>
                     </a>
                     
-                    <a href="{{ route('admin.orders') }}" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-                        
-                        <span class="font-medium">Orders</span>
+                    <a href="{{ route('admin.orders') }}" class="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 touch-target whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span class="font-medium text-sm sm:text-base">Orders</span>
                     </a>
                     
-                    <a href="{{ route('admin.products') }}" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-                        
-                        <span class="font-medium">Products</span>
+                    <a href="{{ route('admin.products') }}" class="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 touch-target whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <span class="font-medium text-sm sm:text-base">Products</span>
                     </a>
                     
-                    <a href="{{ route('admin.categories') }}" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-                        
-                        <span class="font-medium">Categories</span>
+                    <a href="{{ route('admin.categories') }}" class="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 touch-target whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        <span class="font-medium text-sm sm:text-base">Categories</span>
                     </a>
                     
-                    <a href="{{ url('/') }}" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
-                        
-                        <span class="font-medium">Store</span>
+                    <a href="{{ url('/') }}" class="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg text-gray-700 hover:text-green-600 hover:bg-green-50 transition-all duration-200 touch-target whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="font-medium text-sm sm:text-base">Store</span>
                     </a>
                 </div>
 
-                <!-- Right side - User menu and actions -->
-                <div class="flex items-center space-x-4">
+                <!-- Right side - Actions and User menu -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Notifications -->
                     <div class="relative">
-                        <button class="p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 relative">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3.5-3.5a.92.92 0 00-1.5 0L12 17h3zm-9.5-8.5A3.5 3.5 0 019 5a3.5 3.5 0 013.5 3.5c0 1.93-1.57 3.5-3.5 3.5S5.5 10.43 5.5 8.5z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8a3 3 0 01-3 3m0 0a3 3 0 01-3-3m3 3h6m-9 4v6a1 1 0 001 1h8a1 1 0 001-1v-6"></path>
+                        <button class="p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 relative touch-target">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3.393-3.393a.92.92 0 01-.274-.653v-2.906c0-1.66-.673-3.16-1.759-4.246S12.66 4.043 11 4.043s-3.16.674-4.246 1.759S5.043 8.341 5.043 10v2.906c0 .245-.097.48-.274.653L1.376 17H7m8 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
-                            <span class="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full notification-badge"></span>
                         </button>
                     </div>
 
                     <!-- User Profile Dropdown -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="flex items-center space-x-3 px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200">
-                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                        <button @click="open = !open" class="flex items-center space-x-2 sm:space-x-3 px-2 sm:px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200 touch-target">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                                 <span class="text-white font-semibold text-sm">A</span>
                             </div>
                             <div class="hidden sm:block text-left">
-                                <div class="text-sm font-semibold text-gray-900">Admin User</div>
-                                <div class="text-xs text-gray-600">admin@l3ochaq.com</div>
+                                <div class="text-sm font-semibold text-gray-900">Admin</div>
+                                <div class="text-xs text-gray-600">Administrator</div>
                             </div>
                             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -179,29 +338,6 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Mobile menu button -->
-                    <div class="md:hidden">
-                        <button type="button" class="p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200" onclick="toggleMobileMenu()">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mobile Navigation Menu -->
-            <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200">
-                <div class="px-2 pt-2 pb-3 space-y-1 bg-white">
-                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg">Dashboard</a>
-                    <a href="{{ route('admin.products') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg">Products</a>
-                    <a href="{{ route('admin.categories') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg">Categories</a>
-                    <a href="{{ url('/') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg">Store</a>
-                    <div class="border-t border-gray-200 pt-2">
-                        <a href="{{ url('/') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg">Visit Store</a>
-                        <a href="{{ url('/') }}" class="block px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-lg">Sign Out</a>
                     </div>
                 </div>
             </div>
@@ -342,12 +478,6 @@
                     row.style.display = 'none';
                 }
             });
-        }
-        
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
         }
     </script>
 </body>

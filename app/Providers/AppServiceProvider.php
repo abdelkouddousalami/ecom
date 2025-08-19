@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Order;
+use App\Models\Product;
+use App\Observers\OrderObserver;
+use App\Observers\ProductObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register model observers
+        // Temporarily disabled to debug order status update issue
+        // Order::observe(OrderObserver::class);
+        Product::observe(ProductObserver::class);
     }
 }

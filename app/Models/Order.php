@@ -34,6 +34,18 @@ class Order extends Model
         'total' => 'decimal:2',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::created(function ($order) {
+            if (empty($order->order_number)) {
+                $order->order_number = 'ORD-' . date('Y') . '-' . str_pad($order->id, 6, '0', STR_PAD_LEFT);
+                $order->save();
+            }
+        });
+    }
+
     // Status constants
     const STATUS_PENDING = 'pending';
     const STATUS_CONFIRMED = 'confirmed';
@@ -72,7 +84,11 @@ class Order extends Model
     // Helper methods
     public function generateOrderNumber()
     {
-        return 'ORD-' . date('Y') . '-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        if (empty($this->order_number)) {
+            $this->order_number = 'ORD-' . date('Y') . '-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
+            $this->save();
+        }
+        return $this->order_number;
     }
 
     public function getPaymentMethodLabel()

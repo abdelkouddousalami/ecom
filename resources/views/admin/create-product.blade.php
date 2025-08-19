@@ -282,7 +282,7 @@ function displayImagePreviews() {
     // Add image count indicator
     const countIndicator = document.createElement('div');
     countIndicator.className = 'col-span-full mb-2 text-sm text-gray-600 font-medium';
-    countIndicator.innerHTML = `📸 ${selectedFiles.length} image${selectedFiles.length !== 1 ? 's' : ''} selected (${6 - selectedFiles.length} remaining)`;
+    countIndicator.innerHTML = `${selectedFiles.length} image${selectedFiles.length !== 1 ? 's' : ''} selected (${6 - selectedFiles.length} remaining)`;
     grid.appendChild(countIndicator);
     
     selectedFiles.forEach((file, index) => {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductInteraction;
 
 class ProductController extends Controller
 {
@@ -29,18 +30,57 @@ class ProductController extends Controller
         return view('welcome', compact('products'));
     }
     
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'images'])->where('is_active', true)->get();
+        $query = Product::with(['category', 'images'])->where('is_active', true);
+        
+        // Apply filters if provided
+        if ($request->has('category') && $request->category) {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+        
+        if ($request->has('sort') && $request->sort) {
+            switch ($request->sort) {
+                case 'price-low':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price-high':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'rating':
+                    $query->orderBy('rating', 'desc');
+                    break;
+                case 'popular':
+                    $query->orderBy('rating', 'desc');
+                    break;
+                default:
+                    $query->orderBy('created_at', 'desc');
+            }
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+        
+        // Paginate with 6 products per page
+        $products = $query->paginate(6);
         $categories = Category::where('is_active', true)->get();
         
-        return view('products', compact('products', 'categories'));
+        // Get all products for JavaScript functionality (cart, wishlist)
+        $allProducts = Product::select('id', 'name', 'price', 'image', 'slug')
+            ->where('is_active', true)
+            ->get();
+        
+        return view('products', compact('products', 'categories', 'allProducts'));
     }
 
     public function show(Product $product)
     {
         // Load product with all relationships
         $product->load(['category', 'images']);
+        
+        // Track product view
+        ProductInteraction::trackView($product->id);
         
         // Get related products from the same category
         $relatedProducts = Product::with(['category', 'images'])

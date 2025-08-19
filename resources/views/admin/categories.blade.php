@@ -205,7 +205,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
                                         </button>
-                                        <button onclick="deleteCategory('{{ $category->name }}')" class="bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200">
+                                        <button onclick="deleteCategory({{ $category->id }}, '{{ $category->name }}')" class="bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
@@ -267,11 +267,31 @@ function searchCategories() {
 }
 
 // Delete category confirmation
-function deleteCategory(categoryName) {
+function deleteCategory(categoryId, categoryName) {
     if (confirm(`Are you sure you want to delete "${categoryName}" category? This action cannot be undone.`)) {
-        // Add delete functionality here
-        console.log('Deleting category:', categoryName);
-        // You can implement the actual delete functionality here
+        // Create a form and submit it
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/categories/${categoryId}`;
+        
+        // Add CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const csrfField = document.createElement('input');
+        csrfField.type = 'hidden';
+        csrfField.name = '_token';
+        csrfField.value = csrfToken;
+        form.appendChild(csrfField);
+        
+        // Add method override for DELETE
+        const methodField = document.createElement('input');
+        methodField.type = 'hidden';
+        methodField.name = '_method';
+        methodField.value = 'DELETE';
+        form.appendChild(methodField);
+        
+        // Append form to body and submit
+        document.body.appendChild(form);
+        form.submit();
     }
 }
 

@@ -9,3 +9,54 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Icon background styles for dashboard cards */
+.icon-bg-purple {
+    @apply bg-purple-100 text-purple-600;
+}
+
+.icon-bg-blue {
+    @apply bg-blue-100 text-blue-600;
+}
+
+.icon-bg-green {
+    @apply bg-green-100 text-green-600;
+}
+
+.icon-bg-orange {
+    @apply bg-orange-100 text-orange-600;
+}
+
+.icon-bg-red {
+    @apply bg-red-100 text-red-600;
+}
+
+/* Additional dashboard styles */
+.card-shadow {
+    @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+.border-modern {
+    @apply border border-gray-100;
+}
+
+.hover-lift {
+    @apply hover:-translate-y-1 transition-transform duration-200;
+}
+
+.responsive-table {
+    @apply overflow-x-auto;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400;
+}

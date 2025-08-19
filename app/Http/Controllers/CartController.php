@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\ProductInteraction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -11,6 +12,13 @@ class CartController extends Controller
 {
     public function add(Request $request)
     {
+        \Log::info('Cart add request received', [
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'user_id' => auth()->id(),
+            'session_id' => Session::getId()
+        ]);
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'integer|min:1|max:10'
@@ -63,6 +71,14 @@ class CartController extends Controller
                 'price' => $product->price
             ]);
         }
+
+        // Track cart addition interaction
+        \Log::info('Creating ProductInteraction for cart addition', [
+            'product_id' => $product->id,
+            'quantity' => $quantity
+        ]);
+        ProductInteraction::trackCartAddition($product->id, $quantity);
+        \Log::info('ProductInteraction created successfully');
 
         // Get cart count
         $cartCount = $this->getCartCount();

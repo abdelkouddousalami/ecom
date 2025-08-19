@@ -21,90 +21,6 @@
         .font-playfair { 
             font-family: 'Playfair Display', serif; 
         }
-
-        /* Mobile Navigation Styles */
-        .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 998;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease-in-out;
-        }
-        
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            height: 100vh;
-            background: rgba(55, 65, 75, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 999;
-            transition: right 0.3s ease-in-out;
-            padding: 20px;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-        }
-        
-        .mobile-menu.active {
-            right: 0;
-        }
-            
-            .mobile-menu a {
-                font-size: 1.5rem;
-                margin: 1rem 0;
-                color: #1f2937;
-                font-weight: 600;
-                text-decoration: none;
-                transition: color 0.3s ease;
-            }
-            
-            .mobile-menu a:hover,
-            .mobile-menu a.active {
-                color: #2563eb;
-            }
-            
-            .hamburger {
-                display: flex;
-                flex-direction: column;
-                cursor: pointer;
-                padding: 4px;
-            }
-            
-            .hamburger span {
-                width: 25px;
-                height: 3px;
-                background-color: #374151;
-                margin: 3px 0;
-                transition: 0.3s;
-                border-radius: 2px;
-            }
-            
-            .hamburger.active span:nth-child(1) {
-                transform: rotate(-45deg) translate(-5px, 6px);
-            }
-            
-            .hamburger.active span:nth-child(2) {
-                opacity: 0;
-            }
-            
-            .hamburger.active span:nth-child(3) {
-                transform: rotate(45deg) translate(-5px, -6px);
-            }
-        }
         
         .image-gallery {
             display: grid;
@@ -222,80 +138,7 @@
 </head>
 <body class="antialiased bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="/" class="flex-shrink-0">
-                        <img src="{{ asset('images/logos/logo.png') }}" 
-                             alt="l3ochaq Store Logo" 
-                             class="h-8 w-auto object-contain">
-                    </a>
-                </div>
-
-                <!-- Navigation Links (Center) -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Home</a>
-                    <a href="/products" class="text-blue-600 font-semibold">Products</a>
-                    <a href="/orders" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Mes Commandes</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">Contact</a>
-                </div>
-
-                <!-- Right side icons -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <!-- Favorites -->
-                    <div class="relative">
-                        <a href="/wishlist" class="text-gray-700 hover:text-blue-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-100 block">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                            <span class="wishlist-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-lg hidden">0</span>
-                        </a>
-                    </div>
-                    
-                    <!-- Cart (Panier) -->
-                    <div class="relative">
-                        <a href="/cart" class="text-gray-700 hover:text-blue-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-100 block">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                            <span class="cart-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-lg hidden">0</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Mobile menu button and icons -->
-                <div class="md:hidden flex items-center space-x-3">
-                    <!-- Mobile Wishlist Icon -->
-                    <a href="/wishlist" class="text-gray-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-50">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                        <span class="wishlist-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-sm hidden" style="top: -1px; left: -1px;">0</span>
-                    </a>
-                    
-                    <!-- Mobile Cart Icon -->
-                    <a href="/cart" class="text-gray-600 relative transition duration-300 p-2 rounded-lg hover:bg-gray-50">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                        <span class="cart-count absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 items-center justify-center text-xs font-bold shadow-sm hidden" style="top: -1px; left: -1px;">0</span>
-                    </a>
-                    
-                    <!-- Hamburger Menu Button -->
-                    <button id="mobileMenuToggle" class="hamburger text-gray-600 hover:text-blue-600 p-2">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
+    <x-navbar active-page="products" />
 
     <!-- Breadcrumb -->
     <div class="bg-gradient-to-r from-blue-50 to-indigo-100 border-b">
@@ -331,27 +174,27 @@
                     <div class="thumbnail-grid">
                         @if($product->images && $product->images->count() > 0)
                             @foreach($product->images as $index => $image)
-                                <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                <img src="{{ asset($image->image_path) }}" 
                                      alt="{{ $product->name }}" 
                                      class="thumbnail {{ $index === 0 ? 'active' : '' }}"
-                                     onclick="changeMainImage('{{ asset('storage/' . $image->image_path) }}', {{ $index }})">
+                                     onclick="changeMainImage('{{ asset($image->image_path) }}', {{ $index }})">
                             @endforeach
                         @else
-                            <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                            <img src="{{ $product->image ? asset($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                  alt="{{ $product->name }}" 
                                  class="thumbnail active"
-                                 onclick="changeMainImage('{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
+                                 onclick="changeMainImage('{{ $product->image ? asset($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
                         @endif
                     </div>
                     
                     <!-- Main Image -->
                     <div class="relative">
                         @if($product->images && $product->images->count() > 0)
-                            <img id="main-image" src="{{ asset('storage/' . $product->images->first()->image_path) }}" 
+                            <img id="main-image" src="{{ asset($product->images->first()->image_path) }}" 
                                  alt="{{ $product->name }}" 
                                  class="main-image">
                         @else
-                            <img id="main-image" src="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                            <img id="main-image" src="{{ $product->image ? asset($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                  alt="{{ $product->name }}" 
                                  class="main-image">
                         @endif
@@ -504,11 +347,11 @@
                         <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden cursor-pointer transform hover:scale-105" onclick="window.location.href='{{ route('product.show', $relatedProduct->slug) }}'">
                             <div class="relative h-64 overflow-hidden">
                                 @if($relatedProduct->images && $relatedProduct->images->count() > 0)
-                                    <img src="{{ asset('storage/' . $relatedProduct->images->first()->image_path) }}" 
+                                    <img src="{{ asset($relatedProduct->images->first()->image_path) }}" 
                                          alt="{{ $relatedProduct->name }}" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 @else
-                                    <img src="{{ $relatedProduct->image ? asset('storage/' . $relatedProduct->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                                    <img src="{{ $relatedProduct->image ? asset($relatedProduct->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                          alt="{{ $relatedProduct->name }}" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 @endif
@@ -595,9 +438,9 @@
                 <div>
                     <h4 class="text-lg font-semibold mb-4 font-playfair">Contact Us</h4>
                     <div class="space-y-2 text-gray-400">
-                        <p>📧 contact@l3ochaq.com</p>
-                        <p>📞 +212 123 456 789</p>
-                        <p>📍 Casablanca, Morocco</p>
+                        <p>Email: contact@l3ochaq.com</p>
+                        <p>Phone: +212 123 456 789</p>
+                        <p>Address: Casablanca, Morocco</p>
                     </div>
                 </div>
             </div>
@@ -687,7 +530,7 @@
         // Simple cart and wishlist functions using localStorage
         
         // Stylish notification function (simplified version)
-        function showNotification(message, type = 'success', icon = '❤️') {
+        function showNotification(message, type = 'success') {
             console.log('showNotification called:', message, type, icon);
             
             // Remove any existing notification
@@ -726,7 +569,7 @@
             `;
             
             notification.innerHTML = `
-                <span style="font-size: 24px;">${icon}</span>
+                <span style="font-size: 24px;">•</span>
                 <span>${message}</span>
             `;
             
@@ -754,22 +597,66 @@
         function addToCart(productId) {
             const quantity = document.getElementById('quantity').value;
             console.log('addToCart called with productId:', productId, 'quantity:', quantity);
+            
+            // First, make server request for tracking and cart management
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ 
+                    product_id: productId,
+                    quantity: parseInt(quantity)
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Server response:', data);
+                if (data.success) {
+                    console.log('Server cart tracking successful:', data.message);
+                    showNotification(data.message, 'success');
+                    
+                    // Update localStorage only after successful server request
+                    updateLocalStorageCart(productId, parseInt(quantity));
+                } else {
+                    console.error('Server cart error:', data.message);
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Server cart request error:', error);
+                showNotification('Error connecting to server. Item added to local cart only.', 'warning');
+                
+                // Fallback: update localStorage even if server request failed
+                updateLocalStorageCart(productId, parseInt(quantity));
+            });
+        }
+
+        function updateLocalStorageCart(productId, quantity) {
+            // Handle localStorage for frontend functionality
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             
             // Check if product already in cart
             const existingItem = cart.find(item => item.id == productId);
             if (existingItem) {
-                existingItem.quantity += parseInt(quantity);
+                existingItem.quantity += quantity;
                 console.log('Updating cart quantity to:', existingItem.quantity);
-                showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier!`, 'success', '🛒');
+                showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier!`, 'success');
             } else {
                 cart.push({
                     id: productId,
-                    quantity: parseInt(quantity),
+                    quantity: quantity,
                     added_at: new Date().toISOString()
                 });
                 console.log('Adding new product to cart with quantity:', quantity);
-                showNotification(`${quantity} produit(s) ajouté(s) au panier!`, 'success', '🛒');
+                showNotification(`${quantity} produit(s) ajouté(s) au panier!`, 'success');
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -777,19 +664,39 @@
         }
 
         function addToWishlist(productId) {
+            // First, make server request for tracking
+            fetch('/wishlist/toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ product_id: productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Server tracking successful:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Server tracking error:', error);
+            });
+
+            // Then handle localStorage for frontend functionality
             let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
             
             // Check if product already in wishlist
             const existingIndex = wishlist.findIndex(item => item.id == productId);
             if (existingIndex > -1) {
                 wishlist.splice(existingIndex, 1);
-                showNotification('Produit retiré des favoris!', 'removed', '💔');
+                showNotification('Produit retiré des favoris!', 'removed');
             } else {
                 wishlist.push({
                     id: productId,
                     added_at: new Date().toISOString()
                 });
-                showNotification('Produit ajouté aux favoris!', 'success', '❤️');
+                showNotification('Produit ajouté aux favoris!', 'success');
             }
             
             localStorage.setItem('wishlist', JSON.stringify(wishlist));
@@ -904,7 +811,7 @@
                                     <!-- Product Image -->
                                     <div class="relative flex-shrink-0">
                                         <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-50 border">
-                                            <img src="/images/products/${product.image}" 
+                                            <img src="/${product.image}" 
                                                  alt="${product.name}" 
                                                  class="w-full h-full object-cover"
                                                  onerror="this.src='https://via.placeholder.com/64x64/f3f4f6/9ca3af?text=No+Image'">
@@ -990,7 +897,7 @@
             localStorage.setItem('cart', JSON.stringify(cart));
             loadCartModal();
             updateCartCount();
-            showNotification(`${product ? product.name : 'Produit'} retiré du panier!`, 'removed', '🗑️');
+            showNotification(`${product ? product.name : 'Produit'} retiré du panier!`, 'removed');
         }
 
         function clearCartModal() {
@@ -998,18 +905,18 @@
                 localStorage.removeItem('cart');
                 loadCartModal();
                 updateCartCount();
-                showNotification('Panier vidé avec succès!', 'removed', '🧹');
+                showNotification('Panier vidé avec succès!', 'removed');
             }
         }
 
         function processCheckout() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             if (cart.length === 0) {
-                showNotification('Votre panier est vide!', 'removed', '⚠️');
+                showNotification('Votre panier est vide!', 'removed');
                 return;
             }
             
-            showNotification('Redirection vers le paiement...', 'success', '💳');
+            showNotification('Redirection vers le paiement...', 'success');
             setTimeout(() => {
                 alert('Fonctionnalité de paiement en cours de développement!');
             }, 1000);
