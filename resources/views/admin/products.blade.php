@@ -108,14 +108,14 @@
                                     <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
                                         @if($product->images && $product->images->count() > 0)
                                             <img class="w-full h-full object-cover" 
-                                                 src="{{ asset($product->images->first()->image_path) }}" 
+                                                 src="{{ Storage::url($product->images->first()->image_path) }}" 
                                                  alt="{{ $product->name }}"
-                                                 onerror="this.src='{{ asset('images/products/placeholder.jpg') }}'">
+                                                 onerror="this.src='https://via.placeholder.com/150x150?text=No+Image'">>
                                         @elseif($product->image)
                                             <img class="w-full h-full object-cover" 
-                                                 src="{{ asset('storage/' . $product->image) }}" 
+                                                 src="{{ Storage::url($product->image) }}" 
                                                  alt="{{ $product->name }}"
-                                                 onerror="this.src='{{ asset('images/products/placeholder.jpg') }}'">
+                                                 onerror="this.src='https://via.placeholder.com/150x150?text=No+Image'">>
                                         @else
                                             <div class="w-full h-full flex items-center justify-center bg-gray-100">
                                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

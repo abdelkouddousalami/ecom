@@ -484,7 +484,7 @@
                             <div class="carousel-container-{{$index}} flex transition-transform duration-300 ease-in-out h-full">
                                 @foreach($product->images as $imageIndex => $image)
                                 <div class="w-full h-full flex-shrink-0">
-                                    <img src="{{ asset($image->image_path) }}" alt="{{$product->name}} - Image {{$imageIndex + 1}}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <img src="{{ Storage::url($image->image_path) }}" alt="{{$product->name}} - Image {{$imageIndex + 1}}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                                 @endforeach
                             </div>
@@ -508,7 +508,7 @@
                         @else
                             <!-- Fallback for products without images -->
                             <div class="w-full h-full">
-                                <img src="{{ $product->image ? asset($product->image) : asset('images/products/placeholder.jpg') }}" 
+                                <img src="{{ $product->image ? Storage::url($product->image) : 'https://via.placeholder.com/400x400?text=No+Image' }}" 
                                      alt="{{$product->name}}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTc1SDE1MEMxNDQuNDc3IDE3NSAxNDAgMTcwLjUyMyAxNDAgMTY1VjE0MEMxNDAgMTM0LjQ3NyAxNDQuNDc3IDEzMCAxNTAgMTMwSDE3NUMxODAuNTIzIDEzMCAxODUgMTM0LjQ3NyAxODUgMTQwVjE2NUMxODUgMTcwLjUyMyAxODAuNTIzIDE3NSAxNzUgMTc1WiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMjUwIDI3MEgyMDBDMTg0LjUzNiAyNzAgMTcyIDI1Ny40NjQgMTcyIDI0MlYxOTJDMTcyIDE3Ni41MzYgMTg0LjUzNiAxNjQgMjAwIDE2NEgyNTBDMjY1LjQ2NCAxNjQgMjc4IDE3Ni41MzYgMjc4IDE5MlYyNDJDMjc4IDI1Ny40NjQgMjY1LjQ2NCAyNzAgMjUwIDI3MFoiIGZpbGw9IiNEMUQ1REIiLz4KPHRleHQgeD0iMjAwIiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZCNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">
@@ -716,11 +716,11 @@
                             <!-- Product Image -->
                             <div class="w-20 h-20 mx-auto mb-3 bg-gray-100 rounded-lg overflow-hidden">
                                 @if($firstProduct && $firstProduct->images && $firstProduct->images->count() > 0)
-                                    <img src="{{ asset($firstProduct->images->first()->image_path) }}" 
+                                    <img src="{{ Storage::url($firstProduct->images->first()->image_path) }}" 
                                          alt="{{ $firstProduct->name }}" 
                                          class="w-full h-full object-cover">
                                 @else
-                                    <img src="{{ $firstProduct && $firstProduct->image ? asset($firstProduct->image) : asset('images/products/placeholder.jpg') }}" 
+                                    <img src="{{ $firstProduct && $firstProduct->image ? Storage::url($firstProduct->image) : 'https://via.placeholder.com/400x400?text=No+Image' }}" 
                                          alt="{{ $firstProduct ? $firstProduct->name : 'Special Offer' }}" 
                                          class="w-full h-full object-cover">
                                 @endif

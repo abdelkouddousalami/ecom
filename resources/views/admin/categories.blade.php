@@ -175,7 +175,7 @@
                             <!-- Category Image -->
                             <div class="flex-shrink-0">
                                 <img class="w-16 h-16 rounded-lg object-cover border border-gray-200" 
-                                    src="{{ $category->image ? asset('storage/' . $category->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=300&fit=crop' }}" 
+                                    src="{{ $category->image ? Storage::url($category->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=300&fit=crop' }}" 
                                     alt="{{ $category->name }}">
                             </div>
                             

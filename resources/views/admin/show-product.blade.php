@@ -71,10 +71,10 @@
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 @foreach($product->images->sortBy('sort_order') as $image)
                     <div class="relative group">
-                        <img src="{{ asset('storage/' . $image->image_path) }}" 
+                        <img src="{{ Storage::url($image->image_path) }}" 
                              alt="{{ $product->name }}" 
                              class="w-full h-32 object-cover rounded-lg border border-gray-300 cursor-pointer hover:opacity-80 transition-opacity"
-                             onclick="openImageModal('{{ asset('storage/' . $image->image_path) }}')">
+                             onclick="openImageModal('{{ Storage::url($image->image_path) }}')">
                         @if($image->is_primary)
                             <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">Primary</span>
                         @endif

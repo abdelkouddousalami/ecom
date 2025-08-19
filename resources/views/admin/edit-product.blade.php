@@ -110,7 +110,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         @foreach($product->images as $image)
                             <div class="relative">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                <img src="{{ Storage::url($image->image_path) }}" 
                                      alt="{{ $product->name }}" 
                                      class="w-full h-32 object-cover rounded-lg border border-gray-300">
                                 @if($image->is_primary)

@@ -88,7 +88,7 @@
                                         <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                                             <div class="flex items-center space-x-4">
                                                 <div class="w-16 h-16 rounded-lg overflow-hidden bg-white border">
-                                                    <img src="{{ asset('images/products/' . $item->product->image) }}" 
+                                                    <img src="{{ Storage::url($item->product->image) }}" 
                                                          alt="{{ $item->product->name }}" 
                                                          class="w-full h-full object-cover"
                                                          onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMS4zMzMzIDIxLjMzMzNIMjMuOTk5OUMyNC4zNjgzIDIxLjMzMzMgMjQuNzIxIDIxLjMzMzMgMjUuMDU3NiAyMS4zNTU5QzI1LjcxMTUgMjEuMzk5OSAyNi4zMjI1IDIxLjY0NTIgMjYuNzkwMiAyMi4wNzEzTDQyLjY2NjYgMzcuOTk5OVY0OEMzMS40NjY2IDQ4IDE5LjMzMzMgNDggMTYgNDhWMjYuNjY2NkMxNiAyNC45MjI5IDE2IDI0LjA1MTMgMTYuMzk4MSAyMy4zNTE5QzE2LjUwMTEgMjMuMTUxNyAxNi42Mjg0IDIyLjk2MyAxNi43Nzc4IDIyLjc4ODlMMTYuODg4OSAyMi42NjY2QzE3LjU4NDcgMjEuOTcwNyAxOC42OTAzIDIxLjMzMzMgMjEuMzMzMyAyMS4zMzMzWiIgZmlsbD0iIzlDQTNBRiIvPgo8Y2lyY2xlIGN4PSIyNiIgY3k9IjI5LjMzMzMiIHI9IjMuOTk5OSIgZmlsbD0iI0Q5RDlEOSIvPgo8L3N2Zz4K'">

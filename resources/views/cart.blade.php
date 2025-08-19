@@ -293,7 +293,7 @@
                                     <!-- Product Image -->
                                     <div class="relative flex-shrink-0">
                                         <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-200">
-                                            <img src="/${product.image}" 
+                                            <img src="/storage/${product.image}" 
                                                  alt="${product.name}" 
                                                  class="w-full h-full object-cover"
                                                  onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zMiA0MEw0OCAyNEw2NCA0MFY2NEgzMlY0MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSIzNiIgcj0iNCIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">

@@ -85,9 +85,9 @@
                     if (product) {
                         let imageUrl = 'https://via.placeholder.com/300';
                         if (product.images && product.images.length > 0 && product.images[0].image_path) {
-                            imageUrl = '/' + product.images[0].image_path;
+                            imageUrl = '/storage/' + product.images[0].image_path;
                         } else if (product.image) {
-                            imageUrl = '/' + product.image;
+                            imageUrl = '/storage/' + product.image;
                         }
                         const wishlistItemHTML = `
                             <div class="bg-white rounded-lg shadow-md overflow-hidden group hover:shadow-lg transition-shadow duration-300">

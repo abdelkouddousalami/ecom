@@ -53,7 +53,7 @@
                         <div class="flex items-start space-x-4">
                             <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                                 @if($item->product->image)
-                                    <img src="{{ asset('storage/' . $item->product->image) }}" 
+                                    <img src="{{ Storage::url($item->product->image) }}" 
                                          alt="{{ $item->product->name }}" 
                                          class="w-full h-full object-cover">
                                 @else

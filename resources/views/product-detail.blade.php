@@ -174,27 +174,27 @@
                     <div class="thumbnail-grid">
                         @if($product->images && $product->images->count() > 0)
                             @foreach($product->images as $index => $image)
-                                <img src="{{ asset($image->image_path) }}" 
+                                <img src="{{ Storage::url($image->image_path) }}" 
                                      alt="{{ $product->name }}" 
                                      class="thumbnail {{ $index === 0 ? 'active' : '' }}"
-                                     onclick="changeMainImage('{{ asset($image->image_path) }}', {{ $index }})">
+                                     onclick="changeMainImage('{{ Storage::url($image->image_path) }}', {{ $index }})">
                             @endforeach
                         @else
-                            <img src="{{ $product->image ? asset($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                            <img src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                  alt="{{ $product->name }}" 
                                  class="thumbnail active"
-                                 onclick="changeMainImage('{{ $product->image ? asset($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
+                                 onclick="changeMainImage('{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
                         @endif
                     </div>
                     
                     <!-- Main Image -->
                     <div class="relative">
                         @if($product->images && $product->images->count() > 0)
-                            <img id="main-image" src="{{ asset($product->images->first()->image_path) }}" 
+                            <img id="main-image" src="{{ Storage::url($product->images->first()->image_path) }}" 
                                  alt="{{ $product->name }}" 
                                  class="main-image">
                         @else
-                            <img id="main-image" src="{{ $product->image ? asset($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                            <img id="main-image" src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                  alt="{{ $product->name }}" 
                                  class="main-image">
                         @endif
@@ -347,11 +347,11 @@
                         <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden cursor-pointer transform hover:scale-105" onclick="window.location.href='{{ route('product.show', $relatedProduct->slug) }}'">
                             <div class="relative h-64 overflow-hidden">
                                 @if($relatedProduct->images && $relatedProduct->images->count() > 0)
-                                    <img src="{{ asset($relatedProduct->images->first()->image_path) }}" 
+                                    <img src="{{ Storage::url($relatedProduct->images->first()->image_path) }}" 
                                          alt="{{ $relatedProduct->name }}" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 @else
-                                    <img src="{{ $relatedProduct->image ? asset($relatedProduct->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                                    <img src="{{ $relatedProduct->image ? Storage::url($relatedProduct->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                          alt="{{ $relatedProduct->name }}" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 @endif
