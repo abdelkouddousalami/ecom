@@ -1,0 +1,21 @@
+{
+    "name": "l3ochaq Store",
+    "short_name": "l3ochaq",
+    "description": "Your trusted online shopping destination for quality, elegance, and service.",
+    "icons": [
+        {
+            "src": "/images/logos/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/logos/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#dc2626",
+    "background_color": "#ffffff"
+}

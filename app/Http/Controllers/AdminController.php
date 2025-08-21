@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Activity;
 use App\Models\ProductInteraction;
+use App\Models\PhoneNumber;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -24,7 +25,9 @@ class AdminController extends Controller
             'total_categories' => Category::count(),
             'total_orders' => Order::count(),
             'pending_orders' => Order::where('status', Order::STATUS_PENDING)->count(),
-            'revenue' => Order::sum('total')
+            'revenue' => Order::sum('total'),
+            'total_users' => User::count(),
+            'total_phone_numbers' => PhoneNumber::count()
         ];
         
         $categories = Category::where('is_active', true)->get();
@@ -471,6 +474,146 @@ class AdminController extends Controller
                 ], 500);
             }
             return redirect()->back()->with('error', 'Erreur lors de la mise à jour du statut.');
+        }
+    }
+
+    // Phone Numbers Management
+    public function phoneNumbers()
+    {
+        $phoneNumbers = PhoneNumber::with([])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        $stats = [
+            'total' => PhoneNumber::count(),
+            'from_orders' => PhoneNumber::where('source', 'order')->count(),
+            'manual' => PhoneNumber::where('source', 'manual')->count(),
+            'active' => PhoneNumber::where('is_active', true)->count(),
+        ];
+
+        return view('admin.phone-numbers', compact('phoneNumbers', 'stats'));
+    }
+
+    public function storePhoneNumber(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20|unique:phone_numbers,phone',
+            'address' => 'nullable|string|max:500',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        PhoneNumber::create([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'source' => 'manual',
+            'notes' => $request->notes,
+            'collected_at' => now(),
+        ]);
+
+        return redirect()->route('admin.phone-numbers')
+            ->with('success', 'Phone number added successfully!');
+    }
+
+    public function deletePhoneNumber(PhoneNumber $phoneNumber)
+    {
+        $phoneNumber->delete();
+        return redirect()->route('admin.phone-numbers')
+            ->with('success', 'Phone number deleted successfully!');
+    }
+
+    public function collectFromOrders()
+    {
+        $collected = PhoneNumber::collectFromOrders();
+        
+        return redirect()->route('admin.phone-numbers')
+            ->with('success', "Successfully collected {$collected} phone numbers from existing orders!");
+    }
+
+    // Export Methods
+    public function exportAllData()
+    {
+        $data = [
+            'users' => User::with([])->get(),
+            'products' => Product::with(['category', 'images'])->get(),
+            'orders' => Order::with(['items.product'])->get(),
+            'phone_numbers' => PhoneNumber::all(),
+            'stats' => [
+                'total_users' => User::count(),
+                'total_products' => Product::count(),
+                'total_orders' => Order::count(),
+                'total_phone_numbers' => PhoneNumber::count(),
+                'total_revenue' => Order::sum('total'),
+            ]
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.all-data', $data);
+        return $pdf->download('all-data-export-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function exportUsers()
+    {
+        $users = User::orderBy('created_at', 'desc')->get();
+        $stats = [
+            'total_users' => User::count(),
+            'recent_users' => User::where('created_at', '>=', now()->subDays(30))->count(),
+            'admin_users' => User::where('role', 'admin')->count(),
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.users', compact('users', 'stats'));
+        return $pdf->download('users-export-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function exportProducts()
+    {
+        $products = Product::with(['category', 'images'])->orderBy('created_at', 'desc')->get();
+        $stats = [
+            'total_products' => Product::count(),
+            'active_products' => Product::where('is_active', true)->count(),
+            'total_categories' => Category::count(),
+            'total_value' => Product::sum('price'),
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.products', compact('products', 'stats'));
+        return $pdf->download('products-export-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function exportOrders()
+    {
+        $orders = Order::with(['items.product'])->orderBy('created_at', 'desc')->get();
+        $stats = [
+            'total_orders' => Order::count(),
+            'pending_orders' => Order::where('status', 'pending')->count(),
+            'completed_orders' => Order::where('status', 'delivered')->count(),
+            'total_revenue' => Order::sum('total'),
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.orders', compact('orders', 'stats'));
+        return $pdf->download('orders-export-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function exportPhoneNumbers()
+    {
+        $phoneNumbers = PhoneNumber::orderBy('created_at', 'desc')->get();
+        $stats = [
+            'total_phone_numbers' => PhoneNumber::count(),
+            'from_orders' => PhoneNumber::where('source', 'order')->count(),
+            'manual_entries' => PhoneNumber::where('source', 'manual')->count(),
+            'active_numbers' => PhoneNumber::where('is_active', true)->count(),
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.phone-numbers', compact('phoneNumbers', 'stats'));
+        return $pdf->download('phone-numbers-export-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function collectPhoneNumbers()
+    {
+        try {
+            $collected = PhoneNumber::collectFromOrders();
+            return redirect()->back()->with('success', "Successfully collected {$collected} phone numbers from orders!");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error collecting phone numbers: ' . $e->getMessage());
         }
     }
 }

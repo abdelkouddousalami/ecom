@@ -15,11 +15,11 @@ class Order extends Model
         'order_number',
         'first_name',
         'last_name',
-        'email',
+        'email', // Now nullable
         'phone',
         'address',
         'city',
-        'postal_code',
+        'postal_code', // Now nullable
         'payment_method',
         'subtotal',
         'shipping_cost',
@@ -43,6 +43,9 @@ class Order extends Model
                 $order->order_number = 'ORD-' . date('Y') . '-' . str_pad($order->id, 6, '0', STR_PAD_LEFT);
                 $order->save();
             }
+            
+            // Automatically collect phone number
+            \App\Models\PhoneNumber::collectFromOrder($order);
         });
     }
 

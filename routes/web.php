@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
 // Cart and Wishlist View Pages
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart.view');
 Route::get('/checkout', [ProductController::class, 'checkout'])->name('checkout.view');
+Route::get('/checkout/buy-now/{id}', [ProductController::class, 'buyNowCheckout'])->name('checkout.buynow');
 Route::get('/wishlist', [ProductController::class, 'wishlist'])->name('wishlist.view');
 
 // Cart Routes
@@ -169,20 +170,34 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     
     // Products Management
     Route::get('/products', [App\Http\Controllers\Admin\AdminController::class, 'products'])->name('products');
-    Route::get('/products/create', [AdminController::class, 'createProduct'])->name('create-product');
-    Route::post('/products', [AdminController::class, 'storeProduct'])->name('store-product');
-    Route::get('/products/{product}/edit', [AdminController::class, 'editProduct'])->name('edit-product');
-    Route::put('/products/{product}', [AdminController::class, 'updateProduct'])->name('update-product');
-    Route::delete('/products/{product}', [AdminController::class, 'destroyProduct'])->name('delete-product');
-    Route::get('/products/{product}', [AdminController::class, 'showProduct'])->name('show-product');
+    Route::get('/products/create', [App\Http\Controllers\Admin\AdminController::class, 'createProduct'])->name('create-product');
+    Route::post('/products', [App\Http\Controllers\Admin\AdminController::class, 'storeProduct'])->name('store-product');
+    Route::get('/products/{product}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editProduct'])->name('edit-product');
+    Route::put('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'updateProduct'])->name('update-product');
+    Route::delete('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'destroyProduct'])->name('delete-product');
+    Route::get('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'showProduct'])->name('show-product');
     
     // Categories Management
-    Route::get('/categories', [AdminController::class, 'categories'])->name('categories');
-    Route::post('/categories', [AdminController::class, 'storeCategory'])->name('store-category');
-    Route::delete('/categories/{category}', [AdminController::class, 'destroyCategory'])->name('delete-category');
+    Route::get('/categories', [App\Http\Controllers\Admin\AdminController::class, 'categories'])->name('categories');
+    Route::post('/categories', [App\Http\Controllers\Admin\AdminController::class, 'storeCategory'])->name('store-category');
+    Route::delete('/categories/{category}', [App\Http\Controllers\Admin\AdminController::class, 'destroyCategory'])->name('delete-category');
     
     // Orders Management
     Route::get('/orders', [App\Http\Controllers\Admin\AdminController::class, 'orders'])->name('orders');
-    Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('show-order');
-    Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('update-order-status');
+    Route::get('/orders/{order}', [App\Http\Controllers\Admin\AdminController::class, 'showOrder'])->name('show-order');
+    Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminController::class, 'updateOrderStatus'])->name('update-order-status');
+
+    // Phone Numbers Management
+    Route::get('/phone-numbers', [App\Http\Controllers\Admin\AdminController::class, 'phoneNumbers'])->name('phone-numbers');
+    Route::post('/phone-numbers', [App\Http\Controllers\Admin\AdminController::class, 'storePhoneNumber'])->name('store-phone-number');
+    Route::delete('/phone-numbers/{phoneNumber}', [App\Http\Controllers\Admin\AdminController::class, 'deletePhoneNumber'])->name('delete-phone-number');
+    Route::get('/collect-from-orders', [App\Http\Controllers\Admin\AdminController::class, 'collectFromOrders'])->name('collect-from-orders');
+    Route::post('/collect-from-orders', [App\Http\Controllers\Admin\AdminController::class, 'collectFromOrders'])->name('collect-from-orders.post');
+
+    // Export Routes
+    Route::get('/export/all-data', [App\Http\Controllers\Admin\AdminController::class, 'exportAllData'])->name('export.all-data');
+    Route::get('/export/users', [App\Http\Controllers\Admin\AdminController::class, 'exportUsers'])->name('export.users');
+    Route::get('/export/products', [App\Http\Controllers\Admin\AdminController::class, 'exportProducts'])->name('export.products');
+    Route::get('/export/orders', [App\Http\Controllers\Admin\AdminController::class, 'exportOrders'])->name('export.orders');
+    Route::get('/export/phone-numbers', [App\Http\Controllers\Admin\AdminController::class, 'exportPhoneNumbers'])->name('export.phone-numbers');
 });

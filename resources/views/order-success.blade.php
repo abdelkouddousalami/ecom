@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commande Confirmée - l3ochaq Store</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Google Fonts -->
@@ -85,7 +91,7 @@
                             <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"></path>
                             </svg>
-                            Un email de confirmation sera envoyé à votre adresse
+                            Nous vous contacterons par téléphone pour confirmer votre commande
                         </li>
                         <li class="flex items-start">
                             <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

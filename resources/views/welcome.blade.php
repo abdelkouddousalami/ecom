@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MarketPlace - Your One-Stop Shopping Destination</title>
     <meta name="description" content="Discover amazing products at unbeatable prices. Shop electronics, fashion, home goods and more.">
-    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Fonts -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -69,6 +76,33 @@
             animation: heartBeat 0.6s ease-in-out;
         }
         
+        /* Smooth button click animations */
+        .add-to-cart-btn {
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(0);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .add-to-cart-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .add-to-cart-btn.button-clicked {
+            transform: scale(0.95);
+            background-color: #1d4ed8 !important;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .add-to-cart-btn.success {
+            animation: successPulse 0.3s ease-out;
+            background-color: #10b981 !important;
+        }
 
         
         /* Notification animation */
@@ -126,12 +160,25 @@
             }
             
             .stats-container {
-                flex-direction: column !important;
-                gap: 20px !important;
+                flex-direction: row !important;
+                gap: 8px !important;
+                flex-wrap: nowrap !important;
             }
             
             .stat-item {
                 text-align: center;
+                min-width: 0;
+                flex: 1;
+            }
+            
+            .stat-item .text-4xl {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            .stat-item .text-lg {
+                font-size: 0.75rem !important;
+                line-height: 1 !important;
             }
             
             .hero-buttons {
@@ -274,8 +321,10 @@
         </style>
         <div class="absolute z-20 hidden md:block" style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 30;">
             <div class="animate-bounce">
-                <button onclick="scrollToNextSection()" class="px-4 py-2 text-white border border-white rounded-md hover:bg-white hover:text-blue-600 transition-colors duration-300">
-                    Voir les produits
+                <button onclick="scrollToNextSection()" class="w-12 h-12 flex items-center justify-center text-white border-2 border-white rounded-full hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110" title="Scroll to next section">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
                 </button>
             </div>
         </div>
@@ -289,7 +338,7 @@
                         <style>
                         @media (max-width: 640px) {
                             .hero-title-container-mobile {
-                                margin-top: -145px !important;
+                                margin-top: 10px !important;
                             }
                         }
                         </style>
@@ -307,7 +356,7 @@
                         </div>
                         
                         <!-- Statistics Section -->
-                        <div class="stats-container mt-8 flex flex-row justify-center items-center gap-12 max-w-4xl mx-auto">
+                        <div class="stats-container mt-8 flex flex-row justify-center items-center gap-4 sm:gap-8 md:gap-12 max-w-4xl mx-auto">
                             <div class="stat-item text-center">
                                 <div class="text-4xl font-bold text-blue-400 mb-2" style="font-family: 'Playfair Display', serif;">
                                     <span id="clients-counter">0</span>+
@@ -508,7 +557,7 @@
                         @else
                             <!-- Fallback for products without images -->
                             <div class="w-full h-full">
-                                <img src="{{ $product->image ? Storage::url($product->image) : 'https://via.placeholder.com/400x400?text=No+Image' }}" 
+                                <img src="{{ $product->image ? Storage::url($product->image) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K' }}" 
                                      alt="{{$product->name}}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTc1SDE1MEMxNDQuNDc3IDE3NSAxNDAgMTcwLjUyMyAxNDAgMTY1VjE0MEMxNDAgMTM0LjQ3NyAxNDQuNDc3IDEzMCAxNTAgMTMwSDE3NUMxODAuNTIzIDEzMCAxODUgMTM0LjQ3NyAxODUgMTQwVjE2NUMxODUgMTcwLjUyMyAxODAuNTIzIDE3NSAxNzUgMTc1WiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMjUwIDI3MEgyMDBDMTg0LjUzNiAyNzAgMTcyIDI1Ny40NjQgMTcyIDI0MlYxOTJDMTcyIDE3Ni41MzYgMTg0LjUzNiAxNjQgMjAwIDE2NEgyNTBDMjY1LjQ2NCAxNjQgMjc4IDE3Ni41MzYgMjc4IDE5MlYyNDJDMjc4IDI1Ny40NjQgMjY1LjQ2NCAyNzAgMjUwIDI3MFoiIGZpbGw9IiNEMUQ1REIiLz4KPHRleHQgeD0iMjAwIiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZCNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">
@@ -602,8 +651,9 @@
                         <div class="space-y-3">
                             <div class="flex gap-3">
                                 @if($product->stock > 0)
-                                    <button onclick="event.stopPropagation(); addToCart({{ $product->id }})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-300 cursor-pointer" style="font-family: 'Playfair Display', serif;">
-                                        Add to Cart
+                                    <button onclick="event.stopPropagation(); this.classList.add('button-clicked'); addToCart({{ $product->id }}); setTimeout(() => this.classList.remove('button-clicked'), 200);" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 cursor-pointer add-to-cart-btn" style="font-family: 'Playfair Display', serif;">
+                                        <span class="button-text">Add to Cart</span>
+                                        <span class="button-loading hidden">Adding...</span>
                                     </button>
                                 @else
                                     <button class="flex-1 bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg cursor-not-allowed" style="font-family: 'Playfair Display', serif;" disabled>
@@ -664,7 +714,7 @@
                             </div>
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-900" style="font-family: 'Playfair Display', serif;">Free Shipping</h4>
-                                <p class="text-gray-600 text-sm">On all orders over 500 DH</p>
+                                <p class="text-gray-600 text-sm">On all orders</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-200">
@@ -720,7 +770,7 @@
                                          alt="{{ $firstProduct->name }}" 
                                          class="w-full h-full object-cover">
                                 @else
-                                    <img src="{{ $firstProduct && $firstProduct->image ? Storage::url($firstProduct->image) : 'https://via.placeholder.com/400x400?text=No+Image' }}" 
+                                    <img src="{{ $firstProduct && $firstProduct->image ? Storage::url($firstProduct->image) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K' }}" 
                                          alt="{{ $firstProduct ? $firstProduct->name : 'Special Offer' }}" 
                                          class="w-full h-full object-cover">
                                 @endif
@@ -1000,7 +1050,17 @@
         function addToCart(productId, quantity = 1) {
             console.log('addToCart called with productId:', productId, 'quantity:', quantity);
             
-            // First, make server request for tracking and cart management
+            // Find the button that was clicked for visual feedback
+            const button = event?.target?.closest('.add-to-cart-btn');
+            if (button) {
+                button.classList.add('success');
+                setTimeout(() => button.classList.remove('success'), 600);
+            }
+            
+            // Immediate UI feedback - update localStorage first for smooth experience
+            const wasAdded = updateLocalStorageCart(productId, quantity);
+            
+            // Background server request for tracking (non-blocking)
             fetch('/cart/add', {
                 method: 'POST',
                 headers: {
@@ -1013,36 +1073,30 @@
                 })
             })
             .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                console.log('Background server response status:', response.status);
                 return response.json();
             })
             .then(data => {
-                console.log('Server response:', data);
                 if (data.success) {
-                    console.log('Server cart tracking successful:', data.message);
-                    showNotification(data.message, 'success');
-                    
-                    // Update localStorage only after successful server request
-                    updateLocalStorageCart(productId, quantity);
+                    console.log('Server cart tracking successful');
                 } else {
                     console.error('Server cart error:', data.message);
-                    showNotification(data.message, 'error');
+                    // Only show error if it's a critical issue (like stock shortage)
+                    if (data.message.includes('stock') || data.message.includes('limit')) {
+                        showNotification(data.message, 'error');
+                        // Revert localStorage change if there's a stock issue
+                        revertLocalStorageCart(productId, quantity);
+                    }
                 }
             })
             .catch(error => {
-                console.error('Server cart request error:', error);
-                showNotification('Error connecting to server. Item added to local cart only.', 'warning');
-                
-                // Fallback: update localStorage even if server request failed
-                updateLocalStorageCart(productId, quantity);
+                console.error('Background server request failed:', error);
+                // Silent background failure - user already got positive feedback
             });
         }
 
         function updateLocalStorageCart(productId, quantity) {
-            // Handle localStorage for frontend functionality
+            // Handle localStorage for immediate frontend feedback
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             
             // Check if product already in cart
@@ -1050,7 +1104,7 @@
             if (existingItem) {
                 existingItem.quantity += quantity;
                 console.log('Updating cart quantity');
-                showNotification('Quantité mise à jour dans le panier!', 'success');
+                showNotification('Quantité mise à jour dans le panier! ✨', 'success');
             } else {
                 cart.push({
                     id: productId,
@@ -1058,7 +1112,24 @@
                     added_at: new Date().toISOString()
                 });
                 console.log('Adding new product to cart');
-                showNotification('Produit ajouté au panier!', 'success');
+                showNotification('Produit ajouté au panier! 🛒', 'success');
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            return true;
+        }
+
+        function revertLocalStorageCart(productId, quantity) {
+            // Revert cart changes if server validation fails
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id == productId);
+            
+            if (existingItem) {
+                existingItem.quantity -= quantity;
+                if (existingItem.quantity <= 0) {
+                    cart = cart.filter(item => item.id != productId);
+                }
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));

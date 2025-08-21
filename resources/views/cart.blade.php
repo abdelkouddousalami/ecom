@@ -6,6 +6,11 @@
     <title>Mon Panier - l3ochaq Store</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    
     <!-- Load Tailwind CSS directly -->
     <script src="https://cdn.tailwindcss.com"></script>
     

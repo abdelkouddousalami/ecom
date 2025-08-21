@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $product->name }} - l3ochaq Store</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Google Fonts -->
@@ -316,11 +322,11 @@
                         </div>
                         
                         <div class="flex space-x-4">
-                            <button onclick="addToCart({{ $product->id }})" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair">
+                            <button onclick="buyNow({{ $product->id }})" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l1.68 3.36M7 13h10m-6 3a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <span>Add to Cart</span>
+                                <span>Buy Now</span>
                             </button>
                             
                             <button onclick="addToWishlist({{ $product->id }})" class="bg-white border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 font-bold py-4 px-6 rounded-xl transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
@@ -598,7 +604,21 @@
             const quantity = document.getElementById('quantity').value;
             console.log('addToCart called with productId:', productId, 'quantity:', quantity);
             
-            // First, make server request for tracking and cart management
+            // Find the button that was clicked for visual feedback
+            const button = event?.target?.closest('button');
+            if (button) {
+                button.classList.add('bg-green-600');
+                button.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-blue-700');
+                setTimeout(() => {
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-blue-700');
+                }, 800);
+            }
+            
+            // Immediate UI feedback - update localStorage first for smooth experience
+            const wasAdded = updateLocalStorageCart(productId, parseInt(quantity));
+            
+            // Background server request for tracking (non-blocking)
             fetch('/cart/add', {
                 method: 'POST',
                 headers: {
@@ -611,36 +631,45 @@
                 })
             })
             .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                console.log('Background server response status:', response.status);
                 return response.json();
             })
             .then(data => {
-                console.log('Server response:', data);
                 if (data.success) {
-                    console.log('Server cart tracking successful:', data.message);
-                    showNotification(data.message, 'success');
-                    
-                    // Update localStorage only after successful server request
-                    updateLocalStorageCart(productId, parseInt(quantity));
+                    console.log('Server cart tracking successful');
                 } else {
                     console.error('Server cart error:', data.message);
-                    showNotification(data.message, 'error');
+                    // Only show error if it's a critical issue (like stock shortage)
+                    if (data.message.includes('stock') || data.message.includes('limit')) {
+                        showNotification(data.message, 'error');
+                        // Revert localStorage change if there's a stock issue
+                        revertLocalStorageCart(productId, parseInt(quantity));
+                    }
                 }
             })
             .catch(error => {
-                console.error('Server cart request error:', error);
-                showNotification('Error connecting to server. Item added to local cart only.', 'warning');
-                
-                // Fallback: update localStorage even if server request failed
-                updateLocalStorageCart(productId, parseInt(quantity));
+                console.error('Background server request failed:', error);
+                // Silent background failure - user already got positive feedback
             });
         }
 
+        function buyNow(productId) {
+            try {
+                const quantity = document.getElementById('quantity').value;
+                console.log('buyNow function called with ID:', productId, 'quantity:', quantity);
+                
+                // Redirect directly to checkout
+                const url = `/checkout/buy-now/${productId}?quantity=${quantity}`;
+                console.log('Redirecting to URL:', url);
+                window.location.href = url;
+            } catch (error) {
+                console.error('Error in buyNow function:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
         function updateLocalStorageCart(productId, quantity) {
-            // Handle localStorage for frontend functionality
+            // Handle localStorage for immediate frontend feedback
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             
             // Check if product already in cart
@@ -648,7 +677,7 @@
             if (existingItem) {
                 existingItem.quantity += quantity;
                 console.log('Updating cart quantity to:', existingItem.quantity);
-                showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier!`, 'success');
+                showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier! ✨`, 'success');
             } else {
                 cart.push({
                     id: productId,
@@ -656,7 +685,24 @@
                     added_at: new Date().toISOString()
                 });
                 console.log('Adding new product to cart with quantity:', quantity);
-                showNotification(`${quantity} produit(s) ajouté(s) au panier!`, 'success');
+                showNotification(`${quantity} produit(s) ajouté(s) au panier! 🛒`, 'success');
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            return true;
+        }
+
+        function revertLocalStorageCart(productId, quantity) {
+            // Revert cart changes if server validation fails
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id == productId);
+            
+            if (existingItem) {
+                existingItem.quantity -= quantity;
+                if (existingItem.quantity <= 0) {
+                    cart = cart.filter(item => item.id != productId);
+                }
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -814,7 +860,7 @@
                                             <img src="/${product.image}" 
                                                  alt="${product.name}" 
                                                  class="w-full h-full object-cover"
-                                                 onerror="this.src='https://via.placeholder.com/64x64/f3f4f6/9ca3af?text=No+Image'">
+                                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YzZjRmNiIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD4KICA8L3N2Zz4K'">
                                         </div>
                                         <div class="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
                                             ${item.quantity}

@@ -115,13 +115,17 @@
                         <p class="text-gray-900">{{ $order->first_name }} {{ $order->last_name }}</p>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-gray-700">Email</label>
-                        <p class="text-gray-900">{{ $order->email }}</p>
-                    </div>
-                    <div>
                         <label class="text-sm font-medium text-gray-700">Phone</label>
                         <p class="text-gray-900">{{ $order->phone }}</p>
                     </div>
+                    @if($order->notes)
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Notes</label>
+                        <div class="mt-1 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-gray-900 text-sm">{{ $order->notes }}</p>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -132,7 +136,7 @@
                 </div>
                 <div class="px-6 py-4">
                     <p class="text-gray-900">{{ $order->address }}</p>
-                    <p class="text-gray-900">{{ $order->city }}, {{ $order->postal_code }}</p>
+                    <p class="text-gray-900">{{ $order->city }}</p>
                 </div>
             </div>
 

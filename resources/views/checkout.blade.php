@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - l3ochaq Store</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Google Fonts -->
@@ -79,7 +85,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             <!-- Checkout Form -->
-            <div class="lg:col-span-2 space-y-6 lg:space-y-8 order-2 lg:order-1">
+            <div class="lg:col-span-2 space-y-6 lg:space-y-8 order-1 lg:order-1">
                 
                 <!-- Billing Information -->
                 <div class="checkout-section bg-white rounded-xl shadow-lg p-4 lg:p-6 border border-gray-200">
@@ -104,12 +110,6 @@
                         </div>
                         
                         <div>
-                            <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                            <input type="email" id="email" name="email" required 
-                                   class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
-                        </div>
-                        
-                        <div>
                             <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Téléphone *</label>
                             <input type="tel" id="phone" name="phone" required 
                                    class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
@@ -121,24 +121,24 @@
                                    class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="city" class="block text-sm font-semibold text-gray-700 mb-2">Ville *</label>
-                                <input type="text" id="city" name="city" required 
-                                       class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
-                            </div>
-                            <div>
-                                <label for="postal_code" class="block text-sm font-semibold text-gray-700 mb-2">Code postal *</label>
-                                <input type="text" id="postal_code" name="postal_code" required 
-                                       class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
-                            </div>
+                        <div>
+                            <label for="city" class="block text-sm font-semibold text-gray-700 mb-2">Ville *</label>
+                            <input type="text" id="city" name="city" required 
+                                   class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base">
+                        </div>
+                        
+                        <div>
+                            <label for="notes" class="block text-sm font-semibold text-gray-700 mb-2">Notes (optionnel)</label>
+                            <textarea id="notes" name="notes" rows="3" 
+                                      placeholder="Ajoutez des instructions spéciales pour votre commande..."
+                                      class="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 text-sm lg:text-base resize-none"></textarea>
                         </div>
                     </form>
                 </div>
             </div>
 
             <!-- Order Summary -->
-            <div class="lg:col-span-1 order-1 lg:order-2">
+            <div class="lg:col-span-1 order-2 lg:order-2">
                 <div class="checkout-section bg-white rounded-xl shadow-lg p-4 lg:p-6 border border-gray-200 lg:sticky lg:top-24">
                     <h3 class="text-lg lg:text-xl font-bold text-gray-900 mb-4 lg:mb-6 flex items-center">
                         <svg class="w-5 h-5 lg:w-6 lg:h-6 mr-2 lg:mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,6 +186,7 @@
 
     <script>
         let products = @json($products ?? []); // Pass products data from controller
+        let directItem = @json($directItem ?? null); // Direct buy now item if available
 
         // Stylish notification function
         function showNotification(message, type = 'success') {
@@ -267,44 +268,70 @@
         }
 
         function loadCheckoutItems() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const checkoutItems = document.getElementById('checkout-items');
-
-            if (cart.length === 0) {
-                // Redirect to cart if empty
-                window.location.href = '/cart';
-                return;
-            }
-
             let totalPrice = 0;
             checkoutItems.innerHTML = '';
 
-            cart.forEach(item => {
-                const product = products.find(p => p.id == item.id);
-                if (product) {
-                    const itemTotal = product.price * item.quantity;
-                    totalPrice += itemTotal;
-
-                    const itemHTML = `
-                        <div class="flex items-center space-x-2 lg:space-x-3 p-2 lg:p-3 bg-gray-50 rounded-lg">
-                            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg overflow-hidden bg-white border border-gray-200 flex-shrink-0">
-                                <img src="/${product.image}" 
-                                     alt="${product.name}" 
-                                     class="w-full h-full object-cover"
-                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNiAyMEwyNCAxMkwzMiAyMFYzMkgxNlYyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <h4 class="font-semibold text-gray-900 text-xs lg:text-sm truncate">${product.name}</h4>
-                                <p class="text-xs text-gray-600">${product.price} DH × ${item.quantity}</p>
-                            </div>
-                            <div class="text-right flex-shrink-0">
-                                <span class="font-bold text-blue-600 text-xs lg:text-sm">${itemTotal} DH</span>
-                            </div>
+            // Check if we have a direct item (Buy Now)
+            if (directItem) {
+                // Load single direct item
+                const itemHTML = `
+                    <div class="flex items-center space-x-2 lg:space-x-3 p-2 lg:p-3 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg overflow-hidden bg-white border border-gray-200 flex-shrink-0">
+                            <img src="/${directItem.image}" 
+                                 alt="${directItem.name}" 
+                                 class="w-full h-full object-cover"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNiAyMEwyNCAxMkwzMiAyMFYzMkgxNlYyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
                         </div>
-                    `;
-                    checkoutItems.innerHTML += itemHTML;
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-semibold text-gray-900 text-xs lg:text-sm truncate">${directItem.name}</h4>
+                            <p class="text-xs text-gray-600">${directItem.price} DH × ${directItem.quantity}</p>
+                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Achat direct</span>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <span class="font-bold text-blue-600 text-xs lg:text-sm">${directItem.total} DH</span>
+                        </div>
+                    </div>
+                `;
+                checkoutItems.innerHTML = itemHTML;
+                totalPrice = directItem.total;
+            } else {
+                // Load from localStorage cart (regular checkout)
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                
+                if (cart.length === 0) {
+                    // Redirect to cart if empty
+                    window.location.href = '/cart';
+                    return;
                 }
-            });
+
+                cart.forEach(item => {
+                    const product = products.find(p => p.id == item.id);
+                    if (product) {
+                        const itemTotal = product.price * item.quantity;
+                        totalPrice += itemTotal;
+
+                        const itemHTML = `
+                            <div class="flex items-center space-x-2 lg:space-x-3 p-2 lg:p-3 bg-gray-50 rounded-lg">
+                                <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg overflow-hidden bg-white border border-gray-200 flex-shrink-0">
+                                    <img src="/${product.image}" 
+                                         alt="${product.name}" 
+                                         class="w-full h-full object-cover"
+                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNiAyMEwyNCAxMkwzMiAyMFYzMkgxNlYyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iMiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-semibold text-gray-900 text-xs lg:text-sm truncate">${product.name}</h4>
+                                    <p class="text-xs text-gray-600">${product.price} DH × ${item.quantity}</p>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <span class="font-bold text-blue-600 text-xs lg:text-sm">${itemTotal} DH</span>
+                                </div>
+                            </div>
+                        `;
+                        checkoutItems.innerHTML += itemHTML;
+                    }
+                });
+            }
 
             document.getElementById('checkout-subtotal').textContent = totalPrice + ' DH';
             document.getElementById('checkout-total').textContent = totalPrice + ' DH';
@@ -320,12 +347,6 @@
                     showNotification(`Veuillez remplir le champ: ${input.previousElementSibling.textContent}`, 'error');
                     return false;
                 }
-                
-                if (input.type === 'email' && !input.value.includes('@')) {
-                    input.focus();
-                    showNotification('Veuillez entrer une adresse email valide', 'error');
-                    return false;
-                }
             }
             return true;
         }
@@ -335,10 +356,21 @@
                 return;
             }
 
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            if (cart.length === 0) {
-                showNotification('Votre panier est vide!', 'error');
-                return;
+            let cartItems = [];
+            
+            // Check if we have a direct item (Buy Now) or regular cart
+            if (directItem) {
+                cartItems = [{
+                    id: directItem.id,
+                    quantity: directItem.quantity
+                }];
+            } else {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (cart.length === 0) {
+                    showNotification('Votre panier est vide!', 'error');
+                    return;
+                }
+                cartItems = cart;
             }
 
             // Collect form data
@@ -346,13 +378,12 @@
             const orderData = {
                 first_name: formData.get('first_name'),
                 last_name: formData.get('last_name'),
-                email: formData.get('email'),
                 phone: formData.get('phone'),
                 address: formData.get('address'),
                 city: formData.get('city'),
-                postal_code: formData.get('postal_code'),
+                notes: formData.get('notes') || '', // Optional notes field
                 payment_method: 'cod', // Default payment method
-                cart_items: cart
+                cart_items: cartItems
             };
 
             // Show loading state
@@ -373,8 +404,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Clear cart
-                    localStorage.removeItem('cart');
+                    // Clear cart only if it was a regular cart checkout
+                    if (!directItem) {
+                        localStorage.removeItem('cart');
+                    }
                     
                     // Show success message
                     showNotification('Commande confirmée avec succès!', 'success');

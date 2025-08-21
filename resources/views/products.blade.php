@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Products - l3ochaq Store</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Google Fonts -->
@@ -68,6 +74,34 @@
             }
         }
         
+        /* Smooth button click animations */
+        .add-to-cart-btn {
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(0);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .add-to-cart-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .add-to-cart-btn.button-clicked {
+            transform: scale(0.95);
+            background-color: #1d4ed8 !important;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .add-to-cart-btn.success {
+            animation: successPulse 0.3s ease-out;
+            background-color: #10b981 !important;
+        }
+        
         /* Filter section custom transitions */
         #filters-section {
             transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -100,7 +134,37 @@
             transform: translateY(0);
             box-shadow: 0 5px 15px rgba(220, 38, 38, 0.2);
         }
-    </style>
+        
+        /* Smooth button click animations */
+        .add-to-cart-btn {
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(0);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .add-to-cart-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .add-to-cart-btn.button-clicked {
+            transform: scale(0.95);
+            background-color: #1d4ed8 !important;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .add-to-cart-btn.success {
+            animation: successPulse 0.3s ease-out;
+            background-color: #10b981 !important;
+        }
+         #heroo {
+                    margin-top: -50px !important;
+                }
     </style>
 </head>
 <body class="bg-gray-50 h-full m-0 p-0" style="font-family: 'Playfair Display', serif;">
@@ -114,7 +178,7 @@
         <div class="absolute inset-0 bg-black/60"></div>
         
         <!-- Background Pattern -->
-        <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 opacity-10" >
             <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><circle cx="30" cy="30" r="2" style="background-size: 60px 60px;"></div>
         </div>
         
@@ -123,33 +187,10 @@
         <div class="absolute top-20 right-20 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-float-delayed"></div>
         <div class="absolute bottom-10 left-1/4 w-12 h-12 bg-white bg-opacity-10 rounded-full animate-float"></div>
         
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center h-full flex flex-col justify-center items-center pt-12 lg:pt-20" style="margin-top:-30px;">
-            <!-- Breadcrumb -->
-            <div class="mb-4 lg:mb-6 animate-fade-in-up-delay-1" style="margin-top: -30px !important;">
-                <nav class="flex justify-center" aria-label="Breadcrumb">
-                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                        <li class="inline-flex items-center">
-                            <a href="{{ url('/') }}" class="inline-flex items-center text-gray-200 hover:text-white transition-colors duration-300 text-sm lg:text-base">
-                                <svg class="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                                </svg>
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <div class="flex items-center">
-                                <svg class="w-4 h-4 lg:w-6 lg:h-6 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="ml-1 text-white font-medium text-sm lg:text-base">Products</span>
-                            </div>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center h-full flex flex-col justify-center items-center pt-12 lg:pt-20" id="heroo">
+           
             <!-- Main Title -->
-            <div class="animate-fade-in-up-delay-2">
+            <div class="animate-fade-in-up-delay-2" style="margin-top: -20px;">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 lg:mb-6 leading-tight font-playfair">
                     <span class="block text-white">Discover Our</span>
                     <span class="block text-gray-200 italic">Premium Collection</span>
@@ -202,8 +243,10 @@
 
         <!-- Scroll Down Indicator -->
         <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 animate-bounce z-20" style="left: 50%; bottom: 16px; transform: translateX(-50%);">
-            <button onclick="scrollToProducts()" class="px-4 py-2 text-white border border-white rounded-md hover:bg-white hover:text-blue-600 transition-colors duration-300">
-                Voir Produits
+            <button onclick="scrollToProducts()" class="w-12 h-12 flex items-center justify-center text-white border-2 border-white rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110" title="Scroll to products">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
             </button>
         </div>
     </section>
@@ -268,6 +311,7 @@
                             <option value="price-high">Price: High to Low</option>
                             <option value="rating">Highest Rated</option>
                             <option value="popular">Most Popular</option>
+                            <option value="name">Name: A-Z</option>
                         </select>
                     </div>
 
@@ -299,18 +343,33 @@
                     <div class="space-y-2">
                         <label class="text-sm font-semibold text-gray-700">Search Products</label>
                         <div class="relative">
-                            <input type="text" id="search-filter" placeholder="Search by name..." class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 text-gray-700">
+                            <input type="text" id="search-filter" placeholder="Search by name, description..." class="w-full px-3 py-2 pl-10 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 text-gray-700">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-gray-300">
-                    <button onclick="applyFilters()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300">
-                        Apply Filters
+                    <button onclick="applyFilters()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        <span class="flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
+                            </svg>
+                            Apply Filters
+                        </span>
                     </button>
-                    <button onclick="clearAllFilters()" class="sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 font-semibold py-2 px-6 rounded-lg transition-all duration-300 border border-gray-300">
-                        Reset All
+                    <button onclick="clearAllFilters()" class="sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 font-semibold py-2 px-6 rounded-lg transition-all duration-300 border border-gray-300 transform hover:scale-105 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        <span class="flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Reset All
+                        </span>
                     </button>
                 </div>
 
@@ -373,7 +432,7 @@
                         @else
                             <!-- Fallback for products without images -->
                             <div class="w-full h-full">
-                                <img src="{{ $product->image ? Storage::url($product->image) : 'https://via.placeholder.com/400x400?text=No+Image' }}" 
+                                <img src="{{ $product->image ? Storage::url($product->image) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K' }}" 
                                      alt="{{$product->name}}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTc1SDE1MEMxNDQuNDc3IDE3NSAxNDAgMTcwLjUyMyAxNDAgMTY1VjE0MEMxNDAgMTM0LjQ3NyAxNDQuNDc3IDEzMCAxNTAgMTMwSDE3NUMxODAuNTIzIDEzMCAxODUgMTM0LjQ3NyAxODUgMTQwVjE2NUMxODUgMTcwLjUyMyAxODAuNTIzIDE3NSAxNzUgMTc1WiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMjUwIDI3MEgyMDBDMTg0LjUzNiAyNzAgMTcyIDI1Ny40NjQgMTcyIDI0MlYxOTJDMTcyIDE3Ni41MzYgMTg0LjUzNiAxNjQgMjAwIDE2NEgyNTBDMjY1LjQ2NCAxNjQgMjc4IDE3Ni41MzYgMjc4IDE5MlYyNDJDMjc4IDI1Ny40NjQgMjY1LjQ2NCAyNzAgMjUwIDI7MFoiIGZpbGw9IiNEMUQ1REIiLz4KPHRleHQgeD0iMjAwIiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZCNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">
@@ -473,8 +532,8 @@
                         <div class="space-y-2 lg:space-y-3">
                             <div class="flex gap-2 lg:gap-3">
                                 @if($product->stock > 0)
-                                    <button onclick="event.stopPropagation(); addToCart({{ $product->id }})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 lg:py-3 px-3 lg:px-4 rounded-lg transition-colors duration-300 cursor-pointer text-xs sm:text-sm lg:text-base" style="font-family: 'Playfair Display', serif;">
-                                        Add to Cart
+                                    <button onclick="event.stopPropagation(); this.classList.add('button-clicked'); addToCart({{ $product->id }}); setTimeout(() => this.classList.remove('button-clicked'), 200);" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 lg:py-3 px-3 lg:px-4 rounded-lg transition-all duration-200 cursor-pointer add-to-cart-btn text-xs sm:text-sm lg:text-base" style="font-family: 'Playfair Display', serif;">
+                                        <span class="button-text">Add to Cart</span>
                                     </button>
                                 @else
                                     <button class="flex-1 bg-gray-400 text-white font-semibold py-2 lg:py-3 px-3 lg:px-4 rounded-lg cursor-not-allowed text-xs sm:text-sm lg:text-base" style="font-family: 'Playfair Display', serif;" disabled>
@@ -761,6 +820,74 @@
             opacity: 0;
         }
         
+        /* Filter Enhancement Styles */
+        .filter-animate-in {
+            animation: filterSlideIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes filterSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Active filter tag animations */
+        .filter-tag-enter {
+            animation: tagSlideIn 0.4s ease-out forwards;
+        }
+        
+        @keyframes tagSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        
+        /* Enhanced Search Input */
+        #search-filter:focus + div svg {
+            color: #dc2626 !important;
+        }
+        
+        /* Category button hover effects */
+        .category-filter-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .category-filter-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Filter dropdown custom styling */
+        select option {
+            padding: 8px 12px;
+        }
+        
+        select:focus option:checked {
+            background: #dc2626;
+            color: white;
+        }
+        
         /* Responsive Improvements */
         @media (max-width: 768px) {
             .animate-fade-in-up-delay-1,
@@ -769,6 +896,10 @@
             .animate-fade-in-up-delay-4,
             .animate-fade-in-up-delay-5 {
                 animation-delay: 0.1s;
+            }
+            
+            .filter-tag-enter {
+                animation-duration: 0.2s;
             }
         }
     </style>
@@ -994,7 +1125,17 @@
         function addToCart(productId, quantity = 1) {
             console.log('addToCart called with productId:', productId, 'quantity:', quantity);
             
-            // First, make server request for tracking and cart management
+            // Find the button that was clicked for visual feedback
+            const button = event?.target?.closest('.add-to-cart-btn');
+            if (button) {
+                button.classList.add('success');
+                setTimeout(() => button.classList.remove('success'), 600);
+            }
+            
+            // Immediate UI feedback - update localStorage first for smooth experience
+            const wasAdded = updateLocalStorageCart(productId, quantity);
+            
+            // Background server request for tracking (non-blocking)
             fetch('/cart/add', {
                 method: 'POST',
                 headers: {
@@ -1007,36 +1148,30 @@
                 })
             })
             .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                console.log('Background server response status:', response.status);
                 return response.json();
             })
             .then(data => {
-                console.log('Server response:', data);
                 if (data.success) {
-                    console.log('Server cart tracking successful:', data.message);
-                    showNotification(data.message, 'success');
-                    
-                    // Update localStorage only after successful server request
-                    updateLocalStorageCart(productId, quantity);
+                    console.log('Server cart tracking successful');
                 } else {
                     console.error('Server cart error:', data.message);
-                    showNotification(data.message, 'error');
+                    // Only show error if it's a critical issue (like stock shortage)
+                    if (data.message.includes('stock') || data.message.includes('limit')) {
+                        showNotification(data.message, 'error');
+                        // Revert localStorage change if there's a stock issue
+                        revertLocalStorageCart(productId, quantity);
+                    }
                 }
             })
             .catch(error => {
-                console.error('Server cart request error:', error);
-                showNotification('Error connecting to server. Item added to local cart only.', 'warning');
-                
-                // Fallback: update localStorage even if server request failed
-                updateLocalStorageCart(productId, quantity);
+                console.error('Background server request failed:', error);
+                // Silent background failure - user already got positive feedback
             });
         }
 
         function updateLocalStorageCart(productId, quantity) {
-            // Handle localStorage for frontend functionality
+            // Handle localStorage for immediate frontend feedback
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             
             // Check if product already in cart
@@ -1044,7 +1179,7 @@
             if (existingItem) {
                 existingItem.quantity += quantity;
                 console.log('Updating cart quantity');
-                showNotification('Quantité mise à jour dans le panier!', 'success');
+                showNotification('Quantité mise à jour dans le panier! ✨', 'success');
             } else {
                 cart.push({
                     id: productId,
@@ -1052,7 +1187,24 @@
                     added_at: new Date().toISOString()
                 });
                 console.log('Adding new product to cart');
-                showNotification('Produit ajouté au panier!', 'success');
+                showNotification('Produit ajouté au panier! 🛒', 'success');
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            return true;
+        }
+
+        function revertLocalStorageCart(productId, quantity) {
+            // Revert cart changes if server validation fails
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id == productId);
+            
+            if (existingItem) {
+                existingItem.quantity -= quantity;
+                if (existingItem.quantity <= 0) {
+                    cart = cart.filter(item => item.id != productId);
+                }
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -1401,6 +1553,19 @@
             search: ''
         };
 
+        let allProducts = []; // Store all products for filtering
+        let originalProductsOrder = []; // Store original order
+
+        function initializeFilters() {
+            // Store all products in their original order
+            const productCards = document.querySelectorAll('.product-card');
+            allProducts = Array.from(productCards);
+            originalProductsOrder = Array.from(productCards);
+            
+            // Update initial counts
+            updateActiveFiltersDisplay(allProducts.length);
+        }
+
         function filterByCategory(categorySlug) {
             currentFilters.category = categorySlug;
             updateCategoryButtons(categorySlug);
@@ -1422,21 +1587,18 @@
 
         function applyFilters() {
             // Get current filter values
-            currentFilters.sort = document.getElementById('sort-filter').value;
-            currentFilters.price = document.getElementById('price-filter').value;
-            currentFilters.stock = document.getElementById('stock-filter').value;
-            currentFilters.search = document.getElementById('search-filter').value.toLowerCase();
+            currentFilters.sort = document.getElementById('sort-filter')?.value || 'newest';
+            currentFilters.price = document.getElementById('price-filter')?.value || '';
+            currentFilters.stock = document.getElementById('stock-filter')?.value || '';
+            currentFilters.search = document.getElementById('search-filter')?.value.toLowerCase() || '';
 
-            // Get all product cards
-            const productCards = document.querySelectorAll('.product-card');
-            let visibleCount = 0;
-
-            productCards.forEach(card => {
+            // Filter products
+            let filteredProducts = allProducts.filter(card => {
                 let show = true;
 
                 // Category filter
                 if (currentFilters.category) {
-                    const productCategory = card.getAttribute('data-category');
+                    const productCategory = card.getAttribute('data-category') || '';
                     if (productCategory !== currentFilters.category) {
                         show = false;
                     }
@@ -1444,9 +1606,18 @@
 
                 // Search filter
                 if (currentFilters.search) {
-                    const productName = card.getAttribute('data-name') || '';
-                    const productDesc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
-                    if (!productName.includes(currentFilters.search) && !productDesc.includes(currentFilters.search)) {
+                    const productName = (card.getAttribute('data-name') || '').toLowerCase();
+                    const productDesc = card.querySelector('p')?.textContent.toLowerCase() || '';
+                    const productPrice = card.getAttribute('data-price') || '';
+                    const searchTerms = currentFilters.search.split(' ').filter(term => term.length > 0);
+                    
+                    const hasSearchMatch = searchTerms.some(term => 
+                        productName.includes(term) || 
+                        productDesc.includes(term) || 
+                        productPrice.includes(term)
+                    );
+                    
+                    if (!hasSearchMatch) {
                         show = false;
                     }
                 }
@@ -1455,78 +1626,145 @@
                 if (currentFilters.price) {
                     const price = parseInt(card.getAttribute('data-price') || '0');
                     
-                    if (currentFilters.price === '0-100' && price > 100) show = false;
-                    if (currentFilters.price === '100-300' && (price < 100 || price > 300)) show = false;
-                    if (currentFilters.price === '300-500' && (price < 300 || price > 500)) show = false;
-                    if (currentFilters.price === '500-1000' && (price < 500 || price > 1000)) show = false;
-                    if (currentFilters.price === '1000+' && price < 1000) show = false;
+                    switch(currentFilters.price) {
+                        case '0-100':
+                            if (price > 100) show = false;
+                            break;
+                        case '100-300':
+                            if (price < 100 || price > 300) show = false;
+                            break;
+                        case '300-500':
+                            if (price < 300 || price > 500) show = false;
+                            break;
+                        case '500-1000':
+                            if (price < 500 || price > 1000) show = false;
+                            break;
+                        case '1000+':
+                            if (price < 1000) show = false;
+                            break;
+                    }
                 }
 
                 // Stock filter
                 if (currentFilters.stock) {
                     const stock = parseInt(card.getAttribute('data-stock') || '0');
                     
-                    if (currentFilters.stock === 'in-stock' && stock <= 0) show = false;
-                    if (currentFilters.stock === 'low-stock' && (stock <= 0 || stock > 5)) show = false;
-                    if (currentFilters.stock === 'out-of-stock' && stock > 0) show = false;
+                    switch(currentFilters.stock) {
+                        case 'in-stock':
+                            if (stock <= 0) show = false;
+                            break;
+                        case 'low-stock':
+                            if (stock <= 0 || stock > 5) show = false;
+                            break;
+                        case 'out-of-stock':
+                            if (stock > 0) show = false;
+                            break;
+                    }
                 }
 
-                // Show/hide card with animation
-                if (show) {
-                    card.style.display = 'block';
-                    card.style.animation = 'fadeInUp 0.5s ease-out forwards';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
+                return show;
             });
 
-            // Sort visible products
+            // Sort filtered products
             if (currentFilters.sort && currentFilters.sort !== 'newest') {
-                sortProducts(currentFilters.sort);
+                filteredProducts = sortProductsArray(filteredProducts, currentFilters.sort);
             }
 
-            // Update active filters display
-            updateActiveFiltersDisplay(visibleCount);
+            // Update display
+            updateProductsDisplay(filteredProducts);
+            updateActiveFiltersDisplay(filteredProducts.length);
             
             // Show notification
-            showNotification(`Found ${visibleCount} products matching your filters`, 'success');
+            showNotification(`Found ${filteredProducts.length} products matching your filters`, 'success');
         }
 
-        function sortProducts(sortType) {
-            const container = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3');
-            const products = Array.from(container.querySelectorAll('.product-card')).filter(card => card.style.display !== 'none');
-            
-            products.sort((a, b) => {
-                if (sortType === 'price-low' || sortType === 'price-high') {
-                    const priceA = parseInt(a.getAttribute('data-price') || '0');
-                    const priceB = parseInt(b.getAttribute('data-price') || '0');
-                    return sortType === 'price-low' ? priceA - priceB : priceB - priceA;
+        function sortProductsArray(products, sortType) {
+            return [...products].sort((a, b) => {
+                switch(sortType) {
+                    case 'price-low':
+                        return parseInt(a.getAttribute('data-price') || '0') - parseInt(b.getAttribute('data-price') || '0');
+                    case 'price-high':
+                        return parseInt(b.getAttribute('data-price') || '0') - parseInt(a.getAttribute('data-price') || '0');
+                    case 'rating':
+                        return parseFloat(b.getAttribute('data-rating') || '0') - parseFloat(a.getAttribute('data-rating') || '0');
+                    case 'popular':
+                        // Sort by rating + random factor for popularity simulation
+                        const ratingA = parseFloat(a.getAttribute('data-rating') || '0');
+                        const ratingB = parseFloat(b.getAttribute('data-rating') || '0');
+                        const popularityA = ratingA + (Math.random() * 0.5);
+                        const popularityB = ratingB + (Math.random() * 0.5);
+                        return popularityB - popularityA;
+                    case 'name':
+                        const nameA = (a.getAttribute('data-name') || '').toLowerCase();
+                        const nameB = (b.getAttribute('data-name') || '').toLowerCase();
+                        return nameA.localeCompare(nameB);
+                    default:
+                        return 0;
                 }
-                
-                if (sortType === 'rating') {
-                    const ratingA = parseFloat(a.getAttribute('data-rating') || '0');
-                    const ratingB = parseFloat(b.getAttribute('data-rating') || '0');
-                    return ratingB - ratingA;
-                }
-                
-                if (sortType === 'popular') {
-                    // Sort by rating for now, could be enhanced with actual popularity data
-                    const ratingA = parseFloat(a.getAttribute('data-rating') || '0');
-                    const ratingB = parseFloat(b.getAttribute('data-rating') || '0');
-                    return ratingB - ratingA;
-                }
-                
-                return 0;
             });
-            
-            // Re-append sorted products with animation
-            products.forEach((product, index) => {
+        }
+
+        function updateProductsDisplay(visibleProducts) {
+            const container = document.querySelector('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3');
+            if (!container) return;
+
+            // Hide all products first
+            allProducts.forEach(card => {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+            });
+
+            // Show and animate visible products
+            visibleProducts.forEach((card, index) => {
+                // Re-append to container to maintain order
+                container.appendChild(card);
+                
+                // Show with animation delay
                 setTimeout(() => {
-                    container.appendChild(product);
-                    product.style.animation = 'fadeInUp 0.4s ease-out forwards';
+                    card.style.display = 'block';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                    card.style.transition = 'all 0.4s ease-out';
                 }, index * 50);
             });
+
+            // Handle empty state
+            if (visibleProducts.length === 0) {
+                showEmptyState(container);
+            } else {
+                removeEmptyState();
+            }
+        }
+
+        function showEmptyState(container) {
+            removeEmptyState(); // Remove existing empty state first
+            
+            const emptyState = document.createElement('div');
+            emptyState.id = 'empty-state';
+            emptyState.className = 'col-span-full text-center py-16';
+            emptyState.innerHTML = `
+                <div class="max-w-md mx-auto">
+                    <div class="mb-6">
+                        <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0118 12c0-4.418-3.582-8-8-8s-8 3.582-8 8c0 1.042.199 2.04.559 2.958.184.467.283.98.283 1.518v.001c0 .317-.066.633-.195.928A1.5 1.5 0 004.5 18.75h15a1.5 1.5 0 00-1.353-2.273 2.983 2.983 0 01-.195-.928v-.001c0-.538.099-1.051.283-1.518z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2" style="font-family: 'Playfair Display', serif;">No products found</h3>
+                    <p class="text-gray-600 mb-6">Try adjusting your filters or search terms to find what you're looking for.</p>
+                    <button onclick="clearAllFilters()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300">
+                        Clear All Filters
+                    </button>
+                </div>
+            `;
+            container.appendChild(emptyState);
+        }
+
+        function removeEmptyState() {
+            const emptyState = document.getElementById('empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
         }
 
         function updateActiveFiltersDisplay(count) {
@@ -1534,26 +1772,43 @@
             const filterTagsDiv = document.getElementById('filter-tags');
             const resultsCount = document.getElementById('results-count');
             
-            resultsCount.textContent = `${count} products found`;
+            if (resultsCount) {
+                resultsCount.textContent = `${count} products found`;
+            }
+            
+            if (!filterTagsDiv) return;
             
             // Clear existing tags
             filterTagsDiv.innerHTML = '';
             
             let hasActiveFilters = false;
             
-            // Add filter tags
+            // Add filter tags with better labeling
             if (currentFilters.category) {
-                addFilterTag('Category', currentFilters.category, 'category');
+                const categoryName = currentFilters.category.charAt(0).toUpperCase() + currentFilters.category.slice(1);
+                addFilterTag('Category', categoryName, 'category');
                 hasActiveFilters = true;
             }
             
             if (currentFilters.price) {
-                addFilterTag('Price', currentFilters.price, 'price');
+                const priceLabels = {
+                    '0-100': 'Under 100 DH',
+                    '100-300': '100-300 DH',
+                    '300-500': '300-500 DH',
+                    '500-1000': '500-1000 DH',
+                    '1000+': 'Over 1000 DH'
+                };
+                addFilterTag('Price', priceLabels[currentFilters.price] || currentFilters.price, 'price');
                 hasActiveFilters = true;
             }
             
             if (currentFilters.stock) {
-                addFilterTag('Stock', currentFilters.stock, 'stock');
+                const stockLabels = {
+                    'in-stock': 'In Stock',
+                    'low-stock': 'Low Stock',
+                    'out-of-stock': 'Out of Stock'
+                };
+                addFilterTag('Stock', stockLabels[currentFilters.stock] || currentFilters.stock, 'stock');
                 hasActiveFilters = true;
             }
             
@@ -1563,26 +1818,38 @@
             }
             
             if (currentFilters.sort !== 'newest') {
-                addFilterTag('Sort', currentFilters.sort, 'sort');
+                const sortLabels = {
+                    'price-low': 'Price: Low to High',
+                    'price-high': 'Price: High to Low',
+                    'rating': 'Highest Rated',
+                    'popular': 'Most Popular',
+                    'name': 'Name A-Z'
+                };
+                addFilterTag('Sort', sortLabels[currentFilters.sort] || currentFilters.sort, 'sort');
                 hasActiveFilters = true;
             }
             
             // Show/hide active filters section
-            if (hasActiveFilters) {
-                activeFiltersDiv.classList.remove('hidden');
-            } else {
-                activeFiltersDiv.classList.add('hidden');
+            if (activeFiltersDiv) {
+                if (hasActiveFilters) {
+                    activeFiltersDiv.classList.remove('hidden', 'translate-y-4', 'opacity-0');
+                    activeFiltersDiv.classList.add('translate-y-0', 'opacity-100');
+                } else {
+                    activeFiltersDiv.classList.add('hidden');
+                }
             }
         }
 
         function addFilterTag(label, value, type) {
             const filterTagsDiv = document.getElementById('filter-tags');
+            if (!filterTagsDiv) return;
+            
             const tag = document.createElement('span');
-            tag.className = 'inline-flex items-center bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium';
+            tag.className = 'inline-flex items-center bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-red-200 transition-colors duration-200';
             tag.innerHTML = `
-                ${label}: ${value}
-                <button onclick="removeFilter('${type}')" class="ml-2 text-red-500 hover:text-red-700">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span class="mr-2">${label}: ${value}</span>
+                <button onclick="removeFilter('${type}')" class="text-red-500 hover:text-red-700 transition-colors duration-200" title="Remove filter">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
@@ -1634,30 +1901,68 @@
             // Reset category buttons
             updateCategoryButtons('');
             
-            // Show all products
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.style.display = 'block';
-                card.style.animation = 'fadeInUp 0.5s ease-out forwards';
-            });
+            // Show all products in original order
+            updateProductsDisplay(originalProductsOrder);
             
             // Hide active filters
-            document.getElementById('active-filters').classList.add('hidden');
+            const activeFiltersDiv = document.getElementById('active-filters');
+            if (activeFiltersDiv) {
+                activeFiltersDiv.classList.add('hidden');
+            }
             
-            showNotification('All filters cleared!', 'success', '🔄');
+            showNotification('All filters cleared! Showing all products.', 'success');
         }
 
         // Add event listeners for filter inputs
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-apply filters when inputs change
-            document.getElementById('sort-filter').addEventListener('change', applyFilters);
-            document.getElementById('price-filter').addEventListener('change', applyFilters);
-            document.getElementById('stock-filter').addEventListener('change', applyFilters);
+            // Initialize filters
+            initializeFilters();
             
-            // Search filter with debounce
+            // Auto-apply filters when inputs change
+            const sortFilter = document.getElementById('sort-filter');
+            const priceFilter = document.getElementById('price-filter');
+            const stockFilter = document.getElementById('stock-filter');
+            const searchFilter = document.getElementById('search-filter');
+            
+            if (sortFilter) sortFilter.addEventListener('change', applyFilters);
+            if (priceFilter) priceFilter.addEventListener('change', applyFilters);
+            if (stockFilter) stockFilter.addEventListener('change', applyFilters);
+            
+            // Search filter with debounce for better performance
             let searchTimeout;
-            document.getElementById('search-filter').addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(applyFilters, 300);
+            if (searchFilter) {
+                searchFilter.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(applyFilters, 300); // Wait 300ms after user stops typing
+                });
+                
+                // Add search icon and clear button functionality
+                searchFilter.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        applyFilters();
+                    }
+                    if (e.key === 'Escape') {
+                        this.value = '';
+                        applyFilters();
+                    }
+                });
+            }
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + K to focus search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    if (searchFilter) {
+                        searchFilter.focus();
+                        searchFilter.select();
+                    }
+                }
+                
+                // Escape to clear all filters
+                if (e.key === 'Escape' && !e.target.matches('input, textarea, select')) {
+                    clearAllFilters();
+                }
             });
 
             // Animate counters after a delay
@@ -1668,8 +1973,37 @@
                 
                 if (totalProductsCounter) animateCounter(totalProductsCounter, 50);
                 if (categoriesCounter) animateCounter(categoriesCounter, 5);
-                if (dailyViewsCounter) animateCounter(dailyViewsCounter, 250);
+                if (dailyViewsCounter) animateCounter(dailyViewsCounter, 275);
             }, 1000);
+
+            // Initialize cart and wishlist functionality
+            updateCartCount();
+            updateWishlistCount();
+            updateWishlistButtons();
+            
+            // Add intersection observer for lazy loading animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '50px'
+            };
+            
+            const productObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        productObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all product cards for scroll animations
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                productObserver.observe(card);
+            });
         });
 
         // Scroll to products function

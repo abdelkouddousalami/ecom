@@ -118,6 +118,35 @@ class ProductController extends Controller
         return view('checkout', compact('products'));
     }
     
+    public function buyNowCheckout($id, Request $request)
+    {
+        // Find the product by ID
+        $product = Product::findOrFail($id);
+        
+        // Get the quantity from the request, default to 1
+        $quantity = $request->get('quantity', 1);
+        
+        // Ensure quantity is at least 1 and not more than available stock
+        $quantity = max(1, min($quantity, $product->stock));
+        
+        // Create a single item for direct checkout
+        $directItem = [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'image' => $product->image,
+            'quantity' => $quantity,
+            'total' => $product->price * $quantity
+        ];
+        
+        // Get all products for general functionality
+        $products = Product::select('id', 'name', 'price', 'image', 'slug')
+            ->where('is_active', true)
+            ->get();
+        
+        return view('checkout', compact('products', 'directItem'));
+    }
+    
     public function wishlist()
     {
         // Get all products for wishlist page (needed for localStorage functionality)

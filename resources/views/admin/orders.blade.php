@@ -47,8 +47,16 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="text-sm font-medium text-gray-900">{{ $order->first_name }} {{ $order->last_name }}</div>
-                            <div class="text-sm text-gray-500">{{ $order->email }}</div>
                             <div class="text-sm text-gray-500">{{ $order->phone }}</div>
+                            <div class="text-sm text-gray-500">{{ $order->city }}</div>
+                            @if($order->notes)
+                            <div class="text-sm text-blue-600 mt-1" title="{{ $order->notes }}">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Notes disponibles
+                            </div>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <div class="text-sm text-gray-900">{{ $order->items->sum('quantity') }} item(s)</div>
@@ -77,16 +85,12 @@
                             <select class="order-status-select text-xs font-semibold rounded-full px-2 py-1 border-0 focus:ring-2 focus:ring-blue-500
                                 @if($order->status === 'pending') bg-yellow-100 text-yellow-800
                                 @elseif($order->status === 'confirmed') bg-blue-100 text-blue-800
-                                @elseif($order->status === 'processing') bg-purple-100 text-purple-800
-                                @elseif($order->status === 'shipped') bg-indigo-100 text-indigo-800
                                 @elseif($order->status === 'delivered') bg-green-100 text-green-800
                                 @else bg-red-100 text-red-800 @endif"
                                 data-order-id="{{ $order->id }}"
                                 onchange="updateOrderStatus(this)">
                                 <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>En attente</option>
                                 <option value="confirmed" {{ $order->status === 'confirmed' ? 'selected' : '' }}>Confirmée</option>
-                                <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>En préparation</option>
-                                <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Expédiée</option>
                                 <option value="delivered" {{ $order->status === 'delivered' ? 'selected' : '' }}>Livrée</option>
                                 <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
                             </select>
@@ -135,127 +139,87 @@ function updateOrderStatus(selectElement) {
     const orderId = selectElement.dataset.orderId;
     const newStatus = selectElement.value;
     
-    console.log('=== DEBUGGING ORDER STATUS UPDATE ===');
-    console.log('Order ID:', orderId);
-    console.log('New Status:', newStatus);
+    if (!orderId || !newStatus) {
+        showNotification('Error: Missing order ID or status', 'error');
+        return;
+    }
+    
+    console.log('Updating order status:', orderId, 'to', newStatus);
     
     const csrfToken = document.querySelector('meta[name="csrf-token"]');
-    console.log('CSRF token element:', csrfToken);
-    console.log('CSRF token value:', csrfToken ? csrfToken.getAttribute('content') : 'NOT FOUND');
     
-    // First, let's test if our debug route works
-    console.log('Testing debug route first...');
-    fetch('/admin/debug-json', {
-        method: 'POST',
+    if (!csrfToken) {
+        showNotification('Error: CSRF token not found', 'error');
+        return;
+    }
+    
+    // Disable the select during update
+    selectElement.disabled = true;
+    
+    fetch(`/admin/orders/${orderId}/status`, {
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
-            'Accept': 'application/json'
+            'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({
-            test: 'debug test',
-            orderId: orderId,
-            newStatus: newStatus
+            status: newStatus
         })
     })
     .then(response => {
-        console.log('DEBUG ROUTE - Response status:', response.status);
-        console.log('DEBUG ROUTE - Content type:', response.headers.get('content-type'));
-        
         if (!response.ok) {
-            throw new Error(`Debug route failed: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
         return response.json();
     })
-    .then(debugData => {
-        console.log('DEBUG ROUTE - Success:', debugData);
-        console.log('Now testing the actual order update...');
-        
-        // Now test the actual order status update
-        return fetch(`/admin/orders/${orderId}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({
-                status: newStatus
-            })
-        });
-    })
-    .then(response => {
-        console.log('ORDER UPDATE - Response status:', response.status);
-        console.log('ORDER UPDATE - Response URL:', response.url);
-        console.log('ORDER UPDATE - Content type:', response.headers.get('content-type'));
-        
-        // Get the response text to see what we're actually receiving
-        return response.text().then(text => {
-            console.log('ORDER UPDATE - Raw response:', text.substring(0, 500));
-            
-            // Check if it's HTML or JSON
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                try {
-                    const jsonData = JSON.parse(text);
-                    return { isJson: true, data: jsonData, status: response.status };
-                } catch (e) {
-                    console.error('Failed to parse JSON:', e);
-                    return { isJson: false, text: text, status: response.status };
-                }
-            } else {
-                console.error('Response is not JSON, content-type:', contentType);
-                return { isJson: false, text: text, status: response.status };
-            }
-        });
-    })
-    .then(result => {
-        console.log('ORDER UPDATE - Final result:', result);
-        
-        if (result.isJson && result.data.success) {
-            console.log('Order updated successfully!');
-            
+    .then(data => {
+        if (data.success) {
             // Update select appearance based on new status
-            selectElement.className = selectElement.className.replace(
-                /bg-(yellow|blue|purple|indigo|green|red)-100 text-(yellow|blue|purple|indigo|green|red)-800/g, 
-                ''
-            );
-            
-            let statusClass = '';
-            switch(newStatus) {
-                case 'pending':
-                    statusClass = 'bg-yellow-100 text-yellow-800';
-                    break;
-                case 'confirmed':
-                    statusClass = 'bg-blue-100 text-blue-800';
-                    break;
-                case 'processing':
-                    statusClass = 'bg-purple-100 text-purple-800';
-                    break;
-                case 'shipped':
-                    statusClass = 'bg-indigo-100 text-indigo-800';
-                    break;
-                case 'delivered':
-                    statusClass = 'bg-green-100 text-green-800';
-                    break;
-                case 'cancelled':
-                    statusClass = 'bg-red-100 text-red-800';
-                    break;
-            }
-            
-            selectElement.className += ' ' + statusClass;
+            updateSelectStyling(selectElement, newStatus);
             showNotification('Order status updated successfully!', 'success');
         } else {
-            console.error('Order update failed:', result);
-            showNotification(result.data?.message || 'Unknown error occurred', 'error');
+            throw new Error(data.message || 'Update failed');
         }
     })
     .catch(error => {
-        console.error('Error during order status update:', error);
+        console.error('Error updating order status:', error);
         showNotification('Error updating order status: ' + error.message, 'error');
+        
+        // Reset the select to its previous value
+        selectElement.value = selectElement.defaultValue;
+    })
+    .finally(() => {
+        // Re-enable the select
+        selectElement.disabled = false;
     });
+}
+
+function updateSelectStyling(selectElement, status) {
+    // Remove existing status classes
+    selectElement.className = selectElement.className.replace(
+        /bg-(yellow|blue|green|red)-100 text-(yellow|blue|green|red)-800/g, 
+        ''
+    );
+    
+    let statusClass = '';
+    switch(status) {
+        case 'pending':
+            statusClass = 'bg-yellow-100 text-yellow-800';
+            break;
+        case 'confirmed':
+            statusClass = 'bg-blue-100 text-blue-800';
+            break;
+        case 'delivered':
+            statusClass = 'bg-green-100 text-green-800';
+            break;
+        case 'cancelled':
+            statusClass = 'bg-red-100 text-red-800';
+            break;
+    }
+    
+    selectElement.className = selectElement.className.trim() + ' ' + statusClass;
 }
 
 function showNotification(message, type) {

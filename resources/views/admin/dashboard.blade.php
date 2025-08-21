@@ -16,18 +16,61 @@
                     <p class="text-gray-600 text-lg">Here's what's happening with your store today.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
-                    <button class="btn-primary px-6 py-3 rounded-lg text-white font-medium transition-all duration-200 text-sm sm:text-base hover-lift">
+                    <a href="{{ route('admin.create-product') }}" class="btn-primary px-6 py-3 rounded-lg text-white font-medium transition-all duration-200 text-sm sm:text-base hover-lift text-center">
                         <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Add Product
-                    </button>
-                    <button class="px-6 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-700 font-medium hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 text-sm sm:text-base hover-lift">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        Export Data
-                    </button>
+                    </a>
+                    
+                    <!-- Export Dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleExportDropdown()" class="px-6 py-3 bg-white border-2 border-gray-300 rounded-lg text-gray-700 font-medium hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 text-sm sm:text-base hover-lift flex items-center">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Export Data
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div id="exportDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                            <div class="py-2">
+                                <a href="{{ route('admin.export.all-data') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    All Data Export
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="{{ route('admin.export.users') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                    </svg>
+                                    Users Export
+                                </a>
+                                <a href="{{ route('admin.export.products') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                    </svg>
+                                    Products Export
+                                </a>
+                                <a href="{{ route('admin.export.orders') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                    </svg>
+                                    Orders Export
+                                </a>
+                                <a href="{{ route('admin.export.phone-numbers') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                    </svg>
+                                    Phone Numbers Export
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,6 +191,31 @@
                         <div class="w-16 h-16 icon-bg-purple rounded-xl flex items-center justify-center">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phone Numbers Card -->
+            <div class="bg-white rounded-xl card-shadow p-6 border-modern stats-phone hover-lift">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-pink-500 rounded-full mr-2"></div>
+                            <p class="text-gray-500 text-sm font-medium">Phone Numbers</p>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900 font-playfair">{{ $stats['total_phone_numbers'] ?? 0 }}</p>
+                        <div class="flex items-center mt-3">
+                            <a href="{{ route('admin.phone-numbers') }}" class="text-pink-600 text-sm font-medium bg-pink-100 px-2 py-1 rounded-full hover:bg-pink-200 transition duration-200">
+                                Manage Contacts
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <div class="w-16 h-16 icon-bg-pink rounded-xl flex items-center justify-center">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                             </svg>
                         </div>
                     </div>
@@ -367,4 +435,32 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toggleExportDropdown() {
+        const dropdown = document.getElementById('exportDropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('exportDropdown');
+        const button = event.target.closest('button');
+        
+        if (!button || !button.onclick || button.onclick.toString().indexOf('toggleExportDropdown') === -1) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    // Animate stat cards on page load
+    window.addEventListener('load', function() {
+        const cards = document.querySelectorAll('.stats-revenue, .stats-orders, .stats-pending, .stats-users, .stats-phone');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.transform = 'translateY(0)';
+                card.style.opacity = '1';
+            }, index * 100);
+        });
+    });
+</script>
 @endsection

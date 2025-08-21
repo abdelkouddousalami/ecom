@@ -31,6 +31,10 @@
     @apply bg-red-100 text-red-600;
 }
 
+.icon-bg-pink {
+    @apply bg-pink-100 text-pink-600;
+}
+
 /* Additional dashboard styles */
 .card-shadow {
     @apply shadow-sm hover:shadow-md transition-shadow duration-200;
