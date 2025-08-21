@@ -31,6 +31,7 @@ class AdminController extends Controller
             'total_products' => Product::count(),
             'total_orders' => Order::count(),
             'total_categories' => Category::count(),
+            'total_phone_numbers' => PhoneNumber::count(), // Added phone numbers count
             'revenue' => $totalRevenue, // Changed from total_revenue to revenue
             'delivered_orders' => Order::where('status', 'delivered')->count(),
             'pending_orders' => Order::where('status', 'pending')->count(),
@@ -353,11 +354,25 @@ class AdminController extends Controller
     public function phoneNumbers()
     {
         $phoneNumbers = PhoneNumber::latest()->paginate(15);
+        
+        $totalNumbers = PhoneNumber::count();
+        $activeNumbers = PhoneNumber::where('is_active', true)->count();
+        $fromOrders = PhoneNumber::where('source', 'order')->count();
+        $manual = PhoneNumber::where('source', 'manual')->count();
+        $recentSubscriptions = PhoneNumber::where('created_at', '>=', Carbon::now()->subDays(7))->count();
+        
         $stats = [
-            'total_numbers' => PhoneNumber::count(),
-            'active_numbers' => PhoneNumber::where('is_active', true)->count(),
-            'recent_subscriptions' => PhoneNumber::where('created_at', '>=', Carbon::now()->subDays(7))->count(),
+            // New keys expected by the view
+            'total' => $totalNumbers,
+            'from_orders' => $fromOrders,
+            'manual' => $manual,
+            'active' => $activeNumbers,
+            // Keep existing keys for backward compatibility
+            'total_numbers' => $totalNumbers,
+            'active_numbers' => $activeNumbers,
+            'recent_subscriptions' => $recentSubscriptions,
         ];
+        
         return view('admin.phone-numbers', compact('phoneNumbers', 'stats'));
     }
 
