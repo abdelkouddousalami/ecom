@@ -447,64 +447,87 @@
             });
         }
 
-        // Load cart on page load with AGGRESSIVE event prevention
+        // Load cart on page load with controlled event prevention
         document.addEventListener('DOMContentLoaded', function() {
             loadCart();
             
-            // STOP ALL CLICKS and handle them manually
+            // Handle clicks only for cart-specific elements
             document.body.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                
-                console.log('Click intercepted:', e.target);
-                
-                // Decrease quantity button
-                if (e.target.closest('.decrease-btn')) {
-                    const btn = e.target.closest('.decrease-btn');
-                    const productId = parseInt(btn.dataset.id);
-                    const currentQuantity = parseInt(btn.dataset.quantity);
-                    updateQuantity(productId, currentQuantity - 1);
+                // Allow burger menu and navigation clicks to work normally
+                if (e.target.closest('#mobileMenuToggle') || 
+                    e.target.closest('#closeMobileMenu') || 
+                    e.target.closest('#mobileMenuOverlay') ||
+                    e.target.closest('.hamburger') ||
+                    e.target.closest('#mobileMenu') ||
+                    e.target.closest('nav')) {
+                    return; // Let these clicks work normally
                 }
                 
-                // Increase quantity button
-                else if (e.target.closest('.increase-btn')) {
-                    const btn = e.target.closest('.increase-btn');
-                    const productId = parseInt(btn.dataset.id);
-                    const currentQuantity = parseInt(btn.dataset.quantity);
-                    updateQuantity(productId, currentQuantity + 1);
+                // Only prevent default for cart-specific buttons
+                const isCartButton = e.target.closest('.decrease-btn') || 
+                                   e.target.closest('.increase-btn') || 
+                                   e.target.closest('.remove-btn') || 
+                                   e.target.closest('#checkout-btn') || 
+                                   e.target.closest('#clear-cart-btn');
+                
+                if (isCartButton) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    
+                    // Decrease quantity button
+                    if (e.target.closest('.decrease-btn')) {
+                        const btn = e.target.closest('.decrease-btn');
+                        const productId = parseInt(btn.dataset.id);
+                        const currentQuantity = parseInt(btn.dataset.quantity);
+                        updateQuantity(productId, currentQuantity - 1);
+                    }
+                    
+                    // Increase quantity button
+                    else if (e.target.closest('.increase-btn')) {
+                        const btn = e.target.closest('.increase-btn');
+                        const productId = parseInt(btn.dataset.id);
+                        const currentQuantity = parseInt(btn.dataset.quantity);
+                        updateQuantity(productId, currentQuantity + 1);
+                    }
+                    
+                    // Remove item button
+                    else if (e.target.closest('.remove-btn')) {
+                        const btn = e.target.closest('.remove-btn');
+                        const productId = parseInt(btn.dataset.id);
+                        removeFromCart(productId);
+                    }
+                    
+                    // Checkout button
+                    else if (e.target.closest('#checkout-btn')) {
+                        processCheckout();
+                    }
+                    
+                    // Clear cart button
+                    else if (e.target.closest('#clear-cart-btn')) {
+                        clearCart();
+                    }
+                    
+                    return false;
                 }
                 
-                // Remove item button
-                else if (e.target.closest('.remove-btn')) {
-                    const btn = e.target.closest('.remove-btn');
-                    const productId = parseInt(btn.dataset.id);
-                    removeFromCart(productId);
-                }
-                
-                // Checkout button
-                else if (e.target.closest('#checkout-btn')) {
-                    processCheckout();
-                }
-                
-                // Clear cart button
-                else if (e.target.closest('#clear-cart-btn')) {
-                    clearCart();
-                }
-                
-                // Allow navigation links
-                else if (e.target.closest('a')) {
+                // Allow other navigation links to work normally
+                if (e.target.closest('a')) {
                     const link = e.target.closest('a');
                     const href = link.getAttribute('href');
                     if (href && href !== '#') {
-                        window.location.href = href;
+                        // Let the browser handle navigation normally
+                        return;
                     }
                 }
-                
-                return false;
             }, true); // Capture phase
             
-            // Prevent ANY form submissions
+            // Prevent form submissions only for cart-related forms
             document.addEventListener('submit', function(e) {
+                // Allow logout and other navbar forms to work
+                if (e.target.closest('nav') || e.target.method === 'POST') {
+                    return; // Let these forms work normally
+                }
+                
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 return false;
