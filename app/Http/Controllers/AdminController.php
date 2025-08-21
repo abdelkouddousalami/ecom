@@ -13,6 +13,8 @@ use App\Models\User;
 use App\Models\Activity;
 use App\Models\ProductInteraction;
 use App\Models\PhoneNumber;
+use App\Http\Requests\StoreProductRequest;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -56,39 +58,20 @@ class AdminController extends Controller
         return view('admin.create-product', compact('categories'));
     }
 
-    public function storeProduct(Request $request)
+    public function storeProduct(StoreProductRequest $request, ImageUploadService $imageService)
     {
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'price' => 'required|numeric|min:0',
-                'original_price' => 'nullable|numeric|min:0',
-                'category_id' => 'required|exists:categories,id',
-                'images' => 'required|array|min:1|max:6',
-                'images.*' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max each
-                'stock' => 'required|integer|min:0',
-                'rating' => 'nullable|numeric|min:0|max:5',
-                'review_count' => 'nullable|integer|min:0',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $e->errors()
-                ], 422);
-            }
-            throw $e;
-        }
-
-        try {
-            // Handle multiple image uploads
+            // The request is already validated by StoreProductRequest
+            
+            // Handle multiple image uploads with the service
             $imagePaths = [];
             if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $imagePath = $image->store('products', 'public');
-                    $imagePaths[] = $imagePath;
+                $imagePaths = $imageService->storeProductImages($request->file('images'));
+                
+                if (empty($imagePaths)) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['images' => 'Failed to process any images. Please check your image files and try again.']);
                 }
             }
 
@@ -99,9 +82,9 @@ class AdminController extends Controller
                 'price' => $request->price,
                 'original_price' => $request->original_price,
                 'category_id' => $request->category_id,
-                'image' => $imagePaths[0] ?? null, // Keep the first image as main image for backward compatibility
+                'image' => !empty($imagePaths) ? $imagePaths[0] : null, // Keep the first image as main image for backward compatibility
                 'stock' => $request->stock,
-                'rating' => $request->rating,
+                'rating' => $request->rating ?? 0,
                 'review_count' => $request->review_count ?? 0,
                 'is_featured' => $request->has('featured'),
                 'tags' => $request->tags,
@@ -118,6 +101,11 @@ class AdminController extends Controller
                 ]);
             }
 
+            Log::info('Product created successfully', [
+                'product_id' => $product->id,
+                'images_count' => count($imagePaths)
+            ]);
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -129,7 +117,10 @@ class AdminController extends Controller
             return redirect()->route('admin.products')->with('success', 'Product created successfully!');
             
         } catch (\Exception $e) {
-            Log::error('Error creating product: ' . $e->getMessage());
+            Log::error('Error creating product: ' . $e->getMessage(), [
+                'request_data' => $request->except('images'),
+                'files_count' => $request->hasFile('images') ? count($request->file('images')) : 0
+            ]);
             
             if ($request->ajax()) {
                 return response()->json([
@@ -138,7 +129,9 @@ class AdminController extends Controller
                 ], 500);
             }
             
-            return redirect()->back()->withErrors(['error' => 'Error creating product: ' . $e->getMessage()]);
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Error creating product: ' . $e->getMessage()]);
         }
     }
 
@@ -210,17 +203,24 @@ class AdminController extends Controller
         return view('admin.edit-product', compact('product', 'categories'));
     }
 
-    public function updateProduct(Request $request, Product $product)
+    public function updateProduct(Request $request, Product $product, ImageUploadService $imageService)
     {
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'required|string',
+                'description' => 'required|string|min:10',
                 'price' => 'required|numeric|min:0',
                 'original_price' => 'nullable|numeric|min:0',
                 'category_id' => 'required|exists:categories,id',
-                'images' => 'nullable|array|max:6',
-                'images.*' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max each
+                'images' => 'nullable|array|max:10',
+                'images.*' => [
+                    'nullable',
+                    'file',
+                    'image',
+                    'mimes:jpeg,jpg,png,gif,webp,bmp,tiff,svg',
+                    'max:10240', // 10MB max per file
+                    'dimensions:min_width=100,min_height=100,max_width=5000,max_height=5000'
+                ],
                 'stock' => 'required|integer|min:0',
                 'rating' => 'nullable|numeric|min:0|max:5',
                 'review_count' => 'nullable|integer|min:0',
@@ -228,26 +228,27 @@ class AdminController extends Controller
 
             // Handle new image uploads
             if ($request->hasFile('images')) {
-                // Delete old images
-                foreach ($product->images as $oldImage) {
-                    Storage::disk('public')->delete($oldImage->image_path);
-                    $oldImage->delete();
-                }
+                // Process new images
+                $imagePaths = $imageService->storeProductImages($request->file('images'));
+                
+                if (!empty($imagePaths)) {
+                    // Delete old images
+                    foreach ($product->images as $oldImage) {
+                        $imageService->deleteImage($oldImage->image_path);
+                        $oldImage->delete();
+                    }
 
-                // Upload new images
-                foreach ($request->file('images') as $index => $image) {
-                    $imagePath = $image->store('products', 'public');
-                    $product->images()->create([
-                        'image_path' => $imagePath,
-                        'sort_order' => $index,
-                        'is_primary' => $index === 0,
-                    ]);
-                }
+                    // Add new images
+                    foreach ($imagePaths as $index => $imagePath) {
+                        $product->images()->create([
+                            'image_path' => $imagePath,
+                            'sort_order' => $index,
+                            'is_primary' => $index === 0,
+                        ]);
+                    }
 
-                // Update main image reference
-                $firstImage = $product->images()->orderBy('sort_order')->first();
-                if ($firstImage) {
-                    $product->update(['image' => $firstImage->image_path]);
+                    // Update main image reference
+                    $product->update(['image' => $imagePaths[0]]);
                 }
             }
 
@@ -259,7 +260,7 @@ class AdminController extends Controller
                 'original_price' => $request->original_price,
                 'category_id' => $request->category_id,
                 'stock' => $request->stock,
-                'rating' => $request->rating,
+                'rating' => $request->rating ?? 0,
                 'review_count' => $request->review_count ?? 0,
                 'is_featured' => $request->has('featured'),
                 'tags' => $request->tags,
@@ -267,28 +268,37 @@ class AdminController extends Controller
                 'slug' => Str::slug($request->name),
             ]);
 
+            Log::info('Product updated successfully', [
+                'product_id' => $product->id,
+                'updated_images' => $request->hasFile('images')
+            ]);
+
             return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
             
         } catch (\Exception $e) {
-            Log::error('Error updating product: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'Error updating product: ' . $e->getMessage()]);
+            Log::error('Error updating product: ' . $e->getMessage(), [
+                'product_id' => $product->id
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Error updating product: ' . $e->getMessage()]);
         }
     }
 
-    public function destroyProduct(Product $product)
+    public function destroyProduct(Product $product, ImageUploadService $imageService)
     {
         try {
             Log::info('Delete product request received for product ID: ' . $product->id . ' - Name: ' . $product->name);
             
             // Delete associated images from storage
             foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->image_path);
+                $imageService->deleteImage($image->image_path);
                 $image->delete();
             }
 
             // Delete main product image if exists
             if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+                $imageService->deleteImage($product->image);
             }
 
             // Delete the product

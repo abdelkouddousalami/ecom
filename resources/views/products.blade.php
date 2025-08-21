@@ -1955,7 +1955,7 @@
                 
                 if (totalProductsCounter) animateCounter(totalProductsCounter, 50);
                 if (categoriesCounter) animateCounter(categoriesCounter, 5);
-                if (dailyViewsCounter) animateCounter(dailyViewsCounter, 275);
+                if (dailyViewsCounter) animateCounter(dailyViewsCounter, 4900);
             }, 1000);
 
             // Initialize cart and wishlist functionality

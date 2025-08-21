@@ -126,9 +126,10 @@
                 <!-- New Images Upload -->
                 <div>
                     <label for="images" class="block text-sm font-medium text-gray-700">Replace Images (Optional)</label>
-                    <input type="file" name="images[]" id="images" multiple accept="image/*" 
+                    <input type="file" name="images[]" id="images" multiple accept="image/*,.svg" 
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <p class="mt-1 text-xs text-gray-500">Select new images to replace all current images. Leave empty to keep current images. Max 6 images, 5MB each.</p>
+                    <p class="mt-1 text-xs text-gray-500">Select new images to replace all current images. Leave empty to keep current images. Max 10 images, automatically compressed.</p>
+                    <p class="text-xs text-green-600 mt-1">✅ Supported formats: JPEG, PNG, GIF, WebP, BMP, TIFF, SVG. Images should be at least 100x100 pixels.</p>
                     @error('images')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

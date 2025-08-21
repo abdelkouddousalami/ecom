@@ -885,9 +885,9 @@
         window.addEventListener('load', () => {
             // Add a small delay to make it more noticeable
             setTimeout(() => {
-                animateCounter('clients-counter', 500, 2000);
-                animateCounter('satisfaction-counter', 98, 2000);
-                animateCounter('products-counter', 1000, 2000);
+                animateCounter('clients-counter', 5700, 2000);
+                animateCounter('satisfaction-counter', 97, 2000);
+                animateCounter('products-counter', 2890, 2000);
             }, 500);
         });
 

@@ -110,6 +110,7 @@
             border: 2px solid #E5E7EB;
             border-radius: 8px;
             overflow: hidden;
+            min-width: 120px;
         }
         
         .quantity-btn {
@@ -118,6 +119,9 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.2s;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 40px;
         }
         
         .quantity-btn:hover {
@@ -130,6 +134,25 @@
             text-align: center;
             width: 60px;
             background: white;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 640px) {
+            .quantity-control {
+                min-width: 100px;
+            }
+            
+            .quantity-btn {
+                padding: 0.5rem 0.75rem;
+                min-width: 35px;
+                font-size: 1rem;
+            }
+            
+            .quantity-input {
+                width: 50px;
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
         }
         
         .floating-element {
@@ -310,29 +333,29 @@
 
                 <!-- Quantity & Add to Cart -->
                 @if($product->stock > 0)
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                        <div class="flex items-center space-x-6 mb-6">
-                            <label class="text-lg font-bold text-gray-900 font-playfair">Quantity:</label>
-                            <div class="quantity-control">
-                                <button type="button" class="quantity-btn" onclick="decreaseQuantity()">−</button>
-                                <input type="number" id="quantity" value="1" min="1" max="{{ $product->stock }}" class="quantity-input">
-                                <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6 border border-blue-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 mb-6">
+                            <label class="text-base sm:text-lg font-bold text-gray-900 font-playfair">Quantity:</label>
+                            <div class="flex items-center space-x-3 sm:space-x-0">
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn" onclick="decreaseQuantity()">−</button>
+                                    <input type="number" id="quantity" value="1" min="1" max="{{ $product->stock }}" class="quantity-input">
+                                    <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                                </div>
+                                <span class="text-xs sm:text-sm text-gray-600 ml-3 sm:ml-4">{{ $product->stock }} available</span>
                             </div>
-                            <span class="text-sm text-gray-600">{{ $product->stock }} available</span>
                         </div>
                         
-                        <div class="flex space-x-4">
-                            <button onclick="buyNow({{ $product->id }})" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl transition duration-300 flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                            <button onclick="buyNow({{ $product->id }})" class="w-full sm:flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair text-sm sm:text-base">
                                 <span>Buy Now</span>
                             </button>
                             
-                            <button onclick="addToWishlist({{ $product->id }})" class="bg-white border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 font-bold py-4 px-6 rounded-xl transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button onclick="addToWishlist({{ $product->id }})" class="w-full sm:w-auto bg-white border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center sm:justify-start">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
+                                <span class="ml-2 sm:hidden">Add to Wishlist</span>
                             </button>
                         </div>
                     </div>

@@ -1,0 +1,44 @@
+# Enhanced Image Upload Configuration
+
+## Laravel application .htaccess configuration
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Handle Angular and Vue.js client-side routing
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# PHP Configuration for large file uploads
+<IfModule mod_php.c>
+    php_value upload_max_filesize 100M
+    php_value post_max_size 500M
+    php_value max_file_uploads 20
+    php_value memory_limit 512M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# Enable compression for better performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Security for uploaded files
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Allow SVG files with proper MIME type
+AddType image/svg+xml .svg
+AddType image/webp .webp

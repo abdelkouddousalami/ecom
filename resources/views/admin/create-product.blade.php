@@ -104,7 +104,7 @@
                     </div>
                     
                     <div>
-                        <label for="images" class="block text-sm font-medium text-gray-700">Product Images *</label>
+                        <label for="images" class="block text-sm font-medium text-gray-700">Product Images</label>
                         <div class="mt-1">
                             <div id="image-upload-area" class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-indigo-400 transition-colors cursor-pointer">
                                 <div class="space-y-1 text-center">
@@ -114,12 +114,13 @@
                                     <div class="flex text-sm text-gray-600">
                                         <label for="images" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                             <span>Upload multiple files</span>
-                                            <input id="images" name="images[]" type="file" accept="image/*" multiple required class="sr-only" onchange="previewImages(this)">
+                                            <input id="images" name="images[]" type="file" accept="image/jpeg,image/jpg,image/png,image/gif,image/svg+xml" multiple class="sr-only" onchange="previewImages(this)">
                                         </label>
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">Select multiple PNG, JPG, GIF up to 5MB each (Max 6 images)</p>
-                                    <p class="text-xs text-gray-400 mt-1">Hold Ctrl/Cmd to select multiple files at once</p>
+                    <p class="text-xs text-gray-500">Upload images (any size - automatically compressed, Max 10 images) - Optional</p>
+                                    <p class="text-xs text-gray-400 mt-1">Supported formats: JPEG, PNG, GIF, SVG (JPEG will be converted to PNG automatically)</p></p>
+                                    <p class="text-xs text-green-600 mt-1">✅ Images should be at least 100x100 pixels for best quality</p>
                                 </div>
                             </div>
                             
@@ -136,7 +137,7 @@
                                     <button type="button" onclick="clearAllImages()" class="text-red-600 hover:text-red-800 text-sm font-medium">Clear All</button>
                                 </div>
                                 <!-- Hidden input for adding more images -->
-                                <input type="file" id="additional-images" accept="image/*" multiple class="hidden" onchange="addAdditionalImages(this)">
+                                <input type="file" id="additional-images" accept="image/jpeg,image/jpg,image/png,image/gif,image/svg+xml" multiple class="hidden" onchange="addAdditionalImages(this)">
                             </div>
                         </div>
                         @error('images')
@@ -238,25 +239,53 @@ function previewImages(input) {
     console.log('Total selected files:', selectedFiles.length);
     
     // Check file count limit
-    if (selectedFiles.length > 6) {
-        alert('Maximum 6 images allowed. Keeping first 6 images.');
-        selectedFiles = selectedFiles.slice(0, 6);
+    if (selectedFiles.length > 10) {
+        alert('Maximum 10 images allowed. Keeping first 10 images.');
+        selectedFiles = selectedFiles.slice(0, 10);
     }
     
     // Validate each new file
     for (let file of newFiles) {
-        if (file.size > 5 * 1024 * 1024) {
-            alert('File size must be less than 5MB for each image');
-            // Remove the problematic file
+        // No file size limit - images will be automatically compressed
+        // Just check file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+        if (!allowedTypes.includes(file.type)) {
+            alert(`File "${file.name}" is not a supported image format. Please use JPEG, PNG, GIF, or SVG images.`);
             selectedFiles = selectedFiles.filter(f => f !== file);
             continue;
         }
         
         if (!file.type.match('image.*')) {
-            alert('Please select only image files');
+            alert(`File "${file.name}" is not a valid image. Please select only image files.`);
             // Remove the problematic file
             selectedFiles = selectedFiles.filter(f => f !== file);
             continue;
+        }
+
+        // Check image dimensions using FileReader (skip for SVG files)
+        if (file.type !== 'image/svg+xml') {
+            const checkDimensions = (file) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = function() {
+                        const width = this.width;
+                        const height = this.height;
+                        
+                        if (width < 100 || height < 100) {
+                            alert(`Image "${file.name}" is too small. Minimum size is 100x100 pixels.`);
+                            selectedFiles = selectedFiles.filter(f => f !== file);
+                        } else if (width > 5000 || height > 5000) {
+                            alert(`Image "${file.name}" is too large. Maximum size is 5000x5000 pixels.`);
+                            selectedFiles = selectedFiles.filter(f => f !== file);
+                        }
+                        resolve();
+                    };
+                    img.src = URL.createObjectURL(file);
+                });
+            };
+            
+            // Check dimensions asynchronously
+            checkDimensions(file);
         }
     }
     
@@ -282,7 +311,7 @@ function displayImagePreviews() {
     // Add image count indicator
     const countIndicator = document.createElement('div');
     countIndicator.className = 'col-span-full mb-2 text-sm text-gray-600 font-medium';
-    countIndicator.innerHTML = `${selectedFiles.length} image${selectedFiles.length !== 1 ? 's' : ''} selected (${6 - selectedFiles.length} remaining)`;
+    countIndicator.innerHTML = `${selectedFiles.length} image${selectedFiles.length !== 1 ? 's' : ''} selected (${10 - selectedFiles.length} remaining)`;
     grid.appendChild(countIndicator);
     
     selectedFiles.forEach((file, index) => {
@@ -333,8 +362,8 @@ function clearAllImages() {
 
 // Add more images function
 function addMoreImages() {
-    if (selectedFiles.length >= 6) {
-        alert('Maximum 6 images allowed');
+    if (selectedFiles.length >= 10) {
+        alert('Maximum 10 images allowed');
         return;
     }
     document.getElementById('additional-images').click();
@@ -348,21 +377,24 @@ function addAdditionalImages(input) {
     selectedFiles = selectedFiles.concat(newFiles);
     
     // Check file count limit
-    if (selectedFiles.length > 6) {
-        alert('Maximum 6 images allowed. Keeping first 6 images.');
-        selectedFiles = selectedFiles.slice(0, 6);
+    if (selectedFiles.length > 10) {
+        alert('Maximum 10 images allowed. Keeping first 10 images.');
+        selectedFiles = selectedFiles.slice(0, 10);
     }
     
     // Validate each new file
     for (let file of newFiles) {
-        if (file.size > 5 * 1024 * 1024) {
-            alert('File size must be less than 5MB for each image');
+        // No file size limit - images will be automatically compressed
+        // Just check file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+        if (!allowedTypes.includes(file.type)) {
+            alert(`File "${file.name}" is not a supported image format. Please use JPEG, PNG, GIF, or SVG images.`);
             selectedFiles = selectedFiles.filter(f => f !== file);
             continue;
         }
         
         if (!file.type.match('image.*')) {
-            alert('Please select only image files');
+            alert(`File "${file.name}" is not a valid image. Please select only image files.`);
             selectedFiles = selectedFiles.filter(f => f !== file);
             continue;
         }
@@ -455,9 +487,9 @@ imageUploadArea.addEventListener('drop', function(e) {
         selectedFiles = selectedFiles.concat(files);
         
         // Check file count limit
-        if (selectedFiles.length > 6) {
-            alert('Maximum 6 images allowed. Keeping first 6 images.');
-            selectedFiles = selectedFiles.slice(0, 6);
+        if (selectedFiles.length > 10) {
+            alert('Maximum 10 images allowed. Keeping first 10 images.');
+            selectedFiles = selectedFiles.slice(0, 10);
         }
         
         updateFileInput();
@@ -530,9 +562,8 @@ document.querySelector('form').addEventListener('submit', function(e) {
     console.log('Selected files:', selectedFiles.length);
     
     if (selectedFiles.length === 0) {
-        e.preventDefault();
-        alert('Please select at least one product image');
-        return false;
+        // Allow submission without images for testing
+        console.log('No images selected, proceeding anyway');
     }
     
     // Create FormData to properly handle file uploads
@@ -590,22 +621,28 @@ document.querySelector('form').addEventListener('submit', function(e) {
         console.error('Error:', error);
         
         // Try to parse error response for better error messages
+        let errorMessage = 'Error creating product. Please check your inputs and try again.';
+        
         if (error.message) {
             try {
                 const errorText = error.message;
                 if (errorText.includes('validation')) {
-                    alert('Validation error: Please check your inputs and try again.');
-                } else if (errorText.includes('file')) {
-                    alert('File upload error: Please check your images and try again.');
+                    errorMessage = 'Validation error: Please check your inputs and try again.';
+                } else if (errorText.includes('file') || errorText.includes('image')) {
+                    errorMessage = 'File upload error: Please check your images (automatically compressed, multiple formats supported) and try again.';
+                } else if (errorText.includes('size')) {
+                    errorMessage = 'Invalid file format: Please use supported image formats.';
+                } else if (errorText.includes('dimensions')) {
+                    errorMessage = 'Image dimensions error: Images must be between 100x100 and 5000x5000 pixels.';
                 } else {
-                    alert('Error creating product: ' + errorText.substring(0, 100));
+                    errorMessage = 'Error: ' + errorText.substring(0, 100);
                 }
             } catch (e) {
-                alert('Error creating product. Please check your inputs and try again.');
+                // Use default message
             }
-        } else {
-            alert('Error creating product. Please check your inputs and try again.');
         }
+        
+        alert(errorMessage);
         
         submitButton.innerHTML = 'Create Product';
         submitButton.disabled = false;

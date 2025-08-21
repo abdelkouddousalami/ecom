@@ -8,7 +8,9 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\Category;
 use App\Models\PhoneNumber;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -129,44 +131,72 @@ class AdminController extends Controller
      */
     public function storeProduct(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'original_price' => 'nullable|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'images' => 'nullable|array|max:10',
+                'images.*' => 'image|mimes:jpeg,jpg,png,gif,svg|max:50000',
+            ]);
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->original_price = $request->original_price;
-        $product->stock = $request->stock;
-        $product->category_id = $request->category_id;
+            $product = new Product();
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->original_price = $request->original_price;
+            $product->stock = $request->stock;
+            $product->category_id = $request->category_id;
 
-        // Handle main image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $product->image = $imagePath;
-        }
+            // Initialize ImageUploadService
+            $imageService = app(ImageUploadService::class);
 
-        $product->save();
-
-        // Handle multiple images upload
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('products', 'public');
-                $product->images()->create([
-                    'image_path' => $imagePath
-                ]);
+            // Handle multiple images upload
+            if ($request->hasFile('images')) {
+                $imagePaths = $imageService->storeProductImages($request->file('images'));
+                
+                // Set the first image as the main product image
+                if (!empty($imagePaths)) {
+                    $product->image = $imagePaths[0];
+                }
+                
+                $product->save();
+                
+                // Store all images in the ProductImage table
+                foreach ($imagePaths as $index => $imagePath) {
+                    $product->images()->create([
+                        'image_path' => $imagePath,
+                        'is_primary' => $index === 0, // First image is primary
+                        'sort_order' => $index + 1
+                    ]);
+                }
+            } else {
+                $product->save();
             }
-        }
 
-        return redirect()->route('admin.products')->with('success', 'Product created successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Product created successfully!',
+                'redirect' => route('admin.products')
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->errors(),
+                'message' => 'Please check your inputs and file formats.'
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Product creation error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Server error',
+                'message' => 'Unable to create product. Images will be automatically compressed.',
+                'debug' => config('app.debug') ? $e->getMessage() : 'Contact administrator'
+            ], 500);
+        }
     }
 
     /**
@@ -193,47 +223,72 @@ class AdminController extends Controller
      */
     public function updateProduct(Request $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'original_price' => 'nullable|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff,svg',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff,svg',
+            ]);
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->original_price = $request->original_price;
-        $product->stock = $request->stock;
-        $product->category_id = $request->category_id;
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->original_price = $request->original_price;
+            $product->stock = $request->stock;
+            $product->category_id = $request->category_id;
 
-        // Handle main image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image && Storage::disk('public')->exists($product->image)) {
-                Storage::disk('public')->delete($product->image);
+            // Initialize ImageUploadService
+            $imageService = app(ImageUploadService::class);
+
+            // Handle main image upload
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($product->image && Storage::disk('public')->exists($product->image)) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                $imagePath = $imageService->processAndStoreImage($request->file('image'), 'products');
+                if ($imagePath) {
+                    $product->image = $imagePath;
+                }
             }
-            $imagePath = $request->file('image')->store('products', 'public');
-            $product->image = $imagePath;
-        }
 
-        $product->save();
+            $product->save();
 
-        // Handle multiple images upload
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('products', 'public');
-                $product->images()->create([
-                    'image_path' => $imagePath
-                ]);
+            // Handle multiple images upload
+            if ($request->hasFile('images')) {
+                $imagePaths = $imageService->storeProductImages($request->file('images'));
+                foreach ($imagePaths as $imagePath) {
+                    $product->images()->create([
+                        'image_path' => $imagePath
+                    ]);
+                }
             }
-        }
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Product updated successfully!',
+                'redirect' => route('admin.products')
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->errors(),
+                'message' => 'Please check your inputs and file formats.'
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Product update error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Server error',
+                'message' => 'Unable to update product. Images will be automatically compressed.',
+                'debug' => config('app.debug') ? $e->getMessage() : 'Contact administrator'
+            ], 500);
+        }
     }
 
     /**
