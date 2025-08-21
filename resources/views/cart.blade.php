@@ -100,6 +100,204 @@
             background-color: #3b82f6;
             color: white;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            /* Mobile header adjustments */
+            .full-width-section .w-full {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            
+            .header-gradient .w-full {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
+            }
+            
+            .header-gradient h1 {
+                font-size: 2rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .header-gradient p {
+                font-size: 1rem !important;
+                padding: 0 1rem;
+            }
+            
+            /* Mobile cart content */
+            .full-width-section.bg-gray-50 .w-full {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+            
+            /* Mobile grid layout - stack vertically */
+            .grid.xl\\:grid-cols-\\[2fr_1fr\\] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            /* Mobile card adjustments */
+            .bg-white.rounded-2xl.card-shadow {
+                padding: 1rem !important;
+                border-radius: 1rem !important;
+            }
+            
+            /* Mobile cart item layout */
+            .cart-item .flex.flex-col.lg\\:flex-row {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                space-y: 1rem;
+            }
+            
+            .cart-item .lg\\:space-x-8 {
+                margin-left: 0 !important;
+            }
+            
+            .cart-item .lg\\:space-y-0 {
+                row-gap: 1rem !important;
+            }
+            
+            /* Mobile product image */
+            .cart-item .w-24.h-24 {
+                width: 4rem !important;
+                height: 4rem !important;
+            }
+            
+            /* Mobile product details */
+            .cart-item h4 {
+                font-size: 1.125rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .cart-item .flex.items-center.space-x-4.mb-6 {
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            /* Mobile quantity controls */
+            .cart-item .flex.items-center.space-x-4:last-of-type {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.75rem !important;
+            }
+            
+            .cart-item .flex.items-center.bg-gray-50 {
+                order: 1;
+            }
+            
+            /* Mobile price and actions */
+            .cart-item .flex.flex-col.items-end {
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                width: 100% !important;
+                margin-top: 1rem !important;
+            }
+            
+            .cart-item .text-right {
+                text-align: left !important;
+            }
+            
+            .cart-item .text-2xl.font-bold.text-blue-600 {
+                font-size: 1.25rem !important;
+            }
+            
+            /* Mobile order summary */
+            .bg-white.rounded-2xl.card-shadow.sticky {
+                position: relative !important;
+                top: auto !important;
+            }
+            
+            .bg-white.rounded-2xl.card-shadow h3 {
+                font-size: 1.25rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .bg-white.rounded-2xl.card-shadow .text-2xl.font-bold {
+                font-size: 1.125rem !important;
+            }
+            
+            .bg-white.rounded-2xl.card-shadow .text-3xl.font-bold {
+                font-size: 1.5rem !important;
+            }
+            
+            /* Mobile buttons */
+            .btn-primary, .btn-secondary {
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Mobile empty cart */
+            #empty-cart .bg-white.rounded-2xl {
+                padding: 2rem !important;
+                margin: 0 1rem !important;
+            }
+            
+            #empty-cart .w-32.h-32 {
+                width: 4rem !important;
+                height: 4rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            #empty-cart h3 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            #empty-cart p {
+                font-size: 0.875rem !important;
+                margin-bottom: 1.5rem !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* Mobile spacing adjustments */
+            .space-y-6 > * + * {
+                margin-top: 1rem !important;
+            }
+            
+            .space-y-4 > * + * {
+                margin-top: 0.75rem !important;
+            }
+            
+            /* Mobile notification adjustments */
+            .custom-notification {
+                right: 10px !important;
+                left: 10px !important;
+                min-width: auto !important;
+                margin: 0 !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* Extra small mobile adjustments */
+            .full-width-section .w-full {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+            
+            .header-gradient h1 {
+                font-size: 1.75rem !important;
+            }
+            
+            .cart-item .bg-white.rounded-xl {
+                padding: 0.75rem !important;
+            }
+            
+            .cart-item h4 {
+                font-size: 1rem !important;
+            }
+            
+            .bg-white.rounded-2xl.card-shadow {
+                padding: 0.75rem !important;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 0.625rem !important;
+                font-size: 0.8rem !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -139,57 +337,57 @@
 
                 <!-- Cart Items -->
                 <div id="cart-items" class="hidden">
-                    <!-- Improved grid layout with better proportions and gap -->
-                    <div class="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-8 max-w-7xl mx-auto">
+                    <!-- Mobile-first responsive grid layout -->
+                    <div class="flex flex-col xl:grid xl:grid-cols-[2fr_1fr] gap-4 xl:gap-8 max-w-7xl mx-auto">
                         <!-- Items List (Left Side - 2/3 width) -->
-                        <div class="w-full">
-                            <div class="bg-white rounded-2xl card-shadow p-8 border border-gray-100">
-                                <div class="flex items-center justify-between mb-10">
-                                    <h2 class="text-3xl font-bold text-gray-900">Articles sélectionnés</h2>
-                                    <div class="bg-blue-50 text-blue-600 px-6 py-3 rounded-full text-sm font-bold border border-blue-100">
+                        <div class="w-full order-2 xl:order-1">
+                            <div class="bg-white rounded-xl xl:rounded-2xl card-shadow p-4 xl:p-8 border border-gray-100">
+                                <div class="flex items-center justify-between mb-6 xl:mb-10">
+                                    <h2 class="text-xl xl:text-3xl font-bold text-gray-900">Articles sélectionnés</h2>
+                                    <div class="bg-blue-50 text-blue-600 px-3 xl:px-6 py-2 xl:py-3 rounded-full text-xs xl:text-sm font-bold border border-blue-100">
                                         <span id="items-count">0</span> article(s)
                                     </div>
                                 </div>
-                                <div id="items-list" class="space-y-6">
+                                <div id="items-list" class="space-y-4 xl:space-y-6">
                                     <!-- Dynamic cart items will be inserted here -->
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Enhanced order summary with better styling -->
-                        <div class="w-full">
-                            <div class="bg-white rounded-2xl card-shadow p-8 sticky top-24 border border-gray-100">
-                                <h3 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Enhanced order summary with better mobile styling -->
+                        <div class="w-full order-1 xl:order-2">
+                            <div class="bg-white rounded-xl xl:rounded-2xl card-shadow p-4 xl:p-8 xl:sticky xl:top-24 border border-gray-100">
+                                <h3 class="text-lg xl:text-2xl font-bold text-gray-900 mb-4 xl:mb-8 flex items-center">
+                                    <div class="w-8 h-8 xl:w-10 xl:h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3 xl:mr-4">
+                                        <svg class="w-4 h-4 xl:w-5 xl:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 002 2z"></path>
                                         </svg>
                                     </div>
                                     Résumé
                                 </h3>
-                                <div class="space-y-6 mb-10">
-                                    <div class="flex justify-between items-center py-4 border-b border-gray-100">
-                                        <span class="text-gray-600 font-medium text-lg">Sous-total:</span>
-                                        <span id="subtotal" class="font-bold text-gray-900 text-xl">0 DH</span>
+                                <div class="space-y-4 xl:space-y-6 mb-6 xl:mb-10">
+                                    <div class="flex justify-between items-center py-3 xl:py-4 border-b border-gray-100">
+                                        <span class="text-gray-600 font-medium text-sm xl:text-lg">Sous-total:</span>
+                                        <span id="subtotal" class="font-bold text-gray-900 text-lg xl:text-xl">0 DH</span>
                                     </div>
-                                    <div class="flex justify-between items-center py-4 border-b border-gray-100">
-                                        <span class="text-gray-600 font-medium text-lg">Livraison:</span>
-                                        <span id="shipping" class="font-bold text-green-600 text-lg">Gratuite</span>
+                                    <div class="flex justify-between items-center py-3 xl:py-4 border-b border-gray-100">
+                                        <span class="text-gray-600 font-medium text-sm xl:text-lg">Livraison:</span>
+                                        <span id="shipping" class="font-bold text-green-600 text-sm xl:text-lg">Gratuite</span>
                                     </div>
-                                    <div class="flex justify-between items-center py-6 bg-gray-50 rounded-xl px-6 border border-gray-100">
-                                        <span class="text-2xl font-bold text-gray-900">Total:</span>
-                                        <span id="total" class="text-3xl font-bold text-blue-600">0 DH</span>
+                                    <div class="flex justify-between items-center py-4 xl:py-6 bg-gray-50 rounded-xl px-4 xl:px-6 border border-gray-100">
+                                        <span class="text-lg xl:text-2xl font-bold text-gray-900">Total:</span>
+                                        <span id="total" class="text-xl xl:text-3xl font-bold text-blue-600">0 DH</span>
                                     </div>
                                 </div>
-                                <div class="space-y-4">
-                                    <button type="button" id="checkout-btn" class="w-full btn-primary font-bold py-5 px-6 rounded-xl transition-all duration-300 text-lg">
-                                        <svg class="w-6 h-6 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="space-y-3 xl:space-y-4">
+                                    <button type="button" id="checkout-btn" class="w-full btn-primary font-bold py-3 xl:py-5 px-4 xl:px-6 rounded-xl transition-all duration-300 text-sm xl:text-lg">
+                                        <svg class="w-5 h-5 xl:w-6 xl:h-6 inline mr-2 xl:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                         </svg>
                                         Procéder au paiement
                                     </button>
-                                    <button type="button" id="clear-cart-btn" class="w-full btn-secondary font-semibold py-4 px-4 rounded-xl transition-all duration-300 text-lg">
-                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <button type="button" id="clear-cart-btn" class="w-full btn-secondary font-semibold py-3 xl:py-4 px-4 rounded-xl transition-all duration-300 text-sm xl:text-lg">
+                                        <svg class="w-4 h-4 xl:w-5 xl:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
                                         Vider le panier
@@ -293,30 +491,38 @@
                         totalPrice += itemTotal;
 
                         const cartItemHTML = `
-                            <div class="cart-item bg-white rounded-xl card-shadow p-6 border border-gray-100 transition-all duration-300">
-                                <div class="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
-                                    <!-- Product Image -->
-                                    <div class="relative flex-shrink-0">
-                                        <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-200">
-                                            <img src="/storage/${product.image}" 
-                                                 alt="${product.name}" 
-                                                 class="w-full h-full object-cover"
-                                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zMiA0MEw0OCAyNEw2NCA0MFY2NEgzMlY0MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSIzNiIgcj0iNCIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
+                            <div class="cart-item bg-white rounded-xl card-shadow p-4 md:p-6 border border-gray-100 transition-all duration-300">
+                                <div class="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-8">
+                                    <!-- Product Image and Basic Info -->
+                                    <div class="flex items-center space-x-4 md:flex-col md:space-x-0 md:space-y-2 md:flex-shrink-0">
+                                        <div class="relative">
+                                            <div class="w-16 h-16 md:w-24 md:h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-200">
+                                                <img src="/storage/${product.image}" 
+                                                     alt="${product.name}" 
+                                                     class="w-full h-full object-cover"
+                                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zMiA0MEw0OCAyNEw2NCA0MFY2NEgzMlY0MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSIzNiIgcj0iNCIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'; this.onerror=null;">
+                                            </div>
+                                            <div class="absolute -top-2 -right-2 bg-blue-600 text-white rounded-full w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-xs md:text-sm font-bold shadow-lg">
+                                                ${item.quantity}
+                                            </div>
                                         </div>
-                                        <div class="absolute -top-2 -right-2 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-lg">
-                                            ${item.quantity}
+                                        
+                                        <!-- Mobile Product Name -->
+                                        <div class="md:hidden flex-1">
+                                            <h4 class="text-lg font-bold text-gray-900 leading-tight">${product.name}</h4>
+                                            <p class="text-blue-600 font-bold text-sm">${product.price} DH each</p>
                                         </div>
                                     </div>
                                     
-                                    <!-- Product Details -->
-                                    <div class="flex-1 min-w-0">
+                                    <!-- Desktop Product Details -->
+                                    <div class="hidden md:block flex-1 min-w-0">
                                         <h4 class="text-xl font-bold text-gray-900 mb-3">${product.name}</h4>
                                         <div class="flex items-center space-x-4 mb-6">
                                             <span class="bg-blue-50 text-blue-600 text-sm font-bold px-4 py-2 rounded-lg border border-blue-100">${product.price} DH</span>
                                             <span class="text-gray-600 text-base">× ${item.quantity} = <strong class="text-gray-900 text-lg">${product.price * item.quantity} DH</strong></span>
                                         </div>
                                         
-                                        <!-- Quantity Controls -->
+                                        <!-- Desktop Quantity Controls -->
                                         <div class="flex items-center space-x-4">
                                             <span class="text-base font-semibold text-gray-700">Quantité:</span>
                                             <div class="flex items-center bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
@@ -335,14 +541,49 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Price and Actions -->
-                                    <div class="flex flex-col items-end space-y-6">
+                                    <!-- Mobile Bottom Section -->
+                                    <div class="md:hidden space-y-3">
+                                        <!-- Mobile Quantity Controls -->
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm font-semibold text-gray-700">Quantité:</span>
+                                            <div class="flex items-center bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                                                <button type="button" class="decrease-btn quantity-btn w-8 h-8 flex items-center justify-center hover:bg-blue-600 text-gray-600 hover:text-white transition-all duration-200" data-id="${item.id}" data-quantity="${item.quantity}">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                                    </svg>
+                                                </button>
+                                                <span class="px-3 py-1 bg-white font-bold text-gray-900 text-sm min-w-[2.5rem] text-center border-x border-gray-200">${item.quantity}</span>
+                                                <button type="button" class="increase-btn quantity-btn w-8 h-8 flex items-center justify-center hover:bg-blue-600 text-gray-600 hover:text-white transition-all duration-200" data-id="${item.id}" data-quantity="${item.quantity}">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Mobile Price and Remove -->
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-xs text-gray-500">Total</p>
+                                                <p class="text-lg font-bold text-blue-600">${itemTotal} DH</p>
+                                            </div>
+                                            <button type="button" class="remove-btn flex items-center space-x-1 bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-600 px-3 py-2 rounded-lg border border-gray-200 hover:border-red-200 transition-all duration-300 text-xs font-semibold" data-id="${item.id}">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                                <span>Retirer</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Desktop Price and Actions -->
+                                    <div class="hidden md:flex flex-col items-end space-y-6">
                                         <div class="text-right">
                                             <p class="text-sm text-gray-500 mb-2">Total article</p>
                                             <p class="text-2xl font-bold text-blue-600">${itemTotal} DH</p>
                                         </div>
                                         
-                                        <!-- Remove Button -->
+                                        <!-- Desktop Remove Button -->
                                         <button type="button" class="remove-btn flex items-center space-x-2 bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-600 px-4 py-3 rounded-lg border border-gray-200 hover:border-red-200 transition-all duration-300 text-sm font-semibold" data-id="${item.id}">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>

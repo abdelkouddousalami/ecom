@@ -564,17 +564,7 @@
                             </div>
                         @endif
                         
-                        <!-- Quick Actions Overlay -->
-                        <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button onclick="event.stopPropagation(); addToWishlist({{ $product->id }})" class="wishlist-btn bg-white/90 hover:bg-white p-2.5 rounded-full text-gray-600 hover:text-red-500 transition-all duration-300 mb-2 block shadow-md hover:shadow-lg transform hover:scale-110 cursor-pointer" data-product-id="{{ $product->id }}" title="Add to Favorites">
-                                <span class="w-5 h-5 transition-all duration-300 font-bold">♡</span>
-                            </button>
-                            <!-- Quick View Button -->
-                            <button onclick="event.stopPropagation(); window.location.href='{{ route('product.show', $product->slug) }}'" class="bg-white/90 hover:bg-white p-2.5 rounded-full text-gray-600 hover:text-blue-500 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110 cursor-pointer" title="Quick View">
-                                <span class="w-5 h-5 font-bold">View</span>
-                            </button>
-                            </button>
-                        </div>
+
                         
                         <!-- Stock Badge -->
                         @if($product->stock <= 5 && $product->stock > 0)
@@ -668,10 +658,6 @@
                                     </svg>
                                 </button>
                             </div>
-                            
-                            <button onclick="event.stopPropagation(); window.location.href='{{ route('product.show', $product->slug) }}'" class="w-full border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 font-medium py-3 px-4 rounded-lg transition-colors duration-300 cursor-pointer" style="font-family: 'Playfair Display', serif;">
-                                View Details
-                            </button>
                         </div>
                     </div>
                 </div>
