@@ -10,7 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 
 Route::get('/', [ProductController::class, 'welcome']);
 
-Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('product.show');
 
 // Authentication Routes (Hidden URLs)

@@ -213,7 +213,16 @@ class SeoService
      */
     private function addSitemapUrl($url, $priority = '0.5', $changefreq = 'monthly', $lastmod = null)
     {
-        $fullUrl = url($url);
+        // Use the configured APP_URL from .env for production domain
+        $baseUrl = config('app.url');
+        
+        // Ensure we use the production domain for sitemap
+        if (config('app.env') === 'production' || request()->getHost() !== '127.0.0.1') {
+            $baseUrl = 'https://l3ochaq.ma';
+        }
+        
+        $fullUrl = rtrim($baseUrl, '/') . $url;
+        
         $xml = "  <url>\n";
         $xml .= "    <loc>{$fullUrl}</loc>\n";
         
@@ -233,6 +242,11 @@ class SeoService
      */
     public function generateRobotsTxt()
     {
+        // Use the production domain for robots.txt
+        $baseUrl = config('app.env') === 'production' || request()->getHost() !== '127.0.0.1' 
+            ? 'https://l3ochaq.ma' 
+            : config('app.url');
+            
         $content = "User-agent: *\n";
         $content .= "Allow: /\n";
         $content .= "Disallow: /admin/\n";
@@ -243,7 +257,7 @@ class SeoService
         $content .= "Disallow: /orders/\n";
         $content .= "Disallow: /profile/\n";
         $content .= "\n";
-        $content .= "Sitemap: " . url('/sitemap.xml') . "\n";
+        $content .= "Sitemap: " . rtrim($baseUrl, '/') . '/sitemap.xml' . "\n";
 
         return $content;
     }
