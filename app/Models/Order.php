@@ -65,7 +65,7 @@ class Order extends Model
     // Relationships
     public function user()
     {
-        return $this->belongsTo(User::class)->nullable();
+        return $this->belongsTo(User::class);
     }
 
     public function items()
