@@ -193,8 +193,17 @@ class SeoService
             $xml .= $this->addSitemapUrl("/products?category={$category->slug}", '0.8', 'weekly', $category->updated_at->toISOString());
         }
 
-        // Products
-        $products = Product::with('category')->get();
+        // Products (exclude test/demo products from sitemap)
+        $products = Product::with('category')
+            ->where('slug', 'not like', '%test%')
+            ->where('slug', 'not like', '%demo%')
+            ->where('slug', 'not like', '%sample%')
+            ->where('slug', 'not like', '%placeholder%')
+            ->where('name', 'not like', '%test%')
+            ->where('name', 'not like', '%demo%')
+            ->where('name', 'not like', '%sample%')
+            ->where('name', 'not like', '%placeholder%')
+            ->get();
         foreach ($products as $product) {
             $xml .= $this->addSitemapUrl("/products/{$product->slug}", '0.7', 'monthly', $product->updated_at->toISOString());
         }
