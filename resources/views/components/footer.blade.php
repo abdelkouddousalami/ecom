@@ -4,8 +4,8 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8 footer-grid">
             <!-- Company Info -->
             <div class="flex flex-col items-start">
-                <img src="{{ asset('images/logos/logo.png') }}" alt="l3ochaq Store Logo" class="h-10 w-auto mb-4 object-contain">
-                <p class="text-gray-500 mb-4 text-sm" style="font-family: 'Playfair Display', serif;">Your trusted online shopping destination for quality, elegance, and service.</p>
+                <img src="{{ asset('images/logos/logo.png') }}" alt="L3OCHAQ Store Logo" class="h-10 w-auto mb-4 object-contain">
+                <p class="text-gray-500 mb-4 text-sm" style="font-family: 'Playfair Display', serif;">Votre destination de confiance pour les meilleurs cadeaux couples et bijoux au Maroc.</p>
                 <div class="flex space-x-3 mt-2">
                     <a href="https://www.instagram.com/l3ochaq?igsh=MWRtZG1kMzQ1Z2puaQ==" target="_blank" class="text-red-500 hover:text-red-700 transition duration-300" title="Instagram">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
@@ -18,23 +18,23 @@
 
             <!-- Quick Links -->
             <div>
-                <h4 class="text-lg font-bold mb-4 text-red-400 tracking-wide" style="font-family: 'Playfair Display', serif;">Quick Links</h4>
+                <h4 class="text-lg font-bold mb-4 text-red-400 tracking-wide" style="font-family: 'Playfair Display', serif;">Liens Rapides</h4>
                 <ul class="space-y-2 text-sm" style="font-family: 'Playfair Display', serif;">
-                    <li><a href="/" class="hover:text-red-400 transition">Home</a></li>
-                    <li><a href="/products" class="hover:text-red-400 transition">Products</a></li>
-                    <li><a href="/orders" class="hover:text-red-400 transition">My Orders</a></li>
-                    <li><a href="/wishlist" class="hover:text-red-400 transition">Wishlist</a></li>
+                    <li><a href="/" class="hover:text-red-400 transition">Accueil</a></li>
+                    <li><a href="/products" class="hover:text-red-400 transition">Produits</a></li>
+                    <li><a href="/orders" class="hover:text-red-400 transition">Mes Commandes</a></li>
+                    <li><a href="/wishlist" class="hover:text-red-400 transition">Favoris</a></li>
                     <li><a href="#" class="hover:text-red-400 transition">Contact</a></li>
                 </ul>
             </div>
 
             <!-- Categories -->
             <div>
-                <h4 class="text-lg font-bold mb-4 text-red-400 tracking-wide" style="font-family: 'Playfair Display', serif;">Categories</h4>
+                <h4 class="text-lg font-bold mb-4 text-red-400 tracking-wide" style="font-family: 'Playfair Display', serif;">Catégories</h4>
                 <ul class="space-y-2 text-sm" style="font-family: 'Playfair Display', serif;">
-                    <li><a href="#" class="hover:text-red-400 transition">Bracelets</a></li>
-                    <li><a href="#" class="hover:text-red-400 transition">Watches</a></li>
-                    <li><a href="#" class="hover:text-red-400 transition">Gift Packs</a></li>
+                    <li><a href="/products?category=bracelets" class="hover:text-red-400 transition">Bracelets Couples</a></li>
+                    <li><a href="/products?category=montres" class="hover:text-red-400 transition">Montres Assorties</a></li>
+                    <li><a href="/products?category=cadeaux" class="hover:text-red-400 transition">Cadeaux Romantiques</a></li>
                 </ul>
             </div>
 
@@ -45,12 +45,13 @@
                     <li><span class="font-semibold text-gray-900">Email:</span> support@l3ochaq.com</li>
                     <li><span class="font-semibold text-gray-900">Phone:</span> +212710817503</li>
                     <li><span class="font-semibold text-gray-900">Address:</span> Rabat, Morocco</li>
+                    <li><span class="font-semibold text-gray-900">Site:</span> www.l3ochaq.ma</li>
                 </ul>
             </div>
         </div>
 
         <div class="border-t border-gray-300 mt-16 pt-10 text-center text-gray-400 text-sm" style="font-family: 'Playfair Display', serif;">
-            <p>&copy; 2025 <span class="text-red-500 font-semibold">l3ochaq Store</span>. All rights reserved. | Designed with <span class="text-red-500">&#10084;</span> by l3ochaq</p>
+            <p>&copy; 2025 <span class="text-red-500 font-semibold">L3OCHAQ Store</span>. Tous droits réservés. | Conçu avec <span class="text-red-500">&#10084;</span> par L3OCHAQ</p>
         </div>
     </div>
 </footer>

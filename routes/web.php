@@ -158,6 +158,10 @@ Route::post('/admin/debug-json', function(\Illuminate\Http\Request $request) {
 
 Route::get('/order-success/{order}', [OrderController::class, 'success'])->name('order.success');
 
+// SEO Routes
+Route::get('/sitemap.xml', [App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('index');

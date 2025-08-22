@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="fr" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Products - l3ochaq Store</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-seo-meta 
+        :title="$seoMeta['title']"
+        :description="$seoMeta['description']"
+        :keywords="$seoMeta['keywords']"
+        :canonical="$seoMeta['canonical']"
+        :ogTitle="$seoMeta['title']"
+        :ogDescription="$seoMeta['description']"
+        :ogImage="$seoMeta['og_image'] ?? null"
+    />
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
@@ -192,15 +197,15 @@
             <!-- Main Title -->
             <div class="animate-fade-in-up-delay-2" style="margin-top: -20px;">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 lg:mb-6 leading-tight font-playfair">
-                    <span class="block text-white">Discover Our</span>
-                    <span class="block text-gray-200 italic">Premium Collection</span>
+                    <span class="block text-white">L3OCHAQ - Meilleurs Cadeaux</span>
+                    <span class="block text-gray-200 italic">Pour Couples & Bijoux</span>
                 </h1>
             </div>
 
             <!-- Subtitle -->
             <div class="animate-fade-in-up-delay-3">
                 <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed font-playfair px-4">
-                    Explore our curated selection of exquisite jewelry, accessories, and luxury items crafted with passion and precision
+                    Découvrez les meilleurs cadeaux pour couples au Maroc. Bijoux, bracelets assortis, montres duo et accessoires romantiques. L3OCHAQ - Votre destination cadeaux
                 </p>
             </div>
 
@@ -232,10 +237,10 @@
             <div class="animate-fade-in-up-delay-5">
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button onclick="scrollToProducts()" class="bg-white text-gray-900 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair">
-                        Browse Products
+                        Voir Nos Cadeaux
                     </button>
                     <button class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair">
-                        Filter by Category
+                        Cadeaux Couples
                     </button>
                 </div>
             </div>
@@ -404,7 +409,7 @@
                             <div class="carousel-container-{{$index}} flex transition-transform duration-300 ease-in-out h-full">
                                 @foreach($product->images as $imageIndex => $image)
                                 <div class="w-full h-full flex-shrink-0">
-                                    <img src="{{ Storage::url($image->image_path) }}" alt="{{$product->name}} - Image {{$imageIndex + 1}}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($image->image_path) }}" alt="{{$product->name}} - Image {{$imageIndex + 1}}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 </div>
                                 @endforeach
                             </div>
@@ -432,7 +437,7 @@
                         @else
                             <!-- Fallback for products without images -->
                             <div class="w-full h-full">
-                                <img src="{{ $product->image ? Storage::url($product->image) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K' }}" 
+                                <img src="{{ $product->image ? \Illuminate\Support\Facades\Storage::url($product->image) : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzljYTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K' }}" 
                                      alt="{{$product->name}}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTc1SDE1MEMxNDQuNDc3IDE3NSAxNDAgMTcwLjUyMyAxNDAgMTY1VjE0MEMxNDAgMTM0LjQ3NyAxNDQuNDc3IDEzMCAxNTAgMTMwSDE3NUMxODAuNTIzIDEzMCAxODUgMTM0LjQ3NyAxODUgMTQwVjE2NUMxODUgMTcwLjUyMyAxODAuNTIzIDE3NSAxNzUgMTc1WiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMjUwIDI3MEgyMDBDMTg0LjUzNiAyNzAgMTcyIDI1Ny40NjQgMTcyIDI0MlYxOTJDMTcyIDE3Ni41MzYgMTg0LjUzNiAxNjQgMjAwIDE2NEgyNTBDMjY1LjQ2NCAxNjQgMjc4IDE3Ni41MzYgMjc4IDE5MlYyNDJDMjc4IDI1Ny40NjQgMjY1LjQ2NCAyNzAgMjUwIDI7MFoiIGZpbGw9IiNEMUQ1REIiLz4KPHRleHQgeD0iMjAwIiB5PSIzMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZCNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Tm8gSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='">

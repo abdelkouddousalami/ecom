@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductInteraction;
+use App\Services\SeoService;
 
 class ProductController extends Controller
 {
     public function welcome()
     {
+        $seoService = new SeoService();
+        
         // Get featured products for the home page
         $products = Product::with(['category', 'images'])
             ->where('is_active', true)
@@ -27,15 +30,29 @@ class ProductController extends Controller
                 ->get();
         }
         
-        return view('welcome', compact('products'));
+        // Generate SEO meta for homepage
+        $seoMeta = [
+            'title' => 'L3OCHAQ - Meilleurs Cadeaux Couples & Bijoux | www.l3ochaq.ma',
+            'description' => 'L3OCHAQ - Le meilleur magasin marocain pour cadeaux couples et bijoux. Découvrez nos collections uniques parfaites pour couples. Livraison gratuite au Maroc.',
+            'keywords' => 'L3OCHAQ, cadeaux couples, bijoux Maroc, meilleurs cadeaux, bracelets couples, montres assorties, cadeau saint valentin, l3ochaq.ma, livraison gratuite',
+            'canonical' => url('/'),
+            'ogImage' => asset('images/l3ochaq-homepage.jpg')
+        ];
+        
+        return view('welcome', compact('products', 'seoMeta'));
     }
     
     public function index(Request $request)
     {
+        $seoService = new SeoService();
+        
         $query = Product::with(['category', 'images'])->where('is_active', true);
+        
+        $currentCategory = null;
         
         // Apply filters if provided
         if ($request->has('category') && $request->category) {
+            $currentCategory = Category::where('slug', $request->category)->first();
             $query->whereHas('category', function($q) use ($request) {
                 $q->where('slug', $request->category);
             });
@@ -71,11 +88,16 @@ class ProductController extends Controller
             ->where('is_active', true)
             ->get();
         
-        return view('products', compact('products', 'categories', 'allProducts'));
+        // Generate SEO meta for products page
+        $seoMeta = $seoService->generateCategoryMeta($currentCategory);
+        
+        return view('products', compact('products', 'categories', 'allProducts', 'seoMeta'));
     }
 
     public function show(Product $product)
     {
+        $seoService = new SeoService();
+        
         // Load product with all relationships
         $product->load(['category', 'images']);
         
@@ -95,7 +117,14 @@ class ProductController extends Controller
             ->where('is_active', true)
             ->get();
         
-        return view('product-detail', compact('product', 'relatedProducts', 'allProducts'));
+        // Generate SEO meta for product
+        $seoMeta = $seoService->generateProductMeta($product);
+        
+        // Generate breadcrumbs
+        $breadcrumbs = $seoService->getProductBreadcrumbs($product);
+        $breadcrumbData = $seoService->generateBreadcrumbStructuredData($breadcrumbs);
+        
+        return view('product-detail', compact('product', 'relatedProducts', 'allProducts', 'seoMeta', 'breadcrumbs', 'breadcrumbData'));
     }
     
     public function cart()
