@@ -390,6 +390,52 @@ class AdminController extends Controller
     }
 
     /**
+     * Show edit category form
+     */
+    public function editCategory(Category $category)
+    {
+        return view('admin.edit-category', compact('category'));
+    }
+
+    /**
+     * Update category
+     */
+    public function updateCategory(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string|max:1000',
+            'is_active' => 'boolean'
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'is_active' => $request->has('is_active'),
+            'slug' => Str::slug($request->name)
+        ]);
+
+        return redirect()->route('admin.categories')->with('success', 'Category updated successfully!');
+    }
+
+    /**
+     * Toggle category status
+     */
+    public function toggleCategoryStatus(Category $category)
+    {
+        $category->update([
+            'is_active' => !$category->is_active
+        ]);
+
+        $status = $category->is_active ? 'activated' : 'deactivated';
+        return response()->json([
+            'success' => true,
+            'message' => "Category {$status} successfully!",
+            'is_active' => $category->is_active
+        ]);
+    }
+
+    /**
      * Delete category
      */
     public function destroyCategory(Category $category)

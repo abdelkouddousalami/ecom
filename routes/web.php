@@ -184,6 +184,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Categories Management
     Route::get('/categories', [App\Http\Controllers\Admin\AdminController::class, 'categories'])->name('categories');
     Route::post('/categories', [App\Http\Controllers\Admin\AdminController::class, 'storeCategory'])->name('store-category');
+    Route::get('/categories/{category}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editCategory'])->name('edit-category');
+    Route::put('/categories/{category}', [App\Http\Controllers\Admin\AdminController::class, 'updateCategory'])->name('update-category');
+    Route::patch('/categories/{category}/toggle-status', [App\Http\Controllers\Admin\AdminController::class, 'toggleCategoryStatus'])->name('toggle-category-status');
     Route::delete('/categories/{category}', [App\Http\Controllers\Admin\AdminController::class, 'destroyCategory'])->name('delete-category');
     
     // Orders Management
