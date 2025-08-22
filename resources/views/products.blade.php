@@ -258,12 +258,36 @@
 
     <!-- Search/Filter Toggle Button -->
     <section class="py-8 bg-white" style="font-family: 'Playfair Display', serif;">
-        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
             <div class="text-center">
-                <button id="toggle-filters-btn" onclick="toggleFilters()" class="group btn-hover-effect bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95">
-                    <span class="flex items-center space-x-2">
+                <button id="toggle-filters-btn" onclick="toggleFilters()" class="group btn-hover-effect bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 w-full sm:w-auto">
+                    <span class="flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
+                        </svg>
                         <span class="transition-all duration-300">Search & Filter Products</span>
+                        <span id="active-filters-badge" class="hidden bg-white text-red-600 px-2 py-1 rounded-full text-xs font-bold ml-2">0</span>
                     </span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Mobile Filters Bar -->
+    <section id="mobile-quick-filters" class="bg-gray-50 py-3 px-4 border-b border-gray-200 lg:hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center space-x-3 overflow-x-auto scrollbar-hide">
+                <span class="text-sm font-medium text-gray-600 whitespace-nowrap">Quick:</span>
+                <button onclick="filterByCategory('')" class="quick-filter-btn whitespace-nowrap px-3 py-1 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300 hover:border-red-400 hover:text-red-600 transition-all duration-200">
+                    All
+                </button>
+                @foreach($categories->take(3) as $category)
+                <button onclick="filterByCategory('{{ $category->slug }}')" class="quick-filter-btn whitespace-nowrap px-3 py-1 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300 hover:border-red-400 hover:text-red-600 transition-all duration-200">
+                    {{ $category->name }}
+                </button>
+                @endforeach
+                <button onclick="toggleFilters()" class="whitespace-nowrap px-3 py-1 bg-red-600 text-white rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-200">
+                    More Filters
                 </button>
             </div>
         </div>
@@ -360,15 +384,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-gray-300">
-                    <button onclick="applyFilters()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                        <span class="flex items-center justify-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
-                            </svg>
-                            Apply Filters
-                        </span>
-                    </button>
-                    <button onclick="clearAllFilters()" class="sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 font-semibold py-2 px-6 rounded-lg transition-all duration-300 border border-gray-300 transform hover:scale-105 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                    <button onclick="clearAllFilters()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 font-semibold py-2 px-6 rounded-lg transition-all duration-300 border border-gray-300 transform hover:scale-105 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                         <span class="flex items-center justify-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -376,6 +392,14 @@
                             Reset All
                         </span>
                     </button>
+                    <div class="flex-1 text-center py-2 px-6">
+                        <span class="text-sm text-gray-600">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Filters apply automatically
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Active Filters Display -->
@@ -887,6 +911,101 @@
             
             .filter-tag-enter {
                 animation-duration: 0.2s;
+            }
+            
+            /* Mobile-specific filter improvements */
+            #filters-container {
+                padding: 1rem !important;
+            }
+            
+            .category-filter-btn {
+                font-size: 0.75rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }
+            
+            /* Mobile filter dropdown styling */
+            select, input {
+                font-size: 0.875rem !important;
+                padding: 0.625rem 0.75rem !important;
+            }
+            
+            /* Better mobile category grid */
+            .grid.grid-cols-2.sm\\:grid-cols-3.md\\:grid-cols-4.lg\\:grid-cols-6 {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            /* Extra small devices */
+            .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+            
+            /* Stack filter buttons vertically on very small screens */
+            .category-filter-btn span {
+                font-size: 0.7rem !important;
+            }
+            
+            /* Improve search input on mobile */
+            #search-filter {
+                padding-left: 2.5rem !important;
+            }
+        }
+        
+        /* Filter responsiveness animations */
+        .filter-responsive-animation {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Loading state for filters */
+        .filter-loading {
+            opacity: 0.7;
+            pointer-events: none;
+            position: relative;
+        }
+        
+        .filter-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #dc2626;
+            border-radius: 50%;
+            border-top: 2px solid transparent;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Scrollbar hiding for mobile quick filters */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;  /* Chrome, Safari and Opera */
+        }
+        
+        /* Quick filter button active state */
+        .quick-filter-btn.active {
+            background-color: #dc2626 !important;
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+        
+        /* Mobile search input improvements */
+        @media (max-width: 640px) {
+            #search-filter::placeholder {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1554,9 +1673,32 @@
         }
 
         function filterByCategory(categorySlug) {
+            // Add visual feedback to the clicked button
+            const clickedBtn = event.target.closest('.category-filter-btn, .quick-filter-btn');
+            if (clickedBtn) {
+                clickedBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    clickedBtn.style.transform = 'scale(1)';
+                }, 150);
+            }
+            
             currentFilters.category = categorySlug;
             updateCategoryButtons(categorySlug);
-            applyFilters();
+            updateQuickFilterButtons(categorySlug);
+            
+            // Apply filters with visual feedback
+            applyFiltersWithFeedback();
+        }
+        
+        function updateQuickFilterButtons(activeCategory) {
+            document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+                const btnOnclick = btn.getAttribute('onclick');
+                if (btnOnclick && btnOnclick.includes(`'${activeCategory}'`)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
         }
 
         function updateCategoryButtons(activeCategory) {
@@ -1758,6 +1900,7 @@
             const activeFiltersDiv = document.getElementById('active-filters');
             const filterTagsDiv = document.getElementById('filter-tags');
             const resultsCount = document.getElementById('results-count');
+            const activeFiltersBadge = document.getElementById('active-filters-badge');
             
             if (resultsCount) {
                 resultsCount.textContent = `${count} products found`;
@@ -1769,12 +1912,14 @@
             filterTagsDiv.innerHTML = '';
             
             let hasActiveFilters = false;
+            let activeFiltersCount = 0;
             
             // Add filter tags with better labeling
             if (currentFilters.category) {
                 const categoryName = currentFilters.category.charAt(0).toUpperCase() + currentFilters.category.slice(1);
                 addFilterTag('Category', categoryName, 'category');
                 hasActiveFilters = true;
+                activeFiltersCount++;
             }
             
             if (currentFilters.price) {
@@ -1787,6 +1932,7 @@
                 };
                 addFilterTag('Price', priceLabels[currentFilters.price] || currentFilters.price, 'price');
                 hasActiveFilters = true;
+                activeFiltersCount++;
             }
             
             if (currentFilters.stock) {
@@ -1797,11 +1943,13 @@
                 };
                 addFilterTag('Stock', stockLabels[currentFilters.stock] || currentFilters.stock, 'stock');
                 hasActiveFilters = true;
+                activeFiltersCount++;
             }
             
             if (currentFilters.search) {
                 addFilterTag('Search', `"${currentFilters.search}"`, 'search');
                 hasActiveFilters = true;
+                activeFiltersCount++;
             }
             
             if (currentFilters.sort !== 'newest') {
@@ -1814,6 +1962,18 @@
                 };
                 addFilterTag('Sort', sortLabels[currentFilters.sort] || currentFilters.sort, 'sort');
                 hasActiveFilters = true;
+                activeFiltersCount++;
+            }
+            
+            // Update active filters badge on toggle button
+            if (activeFiltersBadge) {
+                if (activeFiltersCount > 0) {
+                    activeFiltersBadge.textContent = activeFiltersCount;
+                    activeFiltersBadge.classList.remove('hidden');
+                    activeFiltersBadge.style.animation = 'pulse 0.5s ease-in-out';
+                } else {
+                    activeFiltersBadge.classList.add('hidden');
+                }
             }
             
             // Show/hide active filters section
@@ -1888,6 +2048,18 @@
             // Reset category buttons
             updateCategoryButtons('');
             
+            // Reset quick filter buttons
+            document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Make 'All' button active
+            const allBtn = document.querySelector('.quick-filter-btn[onclick="filterByCategory(\'\')"]');
+            if (allBtn) allBtn.classList.add('active');
+            
+            // Hide active filters badge
+            const badge = document.getElementById('active-filters-badge');
+            if (badge) badge.classList.add('hidden');
+            
             // Show all products in original order
             updateProductsDisplay(originalProductsOrder);
             
@@ -1900,37 +2072,109 @@
             showNotification('All filters cleared! Showing all products.', 'success');
         }
 
+        // Visual feedback functions for responsive filters
+        function addFilterLoadingState(element) {
+            element.classList.add('filter-loading');
+            element.style.transition = 'all 0.2s ease-in-out';
+        }
+        
+        function removeFilterLoadingState(element) {
+            element.classList.remove('filter-loading');
+        }
+        
+        // Enhanced filter responsiveness with visual feedback
+        function applyFiltersWithFeedback() {
+            // Add loading state to products container
+            const productsContainer = document.querySelector('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3');
+            if (productsContainer) {
+                productsContainer.style.opacity = '0.8';
+                productsContainer.style.transition = 'opacity 0.2s ease-in-out';
+            }
+            
+            // Apply filters
+            applyFilters();
+            
+            // Remove loading state
+            setTimeout(() => {
+                if (productsContainer) {
+                    productsContainer.style.opacity = '1';
+                }
+            }, 300);
+        }
+
         // Add event listeners for filter inputs
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize filters
             initializeFilters();
             
-            // Auto-apply filters when inputs change
+            // Auto-apply filters when inputs change with visual feedback
             const sortFilter = document.getElementById('sort-filter');
             const priceFilter = document.getElementById('price-filter');
             const stockFilter = document.getElementById('stock-filter');
             const searchFilter = document.getElementById('search-filter');
             
-            if (sortFilter) sortFilter.addEventListener('change', applyFilters);
-            if (priceFilter) priceFilter.addEventListener('change', applyFilters);
-            if (stockFilter) stockFilter.addEventListener('change', applyFilters);
+            // Add responsive filter change handlers
+            if (sortFilter) {
+                sortFilter.addEventListener('change', function() {
+                    addFilterLoadingState(this);
+                    setTimeout(() => {
+                        applyFilters();
+                        removeFilterLoadingState(this);
+                    }, 150);
+                });
+            }
             
-            // Search filter with debounce for better performance
+            if (priceFilter) {
+                priceFilter.addEventListener('change', function() {
+                    addFilterLoadingState(this);
+                    setTimeout(() => {
+                        applyFilters();
+                        removeFilterLoadingState(this);
+                    }, 150);
+                });
+            }
+            
+            if (stockFilter) {
+                stockFilter.addEventListener('change', function() {
+                    addFilterLoadingState(this);
+                    setTimeout(() => {
+                        applyFilters();
+                        removeFilterLoadingState(this);
+                    }, 150);
+                });
+            }
+            
+            // Search filter with debounce for better performance and visual feedback
             let searchTimeout;
             if (searchFilter) {
                 searchFilter.addEventListener('input', function() {
+                    const input = this;
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(applyFilters, 300); // Wait 300ms after user stops typing
+                    addFilterLoadingState(input);
+                    
+                    searchTimeout = setTimeout(() => {
+                        applyFilters();
+                        removeFilterLoadingState(input);
+                    }, 300); // Wait 300ms after user stops typing
                 });
                 
                 // Add search icon and clear button functionality
                 searchFilter.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
-                        applyFilters();
+                        clearTimeout(searchTimeout);
+                        addFilterLoadingState(this);
+                        setTimeout(() => {
+                            applyFilters();
+                            removeFilterLoadingState(this);
+                        }, 100);
                     }
                     if (e.key === 'Escape') {
                         this.value = '';
-                        applyFilters();
+                        addFilterLoadingState(this);
+                        setTimeout(() => {
+                            applyFilters();
+                            removeFilterLoadingState(this);
+                        }, 100);
                     }
                 });
             }
