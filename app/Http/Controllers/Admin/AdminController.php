@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\Order;
 use App\Models\Category;
 use App\Models\PhoneNumber;
@@ -292,6 +293,67 @@ class AdminController extends Controller
     }
 
     /**
+     * Update product via form submission (non-AJAX)
+     */
+    public function updateProductForm(Request $request, Product $product)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'original_price' => 'nullable|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff,svg',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff,svg',
+            ]);
+
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->original_price = $request->original_price;
+            $product->stock = $request->stock;
+            $product->category_id = $request->category_id;
+
+            // Initialize ImageUploadService
+            $imageService = app(ImageUploadService::class);
+
+            // Handle main image upload
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($product->image && Storage::disk('public')->exists($product->image)) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                $imagePath = $imageService->processAndStoreImage($request->file('image'), 'products');
+                if ($imagePath) {
+                    $product->image = $imagePath;
+                }
+            }
+
+            $product->save();
+
+            // Handle multiple images upload
+            if ($request->hasFile('images')) {
+                $imagePaths = $imageService->storeProductImages($request->file('images'));
+                foreach ($imagePaths as $imagePath) {
+                    $product->images()->create([
+                        'image_path' => $imagePath
+                    ]);
+                }
+            }
+
+            return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Product update error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Unable to update product. Please try again.')->withInput();
+        }
+    }
+
+    /**
      * Delete product
      */
     public function destroyProduct(Product $product)
@@ -312,6 +374,57 @@ class AdminController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully!');
+    }
+
+    /**
+     * Delete a product image
+     */
+    public function deleteProductImage(ProductImage $image)
+    {
+        try {
+            // Delete the file from storage
+            if (Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            
+            // Delete the database record
+            $image->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Image deleted successfully!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting product image: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete image'
+            ], 500);
+        }
+    }
+
+    /**
+     * Set a product image as primary
+     */
+    public function setPrimaryImage(ProductImage $image)
+    {
+        try {
+            $product = $image->product;
+            
+            // Update the product's main image
+            $product->update(['image' => $image->image_path]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Primary image updated successfully!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error setting primary image: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to set primary image'
+            ], 500);
+        }
     }
 
     /**

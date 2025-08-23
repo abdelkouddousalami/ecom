@@ -1,17 +1,17 @@
-@extends('admin.layout')
 
-@section('title', 'Edit Product')
-@section('header', 'Edit Product')
 
-@php
+<?php $__env->startSection('title', 'Edit Product'); ?>
+<?php $__env->startSection('header', 'Edit Product'); ?>
+
+<?php
 use Illuminate\Support\Facades\Storage;
-@endphp
+?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="px-4 py-6 sm:px-0">
     <!-- Back Button -->
     <div class="mb-6">
-        <a href="{{ route('admin.products') }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-900">
+        <a href="<?php echo e(route('admin.products')); ?>" class="inline-flex items-center text-indigo-600 hover:text-indigo-900">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Storage;
 
     <!-- Form -->
     <div class="bg-white shadow rounded-lg">
-        <form action="{{ route('admin.update-product-form', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6 p-6" id="product-update-form" data-no-ajax="true">
-            @csrf
+        <form action="<?php echo e(route('admin.update-product-form', $product)); ?>" method="POST" enctype="multipart/form-data" class="space-y-6 p-6" id="product-update-form" data-no-ajax="true">
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="form_submission" value="1">
             <input type="hidden" name="_no_ajax" value="true">
             
@@ -34,11 +34,18 @@ use Illuminate\Support\Facades\Storage;
                     <!-- Product Name -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700">Product Name *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" 
+                        <input type="text" name="name" id="name" value="<?php echo e(old('name', $product->name)); ?>" 
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Category -->
@@ -47,15 +54,23 @@ use Illuminate\Support\Facades\Storage;
                         <select name="category_id" id="category_id" 
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                             <option value="">Select a category</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($category->id); ?>" <?php echo e(old('category_id', $product->category_id) == $category->id ? 'selected' : ''); ?>>
+                                    <?php echo e($category->name); ?>
+
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
-                        @error('category_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['category_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
@@ -63,10 +78,17 @@ use Illuminate\Support\Facades\Storage;
                 <div class="mt-6">
                     <label for="description" class="block text-sm font-medium text-gray-700">Description *</label>
                     <textarea name="description" id="description" rows="4" 
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>{{ old('description', $product->description) }}</textarea>
-                    @error('description')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required><?php echo e(old('description', $product->description)); ?></textarea>
+                    <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
             </div>
 
@@ -78,31 +100,52 @@ use Illuminate\Support\Facades\Storage;
                     <!-- Price -->
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700">Price (DH) *</label>
-                        <input type="number" step="0.01" name="price" id="price" value="{{ old('price', $product->price) }}" 
+                        <input type="number" step="0.01" name="price" id="price" value="<?php echo e(old('price', $product->price)); ?>" 
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                        @error('price')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Original Price -->
                     <div>
                         <label for="original_price" class="block text-sm font-medium text-gray-700">Original Price (DH)</label>
-                        <input type="number" step="0.01" name="original_price" id="original_price" value="{{ old('original_price', $product->original_price) }}" 
+                        <input type="number" step="0.01" name="original_price" id="original_price" value="<?php echo e(old('original_price', $product->original_price)); ?>" 
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        @error('original_price')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['original_price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Stock -->
                     <div>
                         <label for="stock" class="block text-sm font-medium text-gray-700">Stock Quantity *</label>
-                        <input type="number" name="stock" id="stock" value="{{ old('stock', $product->stock) }}" 
+                        <input type="number" name="stock" id="stock" value="<?php echo e(old('stock', $product->stock)); ?>" 
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                        @error('stock')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['stock'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
@@ -111,16 +154,16 @@ use Illuminate\Support\Facades\Storage;
             <div class="pb-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Product Images</h3>
                 
-                @if($product->images && $product->images->count() > 0)
+                <?php if($product->images && $product->images->count() > 0): ?>
                     <div class="mb-6">
-                        <h4 class="text-md font-medium text-gray-700 mb-4">Current Images ({{ $product->images->count() }})</h4>
+                        <h4 class="text-md font-medium text-gray-700 mb-4">Current Images (<?php echo e($product->images->count()); ?>)</h4>
                         
                         <!-- Styled image grid without backgrounds -->
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            @foreach($product->images as $image)
+                            <?php $__currentLoopData = $product->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="relative border border-gray-300 rounded-lg overflow-hidden hover:shadow-md transition-shadow" style="background: white;">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" 
-                                         alt="{{ $product->name }}" 
+                                    <img src="<?php echo e(asset('storage/' . $image->image_path)); ?>" 
+                                         alt="<?php echo e($product->name); ?>" 
                                          class="w-full h-32 object-cover"
                                          style="background: white;"
                                          onload="console.log('✅ Image loaded:', this.src);"
@@ -139,19 +182,19 @@ use Illuminate\Support\Facades\Storage;
                                     <!-- Always visible action buttons at bottom -->
                                     <div class="absolute bottom-2 left-2 right-2">
                                         <div class="flex space-x-2 justify-center">
-                                            @php
+                                            <?php
                                                 $isPrimary = $image->is_primary || $product->image === $image->image_path;
-                                            @endphp
-                                            @if($isPrimary)
+                                            ?>
+                                            <?php if($isPrimary): ?>
                                                 <span class="text-green-600 text-xs px-3 py-1 rounded border border-green-600 font-medium" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">✓ Primary</span>
-                                            @else
-                                                <button type="button" onclick="setPrimaryImage({{ $image->id }})" 
+                                            <?php else: ?>
+                                                <button type="button" onclick="setPrimaryImage(<?php echo e($image->id); ?>)" 
                                                         class="text-blue-600 hover:text-blue-800 text-xs px-3 py-1 rounded border border-blue-600 hover:border-blue-800 transition-colors font-medium" 
                                                         style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                                                     Set Primary
                                                 </button>
-                                            @endif
-                                            <button type="button" onclick="removeImage({{ $image->id }})" 
+                                            <?php endif; ?>
+                                            <button type="button" onclick="removeImage(<?php echo e($image->id); ?>)" 
                                                     class="text-red-600 hover:text-red-800 text-xs px-3 py-1 rounded border border-red-600 hover:border-red-800 transition-colors font-medium" 
                                                     style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                                                 ✕ Remove
@@ -161,13 +204,13 @@ use Illuminate\Support\Facades\Storage;
                                     
                                     <!-- Image ID badge - WHITE BACKGROUND -->
                                     <div class="absolute top-2 right-2">
-                                        <span class="text-gray-600 text-xs px-2 py-1 rounded border border-gray-400" style="background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">#{{ $image->id }}</span>
+                                        <span class="text-gray-600 text-xs px-2 py-1 rounded border border-gray-400" style="background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">#<?php echo e($image->id); ?></span>
                                     </div>
                                 </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="mb-6 p-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                         <div class="text-center">
                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -177,7 +220,7 @@ use Illuminate\Support\Facades\Storage;
                             <p class="text-xs text-gray-500">Add some images below</p>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Add New Images -->
                 <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
@@ -203,9 +246,16 @@ use Illuminate\Support\Facades\Storage;
                         </div>
                     </div>
                     
-                    @error('new_images')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['new_images'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
             </div>
 
@@ -217,28 +267,42 @@ use Illuminate\Support\Facades\Storage;
                     <!-- Rating -->
                     <div>
                         <label for="rating" class="block text-sm font-medium text-gray-700">Rating (0-5)</label>
-                        <input type="number" step="0.1" min="0" max="5" name="rating" id="rating" value="{{ old('rating', $product->rating) }}" 
+                        <input type="number" step="0.1" min="0" max="5" name="rating" id="rating" value="<?php echo e(old('rating', $product->rating)); ?>" 
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        @error('rating')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['rating'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Review Count -->
                     <div>
                         <label for="review_count" class="block text-sm font-medium text-gray-700">Review Count</label>
-                        <input type="number" min="0" name="review_count" id="review_count" value="{{ old('review_count', $product->review_count) }}" 
+                        <input type="number" min="0" name="review_count" id="review_count" value="<?php echo e(old('review_count', $product->review_count)); ?>" 
                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        @error('review_count')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['review_count'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
                 <!-- Tags -->
                 <div class="mt-6">
                     <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
-                    <input type="text" name="tags" id="tags" value="{{ old('tags', $product->tags) }}" 
+                    <input type="text" name="tags" id="tags" value="<?php echo e(old('tags', $product->tags)); ?>" 
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
                            placeholder="e.g., premium, luxury, bestseller">
                     <p class="mt-1 text-xs text-gray-500">Separate tags with commas</p>
@@ -249,14 +313,15 @@ use Illuminate\Support\Facades\Storage;
                     <label for="specifications" class="block text-sm font-medium text-gray-700">Specifications</label>
                     <textarea name="specifications" id="specifications" rows="3" 
                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                              placeholder="Technical specifications, materials, dimensions, etc.">{{ old('specifications', $product->specifications) }}</textarea>
+                              placeholder="Technical specifications, materials, dimensions, etc."><?php echo e(old('specifications', $product->specifications)); ?></textarea>
                 </div>
 
                 <!-- Featured -->
                 <div class="mt-6">
                     <div class="flex items-center">
                         <input type="checkbox" name="featured" id="featured" value="1" 
-                               {{ old('featured', $product->is_featured) ? 'checked' : '' }}
+                               <?php echo e(old('featured', $product->is_featured) ? 'checked' : ''); ?>
+
                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                         <label for="featured" class="ml-2 block text-sm text-gray-700">Featured Product</label>
                     </div>
@@ -265,7 +330,7 @@ use Illuminate\Support\Facades\Storage;
 
             <!-- Form Actions -->
             <div class="flex justify-end space-x-3">
-                <a href="{{ route('admin.products') }}" 
+                <a href="<?php echo e(route('admin.products')); ?>" 
                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Cancel
                 </a>
@@ -378,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (files.length > 0) {
                 previewSection.classList.remove('hidden');
                 
-                const currentImageCount = parseInt('{{ $product->images->count() }}');
+                const currentImageCount = parseInt('<?php echo e($product->images->count()); ?>');
                 if (currentImageCount + files.length > 10) {
                     alert('You can only have 10 images total. You currently have ' + currentImageCount + ' images. Please select ' + (10 - currentImageCount) + ' or fewer new images.');
                     e.target.value = '';
@@ -497,4 +562,6 @@ function showMessage(message, type) {
 }
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/admin/edit-product.blade.php ENDPATH**/ ?>

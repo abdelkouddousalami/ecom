@@ -112,6 +112,15 @@ Route::post('/test-orders', function() {
     return response()->json(['success' => true, 'message' => 'Test route works']);
 });
 
+// Test image route
+Route::get('/test-image/{filename}', function($filename) {
+    $path = storage_path('app/public/products/' . $filename);
+    if (file_exists($path)) {
+        return response()->file($path);
+    }
+    return response('Image not found: ' . $path, 404);
+})->name('test-image');
+
 // Test route for AJAX debugging
 Route::post('/admin/test-ajax', function(\Illuminate\Http\Request $request) {
     return response()->json([
@@ -178,8 +187,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/products', [App\Http\Controllers\Admin\AdminController::class, 'storeProduct'])->name('store-product');
     Route::get('/products/{product}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editProduct'])->name('edit-product');
     Route::put('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'updateProduct'])->name('update-product');
+    Route::post('/products/{product}/update-form', [App\Http\Controllers\Admin\AdminController::class, 'updateProductForm'])->name('update-product-form');
     Route::delete('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'destroyProduct'])->name('delete-product');
     Route::get('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'showProduct'])->name('show-product');
+    
+    // Product Image Management
+    Route::delete('/products/images/{image}', [App\Http\Controllers\Admin\AdminController::class, 'deleteProductImage'])->name('delete-product-image');
+    Route::post('/products/images/{image}/set-primary', [App\Http\Controllers\Admin\AdminController::class, 'setPrimaryImage'])->name('set-primary-image');
     
     // Categories Management
     Route::get('/categories', [App\Http\Controllers\Admin\AdminController::class, 'categories'])->name('categories');

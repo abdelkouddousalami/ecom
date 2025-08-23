@@ -206,6 +206,15 @@ class AdminController extends Controller
     public function updateProduct(Request $request, Product $product, ImageUploadService $imageService)
     {
         try {
+            // Force the response to never be JSON - debug headers
+            if ($request->wantsJson() || $request->expectsJson()) {
+                Log::warning('Request wants JSON but forcing redirect', [
+                    'accept_header' => $request->header('Accept'),
+                    'content_type' => $request->header('Content-Type'),
+                    'x_requested_with' => $request->header('X-Requested-With')
+                ]);
+            }
+
             $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'required|string|min:10',
@@ -221,12 +230,53 @@ class AdminController extends Controller
                     'max:10240', // 10MB max per file
                     'dimensions:min_width=100,min_height=100,max_width=5000,max_height=5000'
                 ],
+                'new_images' => 'nullable|array|max:10',
+                'new_images.*' => [
+                    'nullable',
+                    'file',
+                    'image',
+                    'mimes:jpeg,jpg,png,gif,webp,bmp,tiff,svg',
+                    'max:10240', // 10MB max per file
+                    'dimensions:min_width=100,min_height=100,max_width=5000,max_height=5000'
+                ],
                 'stock' => 'required|integer|min:0',
                 'rating' => 'nullable|numeric|min:0|max:5',
                 'review_count' => 'nullable|integer|min:0',
             ]);
 
-            // Handle new image uploads
+            // Handle new image uploads (adding to existing)
+            if ($request->hasFile('new_images')) {
+                // Check total image limit
+                $currentImageCount = $product->images->count();
+                $newImageCount = count($request->file('new_images'));
+                
+                if ($currentImageCount + $newImageCount > 10) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['new_images' => 'Total images cannot exceed 10. Current: ' . $currentImageCount . ', Adding: ' . $newImageCount]);
+                }
+                
+                // Process new images
+                $imagePaths = $imageService->storeProductImages($request->file('new_images'));
+                
+                if (!empty($imagePaths)) {
+                    // Add new images
+                    foreach ($imagePaths as $index => $imagePath) {
+                        $product->images()->create([
+                            'image_path' => $imagePath,
+                            'sort_order' => $currentImageCount + $index,
+                            'is_primary' => $currentImageCount === 0 && $index === 0, // Set as primary if it's the first image overall
+                        ]);
+                    }
+
+                    // Update main image reference if this is the first image
+                    if ($currentImageCount === 0) {
+                        $product->update(['image' => $imagePaths[0]]);
+                    }
+                }
+            }
+
+            // Handle full image replacement (legacy feature)
             if ($request->hasFile('images')) {
                 // Process new images
                 $imagePaths = $imageService->storeProductImages($request->file('images'));
@@ -270,18 +320,105 @@ class AdminController extends Controller
 
             Log::info('Product updated successfully', [
                 'product_id' => $product->id,
-                'updated_images' => $request->hasFile('images')
+                'updated_images' => $request->hasFile('images'),
+                'added_new_images' => $request->hasFile('new_images'),
+                'request_wants_json' => $request->wantsJson(),
+                'request_expects_json' => $request->expectsJson(),
+                'request_headers' => $request->headers->all()
             ]);
 
-            return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+            // Force HTML redirect response - never return JSON for product updates
+            $redirect = redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+            
+            // Explicitly set content type to prevent JSON response
+            $redirect->header('Content-Type', 'text/html');
+            
+            return $redirect;
             
         } catch (\Exception $e) {
             Log::error('Error updating product: ' . $e->getMessage(), [
                 'product_id' => $product->id
             ]);
+            
+            // Always redirect for form submissions, never return JSON for product updates
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['error' => 'Error updating product: ' . $e->getMessage()]);
+        }
+    }
+
+    public function updateProductForm(Request $request, Product $product, ImageUploadService $imageService)
+    {
+        // This method is specifically for form submissions - NEVER returns JSON
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string|min:10',
+                'price' => 'required|numeric|min:0',
+                'original_price' => 'nullable|numeric|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'new_images' => 'nullable|array|max:10',
+                'new_images.*' => [
+                    'nullable',
+                    'file',
+                    'image',
+                    'mimes:jpeg,jpg,png,gif,webp,bmp,tiff,svg',
+                    'max:10240',
+                    'dimensions:min_width=100,min_height=100,max_width=5000,max_height=5000'
+                ],
+                'stock' => 'required|integer|min:0',
+                'rating' => 'nullable|numeric|min:0|max:5',
+                'review_count' => 'nullable|integer|min:0',
+            ]);
+
+            // Handle new image uploads
+            if ($request->hasFile('new_images')) {
+                $currentImageCount = $product->images->count();
+                $newImageCount = count($request->file('new_images'));
+                
+                if ($currentImageCount + $newImageCount <= 10) {
+                    $imagePaths = $imageService->storeProductImages($request->file('new_images'));
+                    
+                    if (!empty($imagePaths)) {
+                        foreach ($imagePaths as $index => $imagePath) {
+                            $product->images()->create([
+                                'image_path' => $imagePath,
+                                'sort_order' => $currentImageCount + $index,
+                                'is_primary' => $currentImageCount === 0 && $index === 0,
+                            ]);
+                        }
+
+                        if ($currentImageCount === 0) {
+                            $product->update(['image' => $imagePaths[0]]);
+                        }
+                    }
+                }
+            }
+
+            // Update product details
+            $product->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'price' => $request->price,
+                'original_price' => $request->original_price,
+                'category_id' => $request->category_id,
+                'stock' => $request->stock,
+                'rating' => $request->rating ?? 0,
+                'review_count' => $request->review_count ?? 0,
+                'is_featured' => $request->has('featured'),
+                'tags' => $request->tags,
+                'specifications' => $request->specifications,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            Log::info('Product updated successfully via form', ['product_id' => $product->id]);
+
+            // Force redirect with Location header
+            return redirect()->away(url('/admin/products'))->with('success', 'Product updated successfully!');
+            
+        } catch (\Exception $e) {
+            Log::error('Error updating product via form: ' . $e->getMessage());
+            return redirect()->back()->withInput()->withErrors(['error' => 'Error updating product: ' . $e->getMessage()]);
         }
     }
 
@@ -311,6 +448,89 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             Log::error('Error deleting product: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => 'Error deleting product: ' . $e->getMessage()]);
+        }
+    }
+
+    public function deleteProductImage(ProductImage $image, ImageUploadService $imageService)
+    {
+        try {
+            $product = $image->product;
+            $wasPrimary = $image->is_primary;
+            
+            // Delete image from storage
+            $imageService->deleteImage($image->image_path);
+            
+            // Delete from database
+            $image->delete();
+            
+            // If this was the primary image, set another image as primary
+            if ($wasPrimary) {
+                $newPrimaryImage = $product->images()->orderBy('sort_order')->first();
+                if ($newPrimaryImage) {
+                    $newPrimaryImage->update(['is_primary' => true]);
+                    $product->update(['image' => $newPrimaryImage->image_path]);
+                } else {
+                    // No images left
+                    $product->update(['image' => null]);
+                }
+            }
+            
+            Log::info('Product image deleted successfully', [
+                'image_id' => $image->id,
+                'product_id' => $product->id,
+                'was_primary' => $wasPrimary
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Image deleted successfully!'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error deleting product image: ' . $e->getMessage(), [
+                'image_id' => $image->id ?? 'unknown'
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting image: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function setPrimaryImage(ProductImage $image)
+    {
+        try {
+            $product = $image->product;
+            
+            // Remove primary status from all images
+            $product->images()->update(['is_primary' => false]);
+            
+            // Set this image as primary
+            $image->update(['is_primary' => true]);
+            
+            // Update product's main image reference
+            $product->update(['image' => $image->image_path]);
+            
+            Log::info('Primary product image updated', [
+                'image_id' => $image->id,
+                'product_id' => $product->id
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Primary image updated successfully!'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error setting primary image: ' . $e->getMessage(), [
+                'image_id' => $image->id ?? 'unknown'
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error setting primary image: ' . $e->getMessage()
+            ], 500);
         }
     }
 

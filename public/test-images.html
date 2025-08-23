@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Test</title>
+    <style>
+        .image-test {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #ccc;
+            margin: 10px;
+            display: inline-block;
+            background: white;
+        }
+        .debug {
+            font-family: monospace;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Loading Test</h1>
+    
+    <div class="debug">Testing different image paths:</div>
+    
+    <div>
+        <div class="debug">1. Asset path: /storage/products/detaille1_2025-08-23_08-53-22_qyvpzk.jpg</div>
+        <img src="/storage/products/detaille1_2025-08-23_08-53-22_qyvpzk.jpg" class="image-test" 
+             onload="console.log('✅ Method 1 success')" 
+             onerror="console.log('❌ Method 1 failed')">
+    </div>
+    
+    <div>
+        <div class="debug">2. Full URL: http://127.0.0.1:8000/storage/products/detaille1_2025-08-23_08-53-22_qyvpzk.jpg</div>
+        <img src="http://127.0.0.1:8000/storage/products/detaille1_2025-08-23_08-53-22_qyvpzk.jpg" class="image-test"
+             onload="console.log('✅ Method 2 success')" 
+             onerror="console.log('❌ Method 2 failed')">
+    </div>
+    
+    <div>
+        <div class="debug">3. Test route: /test-image/detaille1_2025-08-23_08-53-22_qyvpzk.jpg</div>
+        <img src="/test-image/detaille1_2025-08-23_08-53-22_qyvpzk.jpg" class="image-test"
+             onload="console.log('✅ Method 3 success')" 
+             onerror="console.log('❌ Method 3 failed')">
+    </div>
+    
+    <div>
+        <div class="debug">4. Direct file access (if this works, symlink is the issue)</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjBmOWZmIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iNDAiIGZpbGw9IiMzYjgyZjYiLz4KPHRleHQgeD0iMTAwIiB5PSIxMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkJBU0U2NDwvdGV4dD4KPC9zdmc+" class="image-test"
+             onload="console.log('✅ Base64 works')">
+    </div>
+    
+    <script>
+        console.log('🔍 Image test page loaded. Check console for results.');
+        
+        // Test if we can fetch the image
+        fetch('/storage/products/detaille1_2025-08-23_08-53-22_qyvpzk.jpg')
+            .then(response => {
+                console.log('📡 Fetch response:', response.status, response.statusText);
+                return response.blob();
+            })
+            .then(blob => {
+                console.log('📄 Blob size:', blob.size, 'bytes, type:', blob.type);
+            })
+            .catch(error => {
+                console.error('🚫 Fetch error:', error);
+            });
+    </script>
+</body>
+</html>
