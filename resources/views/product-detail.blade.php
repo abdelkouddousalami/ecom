@@ -34,6 +34,11 @@
             gap: 1rem;
         }
         
+        .content-width {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
         .thumbnail-grid {
             display: flex;
             flex-direction: column;
@@ -43,25 +48,36 @@
         .thumbnail {
             width: 80px;
             height: 80px;
-            border-radius: 8px;
-            border: 2px solid transparent;
+            border-radius: 12px;
+            border: 3px solid transparent;
             cursor: pointer;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
         
         .thumbnail.active {
             border-color: #3B82F6;
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25);
         }
         
         .thumbnail:hover {
             border-color: #93C5FD;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(147, 197, 253, 0.3);
         }
         
         .main-image {
             width: 100%;
             height: 500px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .main-image:hover {
+            transform: scale(1.02);
         }
         
         @media (max-width: 768px) {
@@ -73,86 +89,216 @@
                 flex-direction: row;
                 overflow-x: auto;
                 padding-bottom: 10px;
+                gap: 0.5rem;
             }
             
             .thumbnail {
                 min-width: 80px;
+                width: 80px;
+                height: 80px;
+            }
+            
+            .main-image {
+                height: 300px;
             }
         }
         
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: 0.25rem 0.75rem;
+            padding: 0.375rem 0.875rem;
             border-radius: 9999px;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        
+        .badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .badge-green {
-            background-color: #DCFCE7;
-            color: #166534;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
         
         .badge-red {
-            background-color: #FEE2E2;
-            color: #DC2626;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
         }
         
         .badge-yellow {
-            background-color: #FEF3C7;
-            color: #D97706;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
         }
         
         .quantity-control {
             display: flex;
             align-items: center;
             border: 2px solid #E5E7EB;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            min-width: 120px;
+            min-width: 130px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: white;
         }
         
         .quantity-btn {
-            padding: 0.75rem 1rem;
-            background: #F9FAFB;
+            padding: 0.875rem 1.125rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border: none;
             cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 1.1rem;
-            font-weight: 600;
-            min-width: 40px;
+            transition: all 0.2s ease;
+            font-size: 1.25rem;
+            font-weight: 700;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .quantity-btn:hover {
-            background: #E5E7EB;
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            transform: scale(1.05);
+        }
+        
+        .quantity-btn:active {
+            transform: scale(0.98);
         }
         
         .quantity-input {
             border: none;
-            padding: 0.75rem;
+            padding: 0.875rem;
             text-align: center;
-            width: 60px;
+            width: 70px;
             background: white;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1rem;
         }
         
-        @media (max-width: 640px) {
-            .quantity-control {
-                min-width: 100px;
-            }
-            
-            .quantity-btn {
-                padding: 0.5rem 0.75rem;
-                min-width: 35px;
-                font-size: 1rem;
-            }
-            
-            .quantity-input {
-                width: 50px;
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
+        .customization-card {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 0.875rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .customization-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #d97706, #f59e0b);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+        
+        .customization-input {
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+            font-size: 0.875rem;
+        }
+        
+        .customization-input:focus {
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .price-card {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 2px solid #10b981;
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+        
+        .action-card {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 2px solid #3b82f6;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.35);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+        
+        .btn-secondary {
+            background: white;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+        }
+        
+        .btn-secondary:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.25);
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
         }
         
         .floating-element {
@@ -162,6 +308,40 @@
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @media (max-width: 640px) {
+            .quantity-control {
+                min-width: 110px;
+            }
+            
+            .quantity-btn {
+                padding: 0.625rem 0.875rem;
+                min-width: 38px;
+                font-size: 1.125rem;
+            }
+            
+            .quantity-input {
+                width: 60px;
+                padding: 0.625rem;
+                font-size: 0.875rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .price-card, .action-card, .customization-card {
+                padding: 1.25rem;
+            }
         }
     </style>
 </head>
@@ -193,64 +373,87 @@
     </div>
 
     <!-- Product Detail -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 p-8">
-            <!-- Product Images -->
-            <div class="space-y-6">
-                <div class="image-gallery">
-                    <!-- Thumbnails -->
-                    <div class="thumbnail-grid">
-                        @if($product->images && $product->images->count() > 0)
-                            @foreach($product->images as $index => $image)
-                                <img src="{{ Storage::url($image->image_path) }}" 
+                <!-- Product Images -->
+                <div class="space-y-6">
+                    <div class="image-gallery">
+                        <!-- Thumbnails -->
+                        <div class="thumbnail-grid">
+                            @if($product->images && $product->images->count() > 0)
+                                @foreach($product->images as $index => $image)
+                                    <img src="{{ Storage::url($image->image_path) }}" 
+                                         alt="{{ $product->name }}" 
+                                         class="thumbnail {{ $index === 0 ? 'active' : '' }}"
+                                         onclick="changeMainImage('{{ Storage::url($image->image_path) }}', {{ $index }})">
+                                @endforeach
+                            @else
+                                <img src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
                                      alt="{{ $product->name }}" 
-                                     class="thumbnail {{ $index === 0 ? 'active' : '' }}"
-                                     onclick="changeMainImage('{{ Storage::url($image->image_path) }}', {{ $index }})">
-                            @endforeach
-                        @else
-                            <img src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
-                                 alt="{{ $product->name }}" 
-                                 class="thumbnail active"
-                                 onclick="changeMainImage('{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
-                        @endif
-                    </div>
-                    
-                    <!-- Main Image -->
-                    <div class="relative">
-                        @if($product->images && $product->images->count() > 0)
-                            <img id="main-image" src="{{ Storage::url($product->images->first()->image_path) }}" 
-                                 alt="{{ $product->name }}" 
-                                 class="main-image">
-                        @else
-                            <img id="main-image" src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
-                                 alt="{{ $product->name }}" 
-                                 class="main-image">
-                        @endif
-                        
-                        <!-- Image Zoom -->
-                        <div class="absolute top-4 right-4">
-                            <button onclick="openImageModal()" class="bg-white p-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
-                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
-                                </svg>
-                            </button>
+                                     class="thumbnail active"
+                                     onclick="changeMainImage('{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
+                            @endif
                         </div>
                         
-                        <!-- Discount Badge -->
-                        @if($product->original_price && $product->original_price > $product->price)
-                            <div class="absolute top-4 left-4">
-                                <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                                    -{{ $product->discount_percentage }}%
-                                </span>
+                        <!-- Main Image -->
+                        <div class="relative">
+                            @if($product->images && $product->images->count() > 0)
+                                <img id="main-image" src="{{ Storage::url($product->images->first()->image_path) }}" 
+                                     alt="{{ $product->name }}" 
+                                     class="main-image">
+                            @else
+                                <img id="main-image" src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
+                                     alt="{{ $product->name }}" 
+                                     class="main-image">
+                            @endif
+                            
+                            <!-- Image Zoom -->
+                            <div class="absolute top-4 right-4">
+                                <button onclick="openImageModal()" class="bg-white p-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                    </svg>
+                                </button>
                             </div>
-                        @endif
+                            
+                            <!-- Discount Badge -->
+                            @if($product->original_price && $product->original_price > $product->price)
+                                <div class="absolute top-4 left-4">
+                                    <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                        -{{ $product->discount_percentage }}%
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
                     </div>
+                    
+                    <!-- Customization Input - Bottom of Images (Desktop Only) -->
+                    @if($product->is_customizable)
+                        <div class="customization-card hidden md:block" style="padding: 8px; margin-top: 10px;">
+                            <h4 class="text-xs font-medium text-gray-800 mb-1 flex items-center">
+                                <svg class="w-3 h-3 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Customize Product
+                            </h4>
+                            <p class="text-gray-600 mb-1 text-xs">Add custom text to this item.</p>
+                            <div>
+                                <label for="custom_name" class="block text-xs font-medium text-gray-700 mb-1">Custom Text</label>
+                                <input type="text" id="custom_name" name="custom_name" maxlength="50" 
+                                       class="customization-input w-full text-xs" style="padding: 4px 6px; font-size: 11px;"
+                                       placeholder="Enter custom text (max 50 chars)"
+                                       onchange="document.getElementById('custom_name_mobile').value = this.value">
+                                <p class="mt-1 text-xs text-gray-500" style="font-size: 10px;">
+                                    Leave empty if no customization needed.
+                                </p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
-            </div>
 
-            <!-- Product Information -->
-            <div class="space-y-6">
+                <!-- Product Information -->
+                <div class="space-y-6">
                 <!-- Product Category & Status -->
                 <div>
                     <div class="flex items-center gap-2 mb-4">
@@ -278,54 +481,93 @@
                 </div>
 
                 <!-- Price -->
-                <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-                    <div class="flex items-baseline space-x-4">
-                        <span class="text-4xl font-bold text-green-600 font-playfair">{{ number_format($product->price) }} DH</span>
+                <div class="price-card">
+                    <div class="flex items-baseline space-x-4 mb-2">
+                        <span class="text-4xl font-bold text-green-600 font-playfair gradient-text">{{ number_format($product->price) }} DH</span>
                         @if($product->original_price && $product->original_price > $product->price)
                             <span class="text-xl text-gray-500 line-through">{{ number_format($product->original_price) }} DH</span>
-                            <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Save {{ number_format($product->original_price - $product->price) }} DH</span>
+                            <span class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                                Save {{ number_format($product->original_price - $product->price) }} DH
+                            </span>
                         @endif
                     </div>
                     @if($product->original_price && $product->original_price > $product->price)
-                        <p class="text-green-700 text-sm mt-2 font-medium">You save {{ $product->discount_percentage }}% on this item!</p>
+                        <p class="text-green-700 text-base font-semibold flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            You save {{ $product->discount_percentage }}% on this item!
+                        </p>
                     @endif
                 </div>
 
                 <!-- Stock Status -->
                 <div class="flex items-center space-x-2">
                     @if($product->stock > 0)
-                        <span class="badge badge-green">✓ In Stock ({{ $product->stock }} available)</span>
+                        <span class="badge badge-green floating-element">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            In Stock ({{ $product->stock }} available)
+                        </span>
                         @if($product->is_low_stock)
-                            <span class="badge badge-yellow">⚠ Low Stock</span>
+                            <span class="badge badge-yellow floating-element">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                Low Stock
+                            </span>
                         @endif
                     @else
-                        <span class="badge badge-red">✗ Out of Stock</span>
+                        <span class="badge badge-red">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            Out of Stock
+                        </span>
                     @endif
                 </div>
 
                 <!-- Description -->
-                <div class="bg-gray-50 rounded-xl p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair">Description</h3>
+                <div class="info-card">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Description
+                    </h3>
                     <p class="text-gray-700 leading-relaxed text-base">{{ $product->description }}</p>
                 </div>
 
                 <!-- Specifications -->
                 @if($product->specifications)
-                    <div class="bg-blue-50 rounded-xl p-6">
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair">Specifications</h3>
-                        <div class="bg-white rounded-lg p-4 border border-blue-200">
-                            <pre class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed">{{ $product->specifications }}</pre>
+                    <div class="info-card hidden md:block">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                            </svg>
+                            Specifications
+                        </h3>
+                        <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-4 border border-indigo-200">
+                            <pre class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed font-mono">{{ $product->specifications }}</pre>
                         </div>
                     </div>
                 @endif
 
                 <!-- Tags -->
                 @if($product->tags)
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Tags</h3>
-                        <div class="flex flex-wrap gap-2">
+                    <div class="info-card">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 font-playfair flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                            Tags
+                        </h3>
+                        <div class="flex flex-wrap gap-3">
                             @foreach(explode(',', $product->tags) as $tag)
-                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">{{ trim($tag) }}</span>
+                                <span class="px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-full text-sm font-semibold border border-purple-200 hover:shadow-md transition-all duration-300 hover:scale-105">
+                                    {{ trim($tag) }}
+                                </span>
                             @endforeach
                         </div>
                     </div>
@@ -333,7 +575,7 @@
 
                 <!-- Quantity & Add to Cart -->
                 @if($product->stock > 0)
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6 border border-blue-200">
+                    <div class="action-card">
                         <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 mb-6">
                             <label class="text-base sm:text-lg font-bold text-gray-900 font-playfair">Quantity:</label>
                             <div class="flex items-center space-x-3 sm:space-x-0">
@@ -346,16 +588,41 @@
                             </div>
                         </div>
                         
-                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                            <button onclick="buyNow({{ $product->id }})" class="w-full sm:flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 font-playfair text-sm sm:text-base">
+                        <!-- Mobile Customization Section - Above Buy Now -->
+                        @if($product->is_customizable)
+                            <div class="md:hidden customization-card" style="padding: 8px; margin-bottom: 16px;">
+                                <h4 class="text-xs font-medium text-gray-800 mb-1 flex items-center">
+                                    <svg class="w-3 h-3 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    Customize Product
+                                </h4>
+                                <p class="text-gray-600 mb-1 text-xs">Add custom text to this item.</p>
+                                <div>
+                                    <label for="custom_name_mobile" class="block text-xs font-medium text-gray-700 mb-1">Custom Text</label>
+                                    <input type="text" id="custom_name_mobile" name="custom_name_mobile" maxlength="50" 
+                                           class="customization-input w-full text-xs" style="padding: 4px 6px; font-size: 11px;"
+                                           placeholder="Enter custom text (max 50 chars)"
+                                           onchange="document.getElementById('custom_name').value = this.value">
+                                    <p class="mt-1 text-xs text-gray-500" style="font-size: 10px;">
+                                        Leave empty if no customization needed.
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+                        
+                        <div class="flex space-x-3">
+                            <button onclick="buyNow({{ $product->id }})" class="btn-primary flex-1 flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                                </svg>
                                 <span>Buy Now</span>
                             </button>
                             
-                            <button onclick="addToWishlist({{ $product->id }})" class="w-full sm:w-auto bg-white border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center sm:justify-start">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button onclick="addToWishlist({{ $product->id }})" class="bg-white border-2 border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 p-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
-                                <span class="ml-2 sm:hidden">Add to Wishlist</span>
                             </button>
                         </div>
                     </div>
@@ -679,10 +946,16 @@
         function buyNow(productId) {
             try {
                 const quantity = document.getElementById('quantity').value;
-                console.log('buyNow function called with ID:', productId, 'quantity:', quantity);
+                const customNameInput = document.getElementById('custom_name');
+                const customName = customNameInput ? customNameInput.value.trim() : '';
                 
-                // Redirect directly to checkout
-                const url = `/checkout/buy-now/${productId}?quantity=${quantity}`;
+                console.log('buyNow function called with ID:', productId, 'quantity:', quantity, 'custom_name:', customName);
+                
+                // Redirect directly to checkout with custom name parameter
+                let url = `/checkout/buy-now/${productId}?quantity=${quantity}`;
+                if (customName) {
+                    url += `&custom_name=${encodeURIComponent(customName)}`;
+                }
                 console.log('Redirecting to URL:', url);
                 window.location.href = url;
             } catch (error) {
@@ -700,7 +973,7 @@
             if (existingItem) {
                 existingItem.quantity += quantity;
                 console.log('Updating cart quantity to:', existingItem.quantity);
-                showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier! ✨`, 'success');
+                showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier!`, 'success');
             } else {
                 cart.push({
                     id: productId,

@@ -285,6 +285,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <h4 class="font-semibold text-gray-900 text-xs lg:text-sm truncate">${directItem.name}</h4>
+                            ${directItem.custom_name ? `<p class="text-xs text-blue-600 mb-1">✏️ Custom: "${directItem.custom_name}"</p>` : ''}
                             <p class="text-xs text-gray-600">${directItem.price} DH × ${directItem.quantity}</p>
                             <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Achat direct</span>
                         </div>
@@ -362,7 +363,8 @@
             if (directItem) {
                 cartItems = [{
                     id: directItem.id,
-                    quantity: directItem.quantity
+                    quantity: directItem.quantity,
+                    custom_name: directItem.custom_name || null
                 }];
             } else {
                 const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -370,7 +372,11 @@
                     showNotification('Votre panier est vide!', 'error');
                     return;
                 }
-                cartItems = cart;
+                cartItems = cart.map(item => ({
+                    id: item.id,
+                    quantity: item.quantity,
+                    custom_name: item.custom_name || null
+                }));
             }
 
             // Collect form data

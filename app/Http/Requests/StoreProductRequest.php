@@ -40,6 +40,8 @@ class StoreProductRequest extends FormRequest
             'review_count' => 'nullable|integer|min:0',
             'tags' => 'nullable|string|max:500',
             'specifications' => 'nullable|string|max:1000',
+            'featured' => 'nullable|in:1',
+            'customizable' => 'nullable|in:0,1',
         ];
     }
 
@@ -66,6 +68,8 @@ class StoreProductRequest extends FormRequest
             'stock.required' => 'Stock quantity is required.',
             'stock.integer' => 'Stock must be a whole number.',
             'stock.min' => 'Stock cannot be negative.',
+            'customizable.required' => 'Please select whether this product can be customized.',
+            'customizable.in' => 'Invalid customization option selected.',
         ];
     }
 

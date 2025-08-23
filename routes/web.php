@@ -13,6 +13,9 @@ Route::get('/', [ProductController::class, 'welcome']);
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('product.show');
 
+// Category redirect route
+Route::get('/category/{category}', [ProductController::class, 'categoryRedirect'])->name('category.redirect');
+
 // Authentication Routes (Hidden URLs)
 Route::middleware('guest')->group(function () {
     Route::get('/samad', [AuthController::class, 'showLoginForm'])->name('login');
@@ -173,52 +176,52 @@ Route::get('/robots.txt', [App\Http\Controllers\SeoController::class, 'robots'])
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('index');
-    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('index');
+    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
     
     // Users Management
-    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
-    Route::put('/users/{user}/role', [App\Http\Controllers\Admin\AdminController::class, 'updateUserRole'])->name('users.update-role');
-    Route::delete('/users/{user}', [App\Http\Controllers\Admin\AdminController::class, 'deleteUser'])->name('users.delete');
+    Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
+    Route::put('/users/{user}/role', [App\Http\Controllers\AdminController::class, 'updateUserRole'])->name('users.update-role');
+    Route::delete('/users/{user}', [App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
     
     // Products Management
-    Route::get('/products', [App\Http\Controllers\Admin\AdminController::class, 'products'])->name('products');
-    Route::get('/products/create', [App\Http\Controllers\Admin\AdminController::class, 'createProduct'])->name('create-product');
-    Route::post('/products', [App\Http\Controllers\Admin\AdminController::class, 'storeProduct'])->name('store-product');
-    Route::get('/products/{product}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editProduct'])->name('edit-product');
-    Route::put('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'updateProduct'])->name('update-product');
-    Route::post('/products/{product}/update-form', [App\Http\Controllers\Admin\AdminController::class, 'updateProductForm'])->name('update-product-form');
-    Route::delete('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'destroyProduct'])->name('delete-product');
-    Route::get('/products/{product}', [App\Http\Controllers\Admin\AdminController::class, 'showProduct'])->name('show-product');
+    Route::get('/products', [App\Http\Controllers\AdminController::class, 'products'])->name('products');
+    Route::get('/products/create', [App\Http\Controllers\AdminController::class, 'createProduct'])->name('create-product');
+    Route::post('/products', [App\Http\Controllers\AdminController::class, 'storeProduct'])->name('store-product');
+    Route::get('/products/{product}/edit', [App\Http\Controllers\AdminController::class, 'editProduct'])->name('edit-product');
+    Route::put('/products/{product}', [App\Http\Controllers\AdminController::class, 'updateProduct'])->name('update-product');
+    Route::post('/products/{product}/update-form', [App\Http\Controllers\AdminController::class, 'updateProductForm'])->name('update-product-form');
+    Route::delete('/products/{product}', [App\Http\Controllers\AdminController::class, 'destroyProduct'])->name('delete-product');
+    Route::get('/products/{product}', [App\Http\Controllers\AdminController::class, 'showProduct'])->name('show-product');
     
     // Product Image Management
-    Route::delete('/products/images/{image}', [App\Http\Controllers\Admin\AdminController::class, 'deleteProductImage'])->name('delete-product-image');
-    Route::post('/products/images/{image}/set-primary', [App\Http\Controllers\Admin\AdminController::class, 'setPrimaryImage'])->name('set-primary-image');
+    Route::delete('/products/images/{image}', [App\Http\Controllers\AdminController::class, 'deleteProductImage'])->name('delete-product-image');
+    Route::post('/products/images/{image}/set-primary', [App\Http\Controllers\AdminController::class, 'setPrimaryImage'])->name('set-primary-image');
     
     // Categories Management
-    Route::get('/categories', [App\Http\Controllers\Admin\AdminController::class, 'categories'])->name('categories');
-    Route::post('/categories', [App\Http\Controllers\Admin\AdminController::class, 'storeCategory'])->name('store-category');
-    Route::get('/categories/{category}/edit', [App\Http\Controllers\Admin\AdminController::class, 'editCategory'])->name('edit-category');
-    Route::put('/categories/{category}', [App\Http\Controllers\Admin\AdminController::class, 'updateCategory'])->name('update-category');
-    Route::patch('/categories/{category}/toggle-status', [App\Http\Controllers\Admin\AdminController::class, 'toggleCategoryStatus'])->name('toggle-category-status');
-    Route::delete('/categories/{category}', [App\Http\Controllers\Admin\AdminController::class, 'destroyCategory'])->name('delete-category');
+    Route::get('/categories', [App\Http\Controllers\AdminController::class, 'categories'])->name('categories');
+    Route::post('/categories', [App\Http\Controllers\AdminController::class, 'storeCategory'])->name('store-category');
+    Route::get('/categories/{category}/edit', [App\Http\Controllers\AdminController::class, 'editCategory'])->name('edit-category');
+    Route::put('/categories/{category}', [App\Http\Controllers\AdminController::class, 'updateCategory'])->name('update-category');
+    Route::patch('/categories/{category}/toggle-status', [App\Http\Controllers\AdminController::class, 'toggleCategoryStatus'])->name('toggle-category-status');
+    Route::delete('/categories/{category}', [App\Http\Controllers\AdminController::class, 'destroyCategory'])->name('delete-category');
     
     // Orders Management
-    Route::get('/orders', [App\Http\Controllers\Admin\AdminController::class, 'orders'])->name('orders');
-    Route::get('/orders/{order}', [App\Http\Controllers\Admin\AdminController::class, 'showOrder'])->name('show-order');
-    Route::patch('/orders/{order}/status', [App\Http\Controllers\Admin\AdminController::class, 'updateOrderStatus'])->name('update-order-status');
+    Route::get('/orders', [App\Http\Controllers\AdminController::class, 'orders'])->name('orders');
+    Route::get('/orders/{order}', [App\Http\Controllers\AdminController::class, 'showOrder'])->name('show-order');
+    Route::patch('/orders/{order}/status', [App\Http\Controllers\AdminController::class, 'updateOrderStatus'])->name('update-order-status');
 
     // Phone Numbers Management
-    Route::get('/phone-numbers', [App\Http\Controllers\Admin\AdminController::class, 'phoneNumbers'])->name('phone-numbers');
-    Route::post('/phone-numbers', [App\Http\Controllers\Admin\AdminController::class, 'storePhoneNumber'])->name('store-phone-number');
-    Route::delete('/phone-numbers/{phoneNumber}', [App\Http\Controllers\Admin\AdminController::class, 'deletePhoneNumber'])->name('delete-phone-number');
-    Route::get('/collect-from-orders', [App\Http\Controllers\Admin\AdminController::class, 'collectFromOrders'])->name('collect-from-orders');
-    Route::post('/collect-from-orders', [App\Http\Controllers\Admin\AdminController::class, 'collectFromOrders'])->name('collect-from-orders.post');
+    Route::get('/phone-numbers', [App\Http\Controllers\AdminController::class, 'phoneNumbers'])->name('phone-numbers');
+    Route::post('/phone-numbers', [App\Http\Controllers\AdminController::class, 'storePhoneNumber'])->name('store-phone-number');
+    Route::delete('/phone-numbers/{phoneNumber}', [App\Http\Controllers\AdminController::class, 'deletePhoneNumber'])->name('delete-phone-number');
+    Route::get('/collect-from-orders', [App\Http\Controllers\AdminController::class, 'collectFromOrders'])->name('collect-from-orders');
+    Route::post('/collect-from-orders', [App\Http\Controllers\AdminController::class, 'collectFromOrders'])->name('collect-from-orders.post');
 
     // Export Routes
-    Route::get('/export/all-data', [App\Http\Controllers\Admin\AdminController::class, 'exportAllData'])->name('export.all-data');
-    Route::get('/export/users', [App\Http\Controllers\Admin\AdminController::class, 'exportUsers'])->name('export.users');
-    Route::get('/export/products', [App\Http\Controllers\Admin\AdminController::class, 'exportProducts'])->name('export.products');
-    Route::get('/export/orders', [App\Http\Controllers\Admin\AdminController::class, 'exportOrders'])->name('export.orders');
-    Route::get('/export/phone-numbers', [App\Http\Controllers\Admin\AdminController::class, 'exportPhoneNumbers'])->name('export.phone-numbers');
+    Route::get('/export/all-data', [App\Http\Controllers\AdminController::class, 'exportAllData'])->name('export.all-data');
+    Route::get('/export/users', [App\Http\Controllers\AdminController::class, 'exportUsers'])->name('export.users');
+    Route::get('/export/products', [App\Http\Controllers\AdminController::class, 'exportProducts'])->name('export.products');
+    Route::get('/export/orders', [App\Http\Controllers\AdminController::class, 'exportOrders'])->name('export.orders');
+    Route::get('/export/phone-numbers', [App\Http\Controllers\AdminController::class, 'exportPhoneNumbers'])->name('export.phone-numbers');
 });

@@ -67,6 +67,13 @@
                             <div class="flex-1">
                                 <h3 class="text-lg font-medium text-gray-900">{{ $item->product->name }}</h3>
                                 <p class="text-gray-600 text-sm mt-1">{{ $item->product->category->name ?? 'No Category' }}</p>
+                                @if($item->custom_name)
+                                    <div class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                                        <span class="text-blue-800 text-sm font-medium">
+                                            ✏️ Custom Name: "{{ $item->custom_name }}"
+                                        </span>
+                                    </div>
+                                @endif
                                 <div class="flex items-center justify-between mt-3">
                                     <div class="flex items-center space-x-4">
                                         <span class="text-sm text-gray-600">Qty: {{ $item->quantity }}</span>

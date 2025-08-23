@@ -32,7 +32,8 @@ class OrderController extends Controller
                 'payment_method' => 'required|in:cod,bank,card',
                 'cart_items' => 'required|array',
                 'cart_items.*.id' => 'required|exists:products,id',
-                'cart_items.*.quantity' => 'required|integer|min:1'
+                'cart_items.*.quantity' => 'required|integer|min:1',
+                'cart_items.*.custom_name' => 'nullable|string|max:50'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Order validation failed', [
@@ -70,7 +71,8 @@ class OrderController extends Controller
                     'product' => $product,
                     'quantity' => $cartItem['quantity'],
                     'price' => $product->price,
-                    'total' => $itemTotal
+                    'total' => $itemTotal,
+                    'custom_name' => $cartItem['custom_name'] ?? null
                 ];
             }
 
@@ -100,7 +102,8 @@ class OrderController extends Controller
                     'product_id' => $item['product']->id,
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
-                    'total' => $item['total']
+                    'total' => $item['total'],
+                    'custom_name' => $item['custom_name']
                 ]);
 
                 // Update product stock

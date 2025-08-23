@@ -261,6 +261,17 @@ use Illuminate\Support\Facades\Storage;
                         <label for="featured" class="ml-2 block text-sm text-gray-700">Featured Product</label>
                     </div>
                 </div>
+
+                <!-- Customizable -->
+                <div class="mt-6">
+                    <div class="flex items-center">
+                        <input type="checkbox" name="customizable" id="customizable" value="1" 
+                               {{ old('customizable', $product->is_customizable) ? 'checked' : '' }}
+                               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="customizable" class="ml-2 block text-sm text-gray-700">Customizable Product</label>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">Allow customers to add custom names or text to this product</p>
+                </div>
             </div>
 
             <!-- Form Actions -->

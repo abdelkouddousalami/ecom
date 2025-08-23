@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MarketPlace - Your One-Stop Shopping Destination</title>
-    <meta name="description" content="Discover amazing products at unbeatable prices. Shop electronics, fashion, home goods and more.">
-    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <?php if (isset($component)) { $__componentOriginal84f9df3f620371229981225e7ba608d7 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal84f9df3f620371229981225e7ba608d7 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.seo-meta','data' => ['title' => $seoMeta['title'],'description' => $seoMeta['description'],'keywords' => $seoMeta['keywords'],'canonical' => $seoMeta['canonical'],'ogTitle' => $seoMeta['title'],'ogDescription' => $seoMeta['description'],'ogImage' => $seoMeta['ogImage']]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('seo-meta'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['title']),'description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['description']),'keywords' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['keywords']),'canonical' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['canonical']),'ogTitle' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['title']),'ogDescription' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['description']),'ogImage' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($seoMeta['ogImage'])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal84f9df3f620371229981225e7ba608d7)): ?>
+<?php $attributes = $__attributesOriginal84f9df3f620371229981225e7ba608d7; ?>
+<?php unset($__attributesOriginal84f9df3f620371229981225e7ba608d7); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal84f9df3f620371229981225e7ba608d7)): ?>
+<?php $component = $__componentOriginal84f9df3f620371229981225e7ba608d7; ?>
+<?php unset($__componentOriginal84f9df3f620371229981225e7ba608d7); ?>
+<?php endif; ?>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?php echo e(asset('images/logos/faicon.png')); ?>">
@@ -429,15 +444,18 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Bracelets Category -->
-                <div class="category-card group bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-all duration-300 cursor-pointer">
-                    <div class="p-6">
-                        <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-lg mb-4 group-hover:bg-blue-200 transition-colors duration-300">
-                            <span class="text-blue-600 text-2xl font-bold">B</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
-                            Elegant Bracelets
-                        </h3>
-                        <p class="text-gray-600 mb-4 text-sm">Premium collection of gold, silver, and diamond bracelets</p>
+                <a href="<?php echo e(route('products')); ?>" class="block">
+                    <div class="category-card group bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-xl" data-category="bracelets">
+                        <div class="p-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-lg mb-4 group-hover:bg-blue-200 transition-colors duration-300">
+                                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
+                                Elegant Bracelets
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm">Premium collection of gold, silver, and diamond bracelets</p>
                         
                         <!-- Subcategories -->
                         <div class="space-y-2 mb-4">
@@ -455,22 +473,26 @@
                             </div>
                         </div>
                         
-                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 cursor-pointer">
+                        <div class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 text-center">
                             Explore Collection
-                        </button>
+                        </div>
                     </div>
                 </div>
+                </a>
 
                 <!-- Watches Category -->
-                <div class="category-card group bg-white border border-gray-200 rounded-lg hover:border-purple-300 transition-all duration-300 cursor-pointer">
-                    <div class="p-6">
-                        <div class="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-lg mb-4 group-hover:bg-purple-200 transition-colors duration-300">
-                            <span class="text-purple-600 text-2xl font-bold">W</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
-                            Luxury Watches
-                        </h3>
-                        <p class="text-gray-600 mb-4 text-sm">Exquisite timepieces from classic to modern designs</p>
+                <a href="<?php echo e(route('products')); ?>" class="block">
+                    <div class="category-card group bg-white border border-gray-200 rounded-lg hover:border-purple-300 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-xl" data-category="watches">
+                        <div class="p-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-lg mb-4 group-hover:bg-purple-200 transition-colors duration-300">
+                                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
+                                Luxury Watches
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm">Exquisite timepieces from classic to modern designs</p>
                         
                         <!-- Subcategories -->
                         <div class="space-y-2 mb-4">
@@ -488,22 +510,26 @@
                             </div>
                         </div>
                         
-                        <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 cursor-pointer">
+                        <div class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 text-center">
                             Explore Collection
-                        </button>
+                        </div>
                     </div>
                 </div>
+                </a>
 
                 <!-- Gift Packs Category -->
-                <div class="category-card group bg-white border border-gray-200 rounded-lg hover:border-emerald-300 transition-all duration-300 cursor-pointer">
-                    <div class="p-6">
-                        <div class="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-lg mb-4 group-hover:bg-emerald-200 transition-colors duration-300">
-                            <span class="text-emerald-600 text-2xl font-bold">P</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
-                            Special Packs
-                        </h3>
-                        <p class="text-gray-600 mb-4 text-sm">Curated gift sets and jewelry collections for special occasions</p>
+                <a href="<?php echo e(route('products')); ?>" class="block">
+                    <div class="category-card group bg-white border border-gray-200 rounded-lg hover:border-emerald-300 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-xl" data-category="gift-packs">
+                        <div class="p-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-lg mb-4 group-hover:bg-emerald-200 transition-colors duration-300">
+                                <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
+                                Special Packs
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm">Curated gift sets and jewelry collections for special occasions</p>
                         
                         <!-- Subcategories -->
                         <div class="space-y-2 mb-4">
@@ -521,16 +547,16 @@
                             </div>
                         </div>
                         
-                        <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 cursor-pointer">
+                        <div class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 text-center">
                             Explore Collection
-                        </button>
+                        </div>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
     </section>
-        </div>
-    </section>
+        
 
     <!-- Featured Products -->
     <section class="py-16 bg-gray-50">
@@ -1315,6 +1341,15 @@
                     }
                 }
             });
+        }
+        
+        // Category navigation functions
+        function navigateToCategory(categorySlug) {
+            console.log('Navigating to category:', categorySlug);
+            const baseUrl = '<?php echo e(route("products")); ?>';
+            const fullUrl = baseUrl + '?category=' + categorySlug;
+            console.log('Full URL:', fullUrl);
+            window.location.href = fullUrl;
         }
         
         // Initialize cart and wishlist counts on page load

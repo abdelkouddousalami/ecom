@@ -30,6 +30,13 @@ class ProductController extends Controller
                 ->get();
         }
         
+        // Get categories for the Shop by Category section
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('name', 'asc')
+            ->take(3) // Limit to 3 categories for the home page
+            ->get();
+        
         // Generate SEO meta for homepage
         $seoMeta = [
             'title' => 'L3OCHAQ - Meilleurs Cadeaux Couples & Bijoux | www.l3ochaq.ma',
@@ -39,7 +46,7 @@ class ProductController extends Controller
             'ogImage' => asset('images/l3ochaq-homepage.jpg')
         ];
         
-        return view('welcome', compact('products', 'seoMeta'));
+        return view('welcome', compact('products', 'categories', 'seoMeta'));
     }
     
     public function index(Request $request)
@@ -155,6 +162,9 @@ class ProductController extends Controller
         // Get the quantity from the request, default to 1
         $quantity = $request->get('quantity', 1);
         
+        // Get the custom name from the request
+        $customName = $request->get('custom_name', '');
+        
         // Ensure quantity is at least 1 and not more than available stock
         $quantity = max(1, min($quantity, $product->stock));
         
@@ -165,7 +175,9 @@ class ProductController extends Controller
             'price' => $product->price,
             'image' => $product->image,
             'quantity' => $quantity,
-            'total' => $product->price * $quantity
+            'total' => $product->price * $quantity,
+            'custom_name' => $customName,
+            'is_customizable' => $product->is_customizable
         ];
         
         // Get all products for general functionality
@@ -184,5 +196,11 @@ class ProductController extends Controller
             ->get();
         
         return view('wishlist', compact('products'));
+    }
+    
+    public function categoryRedirect($category)
+    {
+        // Redirect to products page with category filter
+        return redirect()->route('products', ['category' => $category]);
     }
 }

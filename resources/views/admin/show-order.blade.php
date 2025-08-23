@@ -108,7 +108,17 @@
                                 </div>
                             </div>
                             <div class="flex-1">
-                                <h3 class="text-lg font-medium text-gray-900">{{ $item->product_name }}</h3>
+                                <h3 class="text-lg font-medium text-gray-900">
+                                    {{ $item->product ? $item->product->name : 'Product not found' }}
+                                    @if($item->custom_name)
+                                        <span class="block text-sm text-blue-600 mt-1">
+                                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            </svg>
+                                            Custom: "{{ $item->custom_name }}"
+                                        </span>
+                                    @endif
+                                </h3>
                                 <p class="text-sm text-gray-600">Quantity: {{ $item->quantity }}</p>
                                 <p class="text-sm text-gray-600">Unit Price: {{ number_format($item->price) }} DH</p>
                             </div>

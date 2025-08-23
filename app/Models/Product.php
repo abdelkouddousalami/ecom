@@ -19,6 +19,7 @@ class Product extends Model
         'review_count',
         'is_featured',
         'is_active',
+        'is_customizable',
         'tags',
         'specifications',
         'slug'
@@ -30,6 +31,7 @@ class Product extends Model
         'rating' => 'decimal:2',
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
+        'is_customizable' => 'boolean',
     ];
 
     protected static function boot()

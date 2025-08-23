@@ -6,7 +6,7 @@
 @section('content')
 <div class="px-4 py-6 sm:px-0">
     <div class="max-w-4xl mx-auto">
-        <form action="{{ route('admin.store-product') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form id="productForm" action="{{ route('admin.store-product') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
             @csrf
             
             <!-- Basic Information -->
@@ -118,8 +118,8 @@
                                         </label>
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
-                    <p class="text-xs text-gray-500">Upload images (any size - automatically compressed, Max 10 images) - Optional</p>
-                                    <p class="text-xs text-gray-400 mt-1">Supported formats: JPEG, PNG, GIF, SVG (JPEG will be converted to PNG automatically)</p></p>
+                                    <p class="text-xs text-gray-500">Upload images (any size - automatically compressed, Max 10 images) - Optional</p>
+                                    <p class="text-xs text-gray-400 mt-1">Supported formats: JPEG, PNG, GIF, SVG (JPEG will be converted to PNG automatically)</p>
                                     <p class="text-xs text-green-600 mt-1">✅ Images should be at least 100x100 pixels for best quality</p>
                                 </div>
                             </div>
@@ -193,6 +193,23 @@
                                     <input type="checkbox" name="featured" id="featured" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <span class="ml-2 text-sm text-gray-600">Mark as featured product</span>
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customization Section -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label for="customizable" class="block text-sm font-medium text-gray-700">Product Customization</label>
+                                <div class="mt-2">
+                                    <select name="customizable" id="customizable" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" onchange="updateCustomizableStatus()">
+                                        <option value="0" selected>No - Standard product (no customization)</option>
+                                        <option value="1">Yes - Allow customers to customize this product</option>
+                                    </select>
+                                    <div id="customizable-status" class="mt-1 text-sm font-semibold"></div>
+                                    <p class="mt-1 text-sm text-gray-500">When enabled, customers can add custom names or text to this product (up to 50 characters)</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -457,199 +474,172 @@ function handleDragEnd(e) {
 }
 
 // Setup drag and drop for upload area
-const imageUploadArea = document.getElementById('image-upload-area');
-const imageInput = document.getElementById('images');
+document.addEventListener('DOMContentLoaded', function() {
+    const imageUploadArea = document.getElementById('image-upload-area');
+    const imageInput = document.getElementById('images');
 
-imageUploadArea.addEventListener('click', function() {
-    imageInput.click();
-});
+    if (imageUploadArea && imageInput) {
+        imageUploadArea.addEventListener('click', function() {
+            imageInput.click();
+        });
 
-imageUploadArea.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.classList.add('border-indigo-500', 'bg-indigo-50');
-});
+        imageUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.add('border-indigo-500', 'bg-indigo-50');
+        });
 
-imageUploadArea.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.classList.remove('border-indigo-500', 'bg-indigo-50');
-});
+        imageUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('border-indigo-500', 'bg-indigo-50');
+        });
 
-imageUploadArea.addEventListener('drop', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.classList.remove('border-indigo-500', 'bg-indigo-50');
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-        // Add files to existing selection
-        selectedFiles = selectedFiles.concat(files);
-        
-        // Check file count limit
-        if (selectedFiles.length > 10) {
-            alert('Maximum 10 images allowed. Keeping first 10 images.');
-            selectedFiles = selectedFiles.slice(0, 10);
-        }
-        
-        updateFileInput();
-        displayImagePreviews();
+        imageUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('border-indigo-500', 'bg-indigo-50');
+            
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length > 0) {
+                // Add files to existing selection
+                selectedFiles = selectedFiles.concat(files);
+                
+                // Check file count limit
+                if (selectedFiles.length > 10) {
+                    alert('Maximum 10 images allowed. Keeping first 10 images.');
+                    selectedFiles = selectedFiles.slice(0, 10);
+                }
+                
+                updateFileInput();
+                displayImagePreviews();
+            }
+        });
     }
-});
 
-// Auto-calculate discount percentage
-document.getElementById('original_price').addEventListener('input', function() {
-    const originalPrice = parseFloat(this.value);
-    const currentPrice = parseFloat(document.getElementById('price').value);
-    
-    if (originalPrice && currentPrice && originalPrice > currentPrice) {
-        const discount = ((originalPrice - currentPrice) / originalPrice * 100).toFixed(0);
-        
-        // Show discount percentage
-        let discountInfo = document.getElementById('discount-info');
-        if (!discountInfo) {
-            discountInfo = document.createElement('p');
-            discountInfo.id = 'discount-info';
-            discountInfo.className = 'mt-1 text-sm text-green-600 font-medium';
-            this.parentNode.parentNode.appendChild(discountInfo);
-        }
-        discountInfo.innerHTML = `<span class="inline-flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>${discount}% discount</span>`;
-    } else {
-        const discountInfo = document.getElementById('discount-info');
-        if (discountInfo) {
-            discountInfo.remove();
-        }
+    // Auto-calculate discount percentage
+    const originalPriceInput = document.getElementById('original_price');
+    if (originalPriceInput) {
+        originalPriceInput.addEventListener('input', function() {
+            const originalPrice = parseFloat(this.value);
+            const currentPrice = parseFloat(document.getElementById('price').value);
+            
+            if (originalPrice && currentPrice && originalPrice > currentPrice) {
+                const discount = ((originalPrice - currentPrice) / originalPrice * 100).toFixed(0);
+                
+                // Show discount percentage
+                let discountInfo = document.getElementById('discount-info');
+                if (!discountInfo) {
+                    discountInfo = document.createElement('p');
+                    discountInfo.id = 'discount-info';
+                    discountInfo.className = 'mt-1 text-sm text-green-600 font-medium';
+                    this.parentNode.parentNode.appendChild(discountInfo);
+                }
+                discountInfo.innerHTML = `<span class="inline-flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>${discount}% discount</span>`;
+            } else {
+                const discountInfo = document.getElementById('discount-info');
+                if (discountInfo) {
+                    discountInfo.remove();
+                }
+            }
+        });
     }
-});
 
-// Rating and review count interaction
-document.getElementById('rating').addEventListener('change', function() {
-    const rating = this.value;
-    const reviewCountInput = document.getElementById('review_count');
-    
-    if (rating && reviewCountInput.value === '0') {
-        // Suggest a reasonable review count based on rating
-        let suggestedCount;
-        if (rating >= 4.5) suggestedCount = Math.floor(Math.random() * 50) + 20; // 20-70 reviews
-        else if (rating >= 4) suggestedCount = Math.floor(Math.random() * 30) + 15; // 15-45 reviews  
-        else if (rating >= 3) suggestedCount = Math.floor(Math.random() * 20) + 10; // 10-30 reviews
-        else suggestedCount = Math.floor(Math.random() * 15) + 5; // 5-20 reviews
-        
-        // Show suggestion
-        let ratingInfo = document.getElementById('rating-suggestion');
-        if (!ratingInfo) {
-            ratingInfo = document.createElement('p');
-            ratingInfo.id = 'rating-suggestion';
-            ratingInfo.className = 'mt-1 text-sm text-blue-600 cursor-pointer hover:text-blue-800';
-            reviewCountInput.parentNode.appendChild(ratingInfo);
-        }
-        ratingInfo.innerHTML = `💡 Suggestion: <span onclick="setReviewCount(${suggestedCount})" class="underline">${suggestedCount} reviews</span> for ${rating} star rating`;
-    } else if (!rating) {
-        const ratingInfo = document.getElementById('rating-suggestion');
-        if (ratingInfo) ratingInfo.remove();
+    // Rating and review count interaction
+    const ratingSelect = document.getElementById('rating');
+    if (ratingSelect) {
+        ratingSelect.addEventListener('change', function() {
+            const rating = this.value;
+            const reviewCountInput = document.getElementById('review_count');
+            
+            if (rating && reviewCountInput.value === '0') {
+                // Suggest a reasonable review count based on rating
+                let suggestedCount;
+                if (rating >= 4.5) suggestedCount = Math.floor(Math.random() * 50) + 20; // 20-70 reviews
+                else if (rating >= 4) suggestedCount = Math.floor(Math.random() * 30) + 15; // 15-45 reviews  
+                else if (rating >= 3) suggestedCount = Math.floor(Math.random() * 20) + 10; // 10-30 reviews
+                else suggestedCount = Math.floor(Math.random() * 15) + 5; // 5-20 reviews
+                
+                // Show suggestion
+                let ratingInfo = document.getElementById('rating-suggestion');
+                if (!ratingInfo) {
+                    ratingInfo = document.createElement('p');
+                    ratingInfo.id = 'rating-suggestion';
+                    ratingInfo.className = 'mt-1 text-sm text-blue-600 cursor-pointer hover:text-blue-800';
+                    reviewCountInput.parentNode.appendChild(ratingInfo);
+                }
+                ratingInfo.innerHTML = `💡 Suggestion: <span onclick="setReviewCount(${suggestedCount})" class="underline">${suggestedCount} reviews</span> for ${rating} star rating`;
+            } else if (!rating) {
+                const ratingInfo = document.getElementById('rating-suggestion');
+                if (ratingInfo) ratingInfo.remove();
+            }
+        });
     }
 });
 
 // Function to set suggested review count
 function setReviewCount(count) {
     document.getElementById('review_count').value = count;
-    document.getElementById('rating-suggestion').remove();
+    const ratingInfo = document.getElementById('rating-suggestion');
+    if (ratingInfo) ratingInfo.remove();
 }
 
-// Form validation and submission
+// Update customizable status display
+function updateCustomizableStatus() {
+    const select = document.getElementById('customizable');
+    const status = document.getElementById('customizable-status');
+    if (select && status) {
+        if (select.value === '1') {
+            status.textContent = '✅ CUSTOMIZABLE - Customers can add custom text';
+            status.className = 'mt-1 text-sm font-semibold text-green-600';
+        } else {
+            status.textContent = '❌ NOT CUSTOMIZABLE - Standard product';
+            status.className = 'mt-1 text-sm font-semibold text-red-600';
+        }
+        console.log('Customizable select changed to:', select.value);
+    }
+}
+
+// Initialize status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCustomizableStatus();
+});
+
+// Simple form submission handler
 document.querySelector('form').addEventListener('submit', function(e) {
-    console.log('Form submission started');
-    console.log('Selected files:', selectedFiles.length);
+    // Debug: Check select status before submission
+    const customizableSelect = document.getElementById('customizable');
+    console.log('Form submitting - customizable select value:', customizableSelect ? customizableSelect.value : 'not found');
+    console.log('Will be customizable:', customizableSelect && customizableSelect.value === '1');
     
-    if (selectedFiles.length === 0) {
-        // Allow submission without images for testing
-        console.log('No images selected, proceeding anyway');
+    // Show alert to confirm what's being submitted
+    if (customizableSelect) {
+        if (customizableSelect.value === '1') {
+            console.log('🟢 SUBMITTING AS CUSTOMIZABLE');
+        } else {
+            console.log('🔴 SUBMITTING AS NOT CUSTOMIZABLE');
+        }
     }
     
-    // Create FormData to properly handle file uploads
-    const formData = new FormData(this);
-    console.log('Original form data created');
+    // Update file input before submission
+    if (selectedFiles.length > 0) {
+        updateFileInput();
+    }
     
-    // Remove the original images field
-    formData.delete('images[]');
-    
-    // Add all selected files
-    selectedFiles.forEach((file, index) => {
-        formData.append('images[]', file);
-        console.log('Added file', index + 1, ':', file.name, file.type, file.size);
-    });
-    
-    console.log('Submitting form with', selectedFiles.length, 'images');
-    
-    // Submit with fetch instead of normal form submission
+    // Show loading state
     const submitButton = document.querySelector('button[type="submit"]');
-    submitButton.innerHTML = `
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Processing...
-    `;
-    submitButton.disabled = true;
+    if (submitButton) {
+        submitButton.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+        `;
+        submitButton.disabled = true;
+    }
     
-    // Submit form with proper file data
-    fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.text().then(text => {
-                throw new Error(text);
-            });
-        }
-    })
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirect;
-        } else {
-            throw new Error(data.message || 'Unknown error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        
-        // Try to parse error response for better error messages
-        let errorMessage = 'Error creating product. Please check your inputs and try again.';
-        
-        if (error.message) {
-            try {
-                const errorText = error.message;
-                if (errorText.includes('validation')) {
-                    errorMessage = 'Validation error: Please check your inputs and try again.';
-                } else if (errorText.includes('file') || errorText.includes('image')) {
-                    errorMessage = 'File upload error: Please check your images (automatically compressed, multiple formats supported) and try again.';
-                } else if (errorText.includes('size')) {
-                    errorMessage = 'Invalid file format: Please use supported image formats.';
-                } else if (errorText.includes('dimensions')) {
-                    errorMessage = 'Image dimensions error: Images must be between 100x100 and 5000x5000 pixels.';
-                } else {
-                    errorMessage = 'Error: ' + errorText.substring(0, 100);
-                }
-            } catch (e) {
-                // Use default message
-            }
-        }
-        
-        alert(errorMessage);
-        
-        submitButton.innerHTML = 'Create Product';
-        submitButton.disabled = false;
-    });
-    
-    e.preventDefault();
-    return false;
+    // Allow normal form submission
 });
 </script>
 @endsection

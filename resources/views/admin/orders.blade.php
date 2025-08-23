@@ -63,6 +63,9 @@
                             <div class="text-sm text-gray-500">
                                 @foreach($order->items->take(2) as $item)
                                     {{ $item->product->name }}{{ !$loop->last ? ', ' : '' }}
+                                    @if($item->custom_name)
+                                        <span class="text-blue-600 text-xs">✏️ Custom</span>
+                                    @endif
                                 @endforeach
                                 @if($order->items->count() > 2)
                                     <span class="text-gray-400">+{{ $order->items->count() - 2 }} more</span>

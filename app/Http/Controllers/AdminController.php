@@ -61,6 +61,14 @@ class AdminController extends Controller
     public function storeProduct(StoreProductRequest $request, ImageUploadService $imageService)
     {
         try {
+            // Debug: Log what we receive from the select dropdown
+            Log::info('Product creation - Select dropdown value:', [
+                'customizable_raw' => $request->get('customizable'),
+                'customizable_input' => $request->input('customizable'),
+                'will_be_customizable' => $request->input('customizable', '0') == '1',
+                'all_form_data' => $request->all()
+            ]);
+            
             // The request is already validated by StoreProductRequest
             
             // Handle multiple image uploads with the service
@@ -86,7 +94,8 @@ class AdminController extends Controller
                 'stock' => $request->stock,
                 'rating' => $request->rating ?? 0,
                 'review_count' => $request->review_count ?? 0,
-                'is_featured' => $request->has('featured'),
+                'is_featured' => $request->input('featured') == '1',
+                'is_customizable' => $request->input('customizable', '0') == '1',
                 'tags' => $request->tags,
                 'specifications' => $request->specifications,
                 'slug' => Str::slug($request->name),
@@ -406,6 +415,7 @@ class AdminController extends Controller
                 'rating' => $request->rating ?? 0,
                 'review_count' => $request->review_count ?? 0,
                 'is_featured' => $request->has('featured'),
+                'is_customizable' => $request->has('customizable'),
                 'tags' => $request->tags,
                 'specifications' => $request->specifications,
                 'slug' => Str::slug($request->name),
