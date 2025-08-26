@@ -1049,7 +1049,7 @@
         }
         
         function addToCart(productId, quantity = 1) {
-            console.log('addToCart called with productId:', productId, 'quantity:', quantity);
+            //('addToCart called with productId:', productId, 'quantity:', quantity);
             
             // Find the button that was clicked for visual feedback
             const button = event?.target?.closest('.add-to-cart-btn');
@@ -1074,12 +1074,12 @@
                 })
             })
             .then(response => {
-                console.log('Background server response status:', response.status);
+                //('Background server response status:', response.status);
                 return response.json();
             })
             .then(data => {
                 if (data.success) {
-                    console.log('Server cart tracking successful');
+                    //('Server cart tracking successful');
                 } else {
                     console.error('Server cart error:', data.message);
                     // Only show error if it's a critical issue (like stock shortage)
@@ -1104,7 +1104,7 @@
             const existingItem = cart.find(item => item.id == productId);
             if (existingItem) {
                 existingItem.quantity += quantity;
-                console.log('Updating cart quantity');
+                //('Updating cart quantity');
                 showNotification('Quantité mise à jour dans le panier! ✨', 'success');
             } else {
                 cart.push({
@@ -1112,7 +1112,7 @@
                     quantity: quantity,
                     added_at: new Date().toISOString()
                 });
-                console.log('Adding new product to cart');
+                //('Adding new product to cart');
                 showNotification('Produit ajouté au panier! 🛒', 'success');
             }
             
@@ -1150,7 +1150,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Server tracking successful:', data.message);
+                    //('Server tracking successful:', data.message);
                 }
             })
             .catch(error => {
@@ -1294,10 +1294,10 @@
         
         // Category navigation functions
         function navigateToCategory(categorySlug) {
-            console.log('Navigating to category:', categorySlug);
+            //('Navigating to category:', categorySlug);
             const baseUrl = '{{ route("products") }}';
             const fullUrl = baseUrl + '?category=' + categorySlug;
-            console.log('Full URL:', fullUrl);
+            //('Full URL:', fullUrl);
             window.location.href = fullUrl;
         }
         

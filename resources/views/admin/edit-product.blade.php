@@ -123,8 +123,8 @@ use Illuminate\Support\Facades\Storage;
                                          alt="{{ $product->name }}" 
                                          class="w-full h-32 object-cover"
                                          style="background: white;"
-                                         onload="console.log('✅ Image loaded:', this.src);"
-                                         onerror="console.log('❌ Image failed:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                         onload="//('✅ Image loaded:', this.src);"
+                                         onerror="//('❌ Image failed:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                     
                                     <!-- Fallback for failed images - NO BLACK -->
                                     <div class="w-full h-32 flex items-center justify-center text-gray-500 text-sm border border-gray-300" style="display: none; background: white;">

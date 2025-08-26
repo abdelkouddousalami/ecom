@@ -130,7 +130,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Add confetti or celebration animation here if desired
-            console.log('Order success page loaded');
             
             // Optional: Clear any remaining cart data from localStorage
             localStorage.removeItem('cart');

@@ -1173,7 +1173,7 @@
 
         // Stylish notification function
         function showNotification(message, type = 'success') {
-            console.log('showNotification called:', message, type);
+            //('showNotification called:', message, type);
             
             // Remove any existing notification
             const existingNotification = document.querySelector('.custom-notification');
@@ -1229,7 +1229,7 @@
         }
         
         function addToCart(productId, quantity = 1) {
-            console.log('addToCart called with productId:', productId, 'quantity:', quantity);
+            //('addToCart called with productId:', productId, 'quantity:', quantity);
             
             // Find the button that was clicked for visual feedback
             const button = event?.target?.closest('.add-to-cart-btn');
@@ -1254,12 +1254,12 @@
                 })
             })
             .then(response => {
-                console.log('Background server response status:', response.status);
+                //('Background server response status:', response.status);
                 return response.json();
             })
             .then(data => {
                 if (data.success) {
-                    console.log('Server cart tracking successful');
+                    //('Server cart tracking successful');
                 } else {
                     console.error('Server cart error:', data.message);
                     // Only show error if it's a critical issue (like stock shortage)
@@ -1284,7 +1284,7 @@
             const existingItem = cart.find(item => item.id == productId);
             if (existingItem) {
                 existingItem.quantity += quantity;
-                console.log('Updating cart quantity');
+                //('Updating cart quantity');
                 showNotification('Quantité mise à jour dans le panier! ✨', 'success');
             } else {
                 cart.push({
@@ -1292,7 +1292,7 @@
                     quantity: quantity,
                     added_at: new Date().toISOString()
                 });
-                console.log('Adding new product to cart');
+                //('Adding new product to cart');
                 showNotification('Produit ajouté au panier! 🛒', 'success');
             }
             
@@ -1318,7 +1318,7 @@
         }
 
         function addToWishlist(productId) {
-            console.log('addToWishlist called with productId:', productId);
+            //('addToWishlist called with productId:', productId);
             
             // First, make server request for tracking
             fetch('/wishlist/toggle', {
@@ -1332,7 +1332,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Server tracking successful:', data.message);
+                    //('Server tracking successful:', data.message);
                 }
             })
             .catch(error => {
@@ -1346,14 +1346,14 @@
             const existingIndex = wishlist.findIndex(item => item.id == productId);
             if (existingIndex > -1) {
                 wishlist.splice(existingIndex, 1);
-                console.log('Removing from wishlist');
+                //('Removing from wishlist');
                 showNotification('Produit retiré des favoris!', 'removed');
             } else {
                 wishlist.push({
                     id: productId,
                     added_at: new Date().toISOString()
                 });
-                console.log('Adding to wishlist');
+                //('Adding to wishlist');
                 showNotification('Produit ajouté aux favoris!', 'success');
             }
             

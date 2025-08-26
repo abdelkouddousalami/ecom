@@ -703,7 +703,7 @@
         // Edit phone number function
         function editPhoneNumber(id) {
             // Implement edit functionality
-            console.log('Edit phone number:', id);
+            //('Edit phone number:', id);
         }
 
         // Enhanced animations

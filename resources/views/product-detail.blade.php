@@ -827,7 +827,6 @@
         
         // Stylish notification function (simplified version)
         function showNotification(message, type = 'success') {
-            console.log('showNotification called:', message, type, icon);
             
             // Remove any existing notification
             const existingNotification = document.querySelector('.custom-notification');
@@ -870,12 +869,10 @@
             `;
             
             document.body.appendChild(notification);
-            console.log('Notification added to DOM');
             
             // Slide in animation
             setTimeout(() => {
                 notification.style.transform = 'translateX(0)';
-                console.log('Slide in animation triggered');
             }, 100);
             
             // Auto remove after 3 seconds with slide out animation
@@ -884,7 +881,6 @@
                 setTimeout(() => {
                     if (notification.parentNode) {
                         notification.remove();
-                        console.log('Notification removed');
                     }
                 }, 300);
             }, 3000);
@@ -892,7 +888,6 @@
         
         function addToCart(productId) {
             const quantity = document.getElementById('quantity').value;
-            console.log('addToCart called with productId:', productId, 'quantity:', quantity);
             
             // Find the button that was clicked for visual feedback
             const button = event?.target?.closest('button');
@@ -921,12 +916,10 @@
                 })
             })
             .then(response => {
-                console.log('Background server response status:', response.status);
                 return response.json();
             })
             .then(data => {
                 if (data.success) {
-                    console.log('Server cart tracking successful');
                 } else {
                     console.error('Server cart error:', data.message);
                     // Only show error if it's a critical issue (like stock shortage)
@@ -949,14 +942,14 @@
                 const customNameInput = document.getElementById('custom_name');
                 const customName = customNameInput ? customNameInput.value.trim() : '';
                 
-                console.log('buyNow function called with ID:', productId, 'quantity:', quantity, 'custom_name:', customName);
+                //('buyNow function called with ID:', productId, 'quantity:', quantity, 'custom_name:', customName);
                 
                 // Redirect directly to checkout with custom name parameter
                 let url = `/checkout/buy-now/${productId}?quantity=${quantity}`;
                 if (customName) {
                     url += `&custom_name=${encodeURIComponent(customName)}`;
                 }
-                console.log('Redirecting to URL:', url);
+                //('Redirecting to URL:', url);
                 window.location.href = url;
             } catch (error) {
                 console.error('Error in buyNow function:', error);
@@ -972,7 +965,7 @@
             const existingItem = cart.find(item => item.id == productId);
             if (existingItem) {
                 existingItem.quantity += quantity;
-                console.log('Updating cart quantity to:', existingItem.quantity);
+                //('Updating cart quantity to:', existingItem.quantity);
                 showNotification(`Quantité mise à jour (${existingItem.quantity}) dans le panier!`, 'success');
             } else {
                 cart.push({
@@ -980,7 +973,7 @@
                     quantity: quantity,
                     added_at: new Date().toISOString()
                 });
-                console.log('Adding new product to cart with quantity:', quantity);
+                //('Adding new product to cart with quantity:', quantity);
                 showNotification(`${quantity} produit(s) ajouté(s) au panier! 🛒`, 'success');
             }
             
@@ -1018,7 +1011,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Server tracking successful:', data.message);
+                    //('Server tracking successful:', data.message);
                 }
             })
             .catch(error => {

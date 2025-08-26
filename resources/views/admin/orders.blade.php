@@ -147,7 +147,7 @@ function updateOrderStatus(selectElement) {
         return;
     }
     
-    console.log('Updating order status:', orderId, 'to', newStatus);
+    //('Updating order status:', orderId, 'to', newStatus);
     
     const csrfToken = document.querySelector('meta[name="csrf-token"]');
     

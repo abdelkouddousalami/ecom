@@ -208,11 +208,11 @@ function updateOrderStatus(selectElement) {
     const orderId = selectElement.dataset.orderId;
     const newStatus = selectElement.value;
     
-    console.log('Updating order:', orderId, 'to status:', newStatus);
+    //('Updating order:', orderId, 'to status:', newStatus);
     
     const csrfToken = document.querySelector('meta[name="csrf-token"]');
-    console.log('CSRF token element:', csrfToken);
-    console.log('CSRF token value:', csrfToken ? csrfToken.getAttribute('content') : 'NOT FOUND');
+    //('CSRF token element:', csrfToken);
+    //('CSRF token value:', csrfToken ? csrfToken.getAttribute('content') : 'NOT FOUND');
     
     fetch(`/admin/orders/${orderId}/status`, {
         method: 'PATCH',
@@ -225,8 +225,8 @@ function updateOrderStatus(selectElement) {
         })
     })
     .then(response => {
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
+        //('Response status:', response.status);
+        //('Response headers:', response.headers);
         
         // Check if response is HTML (error page) or JSON
         const contentType = response.headers.get('content-type');

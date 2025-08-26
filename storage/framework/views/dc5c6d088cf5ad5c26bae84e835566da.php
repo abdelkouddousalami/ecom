@@ -1,12 +1,12 @@
-@extends('admin.layout')
 
-@section('title', 'Products')
-@section('header', 'Products Management')
 
-@section('content')
+<?php $__env->startSection('title', 'Products'); ?>
+<?php $__env->startSection('header', 'Products Management'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-8">>
     <!-- Success/Error Messages -->
-    @if(session('success'))
+    <?php if(session('success')): ?>
     <div id="success-toast" class="fixed top-6 right-6 z-50 bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg shadow-lg">
         <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -18,7 +18,7 @@
             </div>
             <div class="ml-4">
                 <p class="font-semibold text-green-900">Success!</p>
-                <p class="text-sm text-green-700">{{ session('success') }}</p>
+                <p class="text-sm text-green-700"><?php echo e(session('success')); ?></p>
             </div>
             <button onclick="this.parentElement.parentElement.remove()" class="ml-6 text-green-600 hover:text-green-800 transition-colors duration-200">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -27,9 +27,9 @@
             </button>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
-    @if(session('error'))
+    <?php if(session('error')): ?>
     <div id="error-toast" class="fixed top-6 right-6 z-50 bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-lg shadow-lg">
         <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -41,7 +41,7 @@
             </div>
             <div class="ml-4">
                 <p class="font-semibold text-red-900">Error!</p>
-                <p class="text-sm text-red-700">{{ session('error') }}</p>
+                <p class="text-sm text-red-700"><?php echo e(session('error')); ?></p>
             </div>
             <button onclick="this.parentElement.parentElement.remove()" class="ml-6 text-red-600 hover:text-red-800 transition-colors duration-200">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -50,7 +50,7 @@
             </button>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Page Header -->
     <div class="mb-8">
@@ -61,9 +61,9 @@
             </div>
             <div class="flex items-center space-x-3">
                 <div class="px-4 py-2 bg-blue-50 rounded-lg border border-blue-200">
-                    <span class="text-blue-700 text-sm font-semibold">{{ $products->count() }} Products</span>
+                    <span class="text-blue-700 text-sm font-semibold"><?php echo e($products->count()); ?> Products</span>
                 </div>
-                <a href="{{ route('admin.create-product') }}" class="inline-flex items-center px-6 py-3 text-sm font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+                <a href="<?php echo e(route('admin.create-product')); ?>" class="inline-flex items-center px-6 py-3 text-sm font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
                     <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -100,96 +100,99 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($products as $product)
+                    <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr class="hover:bg-gray-50 transition-colors duration-200">
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-4">
                                 <div class="flex-shrink-0">
                                     <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-                                        @if($product->images && $product->images->count() > 0)
+                                        <?php if($product->images && $product->images->count() > 0): ?>
                                             <img class="w-full h-full object-cover" 
-                                                 src="{{ Storage::url($product->images->first()->image_path) }}" 
-                                                 alt="{{ $product->name }}"
+                                                 src="<?php echo e(Storage::url($product->images->first()->image_path)); ?>" 
+                                                 alt="<?php echo e($product->name); ?>"
                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gray-100\'><svg class=\'w-8 h-8 text-gray-400\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'></path></svg></div>'">
-                                        @elseif($product->image)
+                                        <?php elseif($product->image): ?>
                                             <img class="w-full h-full object-cover" 
-                                                 src="{{ Storage::url($product->image) }}" 
-                                                 alt="{{ $product->name }}"
+                                                 src="<?php echo e(Storage::url($product->image)); ?>" 
+                                                 alt="<?php echo e($product->name); ?>"
                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gray-100\'><svg class=\'w-8 h-8 text-gray-400\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'></path></svg></div>'">
-                                        @else
+                                        <?php else: ?>
                                             <div class="w-full h-full flex items-center justify-center bg-gray-100">
                                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                 </svg>
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-sm font-semibold text-gray-900 mb-1">{{ $product->name }}</div>
+                                    <div class="text-sm font-semibold text-gray-900 mb-1"><?php echo e($product->name); ?></div>
                                     <div class="text-xs text-gray-500">
-                                        {{ Str::limit($product->description, 60) }}
+                                        <?php echo e(Str::limit($product->description, 60)); ?>
+
                                     </div>
                                     <div class="text-xs text-gray-400 mt-1">
-                                        SKU: {{ $product->id }}
+                                        SKU: <?php echo e($product->id); ?>
+
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            @if($product->category)
+                            <?php if($product->category): ?>
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    {{ $product->category->name }}
+                                    <?php echo e($product->category->name); ?>
+
                                 </span>
-                            @else
+                            <?php else: ?>
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                                     No Category
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-gray-900">{{ number_format($product->price) }} DH</div>
-                            @if($product->original_price && $product->original_price > $product->price && $product->original_price > 0)
-                                <div class="text-xs text-gray-500 line-through">{{ number_format($product->original_price) }} DH</div>
+                            <div class="text-sm font-bold text-gray-900"><?php echo e(number_format($product->price)); ?> DH</div>
+                            <?php if($product->original_price && $product->original_price > $product->price && $product->original_price > 0): ?>
+                                <div class="text-xs text-gray-500 line-through"><?php echo e(number_format($product->original_price)); ?> DH</div>
                                 <div class="text-xs text-red-600 font-medium">
-                                    -{{ round(100 - ($product->price / $product->original_price) * 100) }}%
+                                    -<?php echo e(round(100 - ($product->price / $product->original_price) * 100)); ?>%
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-medium text-gray-900">{{ $product->stock }} units</div>
-                            @if($product->stock <= 5 && $product->stock > 0)
+                            <div class="text-sm font-medium text-gray-900"><?php echo e($product->stock); ?> units</div>
+                            <?php if($product->stock <= 5 && $product->stock > 0): ?>
                                 <div class="text-xs text-orange-600 font-medium">Low stock</div>
-                            @elseif($product->stock == 0)
+                            <?php elseif($product->stock == 0): ?>
                                 <div class="text-xs text-red-600 font-medium">Out of stock</div>
-                            @else
+                            <?php else: ?>
                                 <div class="text-xs text-green-600 font-medium">In stock</div>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4">
-                            @if($product->stock > 0)
+                            <?php if($product->stock > 0): ?>
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
                                     Active
                                 </span>
-                            @else
+                            <?php else: ?>
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                     <div class="w-2 h-2 bg-red-400 rounded-full mr-2"></div>
                                     Out of Stock
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('admin.edit-product', $product) }}" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                                <a href="<?php echo e(route('admin.edit-product', $product)); ?>" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
                                     Edit
                                 </a>
-                                <a href="{{ route('admin.show-product', $product) }}" class="text-green-600 hover:text-green-900 text-sm font-medium">
+                                <a href="<?php echo e(route('admin.show-product', $product)); ?>" class="text-green-600 hover:text-green-900 text-sm font-medium">
                                     View
                                 </a>
-                                <form action="{{ route('admin.delete-product', $product) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete {{ addslashes($product->name) }}?')">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('admin.delete-product', $product)); ?>" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete <?php echo e(addslashes($product->name)); ?>?')">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="submit" class="text-red-600 hover:text-red-900 text-sm font-medium">
                                         Delete
                                     </button>
@@ -197,7 +200,7 @@
                             </div>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center justify-center">
@@ -208,7 +211,7 @@
                                 </div>
                                 <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
                                 <p class="text-gray-500 mb-6">Get started by adding your first product to the inventory.</p>
-                                <a href="{{ route('admin.create-product') }}" class="inline-flex items-center px-6 py-3 text-sm font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+                                <a href="<?php echo e(route('admin.create-product')); ?>" class="inline-flex items-center px-6 py-3 text-sm font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
@@ -217,17 +220,18 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
         
         <!-- Pagination -->
-        @if($products->hasPages())
+        <?php if($products->hasPages()): ?>
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $products->links() }}
+            <?php echo e($products->links()); ?>
+
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
 
@@ -261,4 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/admin/products.blade.php ENDPATH**/ ?>

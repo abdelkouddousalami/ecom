@@ -779,6 +779,7 @@ class AdminController extends Controller
             'products' => Product::with(['category', 'images'])->get(),
             'orders' => Order::with(['items.product'])->get(),
             'phone_numbers' => PhoneNumber::all(),
+            'export_date' => now()->format('Y-m-d H:i:s'),
             'stats' => [
                 'total_users' => User::count(),
                 'total_products' => Product::count(),
@@ -787,6 +788,13 @@ class AdminController extends Controller
                 'total_revenue' => Order::sum('total'),
             ]
         ];
+        
+        // Extract individual variables for the view
+        $data['total_users'] = $data['stats']['total_users'];
+        $data['total_products'] = $data['stats']['total_products'];
+        $data['total_orders'] = $data['stats']['total_orders'];
+        $data['total_phone_numbers'] = $data['stats']['total_phone_numbers'];
+        $data['total_revenue'] = $data['stats']['total_revenue'];
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.all-data', $data);
         return $pdf->download('all-data-export-' . now()->format('Y-m-d') . '.pdf');
@@ -795,41 +803,61 @@ class AdminController extends Controller
     public function exportUsers()
     {
         $users = User::orderBy('created_at', 'desc')->get();
+        $export_date = now()->format('Y-m-d H:i:s');
         $stats = [
             'total_users' => User::count(),
             'recent_users' => User::where('created_at', '>=', now()->subDays(30))->count(),
             'admin_users' => User::where('role', 'admin')->count(),
         ];
+        
+        // Extract individual variables for the view
+        $total_users = $stats['total_users'];
+        $recent_users = $stats['recent_users'];
+        $admin_users = $stats['admin_users'];
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.users', compact('users', 'stats'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.users', compact('users', 'stats', 'export_date', 'total_users', 'recent_users', 'admin_users'));
         return $pdf->download('users-export-' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function exportProducts()
     {
         $products = Product::with(['category', 'images'])->orderBy('created_at', 'desc')->get();
+        $export_date = now()->format('Y-m-d H:i:s');
         $stats = [
             'total_products' => Product::count(),
             'active_products' => Product::where('is_active', true)->count(),
             'total_categories' => Category::count(),
             'total_value' => Product::sum('price'),
         ];
+        
+        // Extract individual variables for the view
+        $total_products = $stats['total_products'];
+        $active_products = $stats['active_products'];
+        $total_categories = $stats['total_categories'];
+        $total_value = $stats['total_value'];
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.products', compact('products', 'stats'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.products', compact('products', 'stats', 'export_date', 'total_products', 'active_products', 'total_categories', 'total_value'));
         return $pdf->download('products-export-' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function exportOrders()
     {
         $orders = Order::with(['items.product'])->orderBy('created_at', 'desc')->get();
+        $export_date = now()->format('Y-m-d H:i:s');
         $stats = [
             'total_orders' => Order::count(),
             'pending_orders' => Order::where('status', 'pending')->count(),
             'completed_orders' => Order::where('status', 'delivered')->count(),
             'total_revenue' => Order::sum('total'),
         ];
+        
+        // Extract individual variables for the view
+        $total_orders = $stats['total_orders'];
+        $pending_orders = $stats['pending_orders'];
+        $completed_orders = $stats['completed_orders'];
+        $total_revenue = $stats['total_revenue'];
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.orders', compact('orders', 'stats'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.exports.orders', compact('orders', 'stats', 'export_date', 'total_orders', 'pending_orders', 'completed_orders', 'total_revenue'));
         return $pdf->download('orders-export-' . now()->format('Y-m-d') . '.pdf');
     }
 

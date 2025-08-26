@@ -61,7 +61,7 @@
 
     <script>
         let products = @json($products ?? []);
-        console.log(products);
+        //(products);
          // Pass products data from controller
 
         function loadWishlist() {
