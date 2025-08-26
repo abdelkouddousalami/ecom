@@ -21,9 +21,25 @@ class RoleMiddleware
             return redirect('/samad')->with('error', 'You must be logged in to access this page.');
         }
 
-        // Check if user has the required role
-        if (!Auth::user()->hasRole($role)) {
-            abort(403, 'Unauthorized. You do not have permission to access this page.');
+        $user = Auth::user();
+
+        // Handle admin role - both admin and super_admin can access admin routes
+        if ($role === 'admin') {
+            if (!$user->hasAdminPrivileges()) {
+                abort(403, 'Unauthorized. Admin access required.');
+            }
+        } 
+        // Handle super admin role - only super_admin can access
+        elseif ($role === 'super_admin') {
+            if (!$user->isSuperAdmin()) {
+                abort(403, 'Unauthorized. Super Admin access required.');
+            }
+        }
+        // Handle other specific roles
+        else {
+            if (!$user->hasRole($role)) {
+                abort(403, 'Unauthorized. You do not have permission to access this page.');
+            }
         }
 
         return $next($request);

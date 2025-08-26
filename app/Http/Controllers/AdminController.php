@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Category;
@@ -732,6 +733,96 @@ class AdminController extends Controller
         ];
 
         return view('admin.phone-numbers', compact('phoneNumbers', 'stats'));
+    }
+
+    // User Management Methods (Both Admin and Super Admin can access)
+    public function users()
+    {
+        // Get all users but filter out super admins if current user is not super admin
+        $query = User::query();
+        
+        if (!Auth::user()->canSeeSuperAdmins()) {
+            $query->where('role', '!=', 'super_admin');
+        }
+        
+        $users = $query->orderBy('created_at', 'desc')->paginate(15);
+        
+        $stats = [
+            'total_users' => Auth::user()->canSeeSuperAdmins() ? User::count() : User::where('role', '!=', 'super_admin')->count(),
+            'admin_users' => User::where('role', 'admin')->count(),
+            'super_admin_users' => Auth::user()->canSeeSuperAdmins() ? User::where('role', 'super_admin')->count() : 0,
+            'regular_users' => User::where('role', 'user')->count(),
+        ];
+        
+        return view('admin.users', compact('users', 'stats'));
+    }
+
+    public function updateUserRole(Request $request, User $user)
+    {
+        // Both admins and super admins can manage user roles, but with restrictions
+        if (!Auth::user()->hasAdminPrivileges()) {
+            abort(403, 'Unauthorized. Admin access required.');
+        }
+
+        // Super admins cannot be modified by anyone (not even other super admins)
+        if ($user->isSuperAdmin()) {
+            return redirect()->back()->withErrors(['error' => 'Super Admin roles cannot be modified.']);
+        }
+
+        // Regular admins can only manage user/admin roles, super admins can do more
+        $allowedRoles = ['user', 'admin'];
+        if (Auth::user()->isSuperAdmin()) {
+            // Super admins could potentially assign more roles if needed in the future
+            $allowedRoles = ['user', 'admin'];
+        }
+
+        $request->validate([
+            'role' => 'required|in:' . implode(',', $allowedRoles)
+        ]);
+
+        $oldRole = $user->role;
+        $user->update(['role' => $request->role]);
+
+        Log::info('User role updated', [
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'old_role' => $oldRole,
+            'new_role' => $request->role,
+            'updated_by' => Auth::user()->email,
+            'updated_by_role' => Auth::user()->role
+        ]);
+
+        return redirect()->back()->with('success', "User role updated from {$oldRole} to {$request->role} successfully!");
+    }
+
+    public function deleteUser(User $user)
+    {
+        // Both admins and super admins can delete users, but with restrictions
+        if (!Auth::user()->hasAdminPrivileges()) {
+            abort(403, 'Unauthorized. Admin access required.');
+        }
+
+        // Prevent deletion of super admins
+        if ($user->isSuperAdmin()) {
+            return redirect()->back()->withErrors(['error' => 'Super Admin accounts cannot be deleted.']);
+        }
+
+        // Prevent self-deletion
+        if ($user->id === Auth::user()->id) {
+            return redirect()->back()->withErrors(['error' => 'You cannot delete your own account.']);
+        }
+
+        $userEmail = $user->email;
+        $user->delete();
+
+        Log::info('User deleted', [
+            'deleted_user_id' => $user->id,
+            'deleted_user_email' => $userEmail,
+            'deleted_by' => Auth::user()->email,
+            'deleted_by_role' => Auth::user()->role
+        ]);
+
+        return redirect()->back()->with('success', "User {$userEmail} deleted successfully!");
     }
 
     public function storePhoneNumber(Request $request)

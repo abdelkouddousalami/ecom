@@ -179,7 +179,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('index');
     Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
     
-    // Users Management
+    // Users Management (Both Admin and Super Admin can access)
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
     Route::put('/users/{user}/role', [App\Http\Controllers\AdminController::class, 'updateUserRole'])->name('users.update-role');
     Route::delete('/users/{user}', [App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');

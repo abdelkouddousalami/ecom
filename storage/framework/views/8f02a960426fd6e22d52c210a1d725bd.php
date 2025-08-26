@@ -272,6 +272,18 @@
                         <span class="font-medium">Categories</span>
                     </a>
                     
+                    <?php if(Auth::user()->hasAdminPrivileges()): ?>
+                    <a href="<?php echo e(route('admin.users')); ?>" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m3 5.197H15m-6.5-9a4 4 0 11-8 0 4 4 0 018 0zM5 19v-1a6 6 0 0112 0v1z"></path>
+                        </svg>
+                        <span class="font-medium">Users</span>
+                        <?php if(Auth::user()->isSuperAdmin()): ?>
+                            <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Ghost</span>
+                        <?php endif; ?>
+                    </a>
+                    <?php endif; ?>
+                    
                     <a href="<?php echo e(url('/')); ?>" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-700 hover:text-green-600 hover:bg-green-50 transition-all duration-200">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -379,6 +391,18 @@
                         </svg>
                         <span class="font-medium">Categories</span>
                     </a>
+                    
+                    <?php if(Auth::user()->hasAdminPrivileges()): ?>
+                    <a href="<?php echo e(route('admin.users')); ?>" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200 w-full">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m3 5.197H15m-6.5-9a4 4 0 11-8 0 4 4 0 018 0zM5 19v-1a6 6 0 0112 0v1z"></path>
+                        </svg>
+                        <span class="font-medium">Users</span>
+                        <?php if(Auth::user()->isSuperAdmin()): ?>
+                            <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Ghost</span>
+                        <?php endif; ?>
+                    </a>
+                    <?php endif; ?>
                     
                     <a href="<?php echo e(url('/')); ?>" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-green-600 hover:bg-green-50 transition-all duration-200 w-full">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

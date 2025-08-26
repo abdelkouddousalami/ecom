@@ -48,6 +48,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user is a super admin
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    /**
      * Check if user is an admin
      */
     public function isAdmin(): bool
@@ -64,10 +72,34 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user has admin privileges (admin or super_admin)
+     */
+    public function hasAdminPrivileges(): bool
+    {
+        return in_array($this->role, ['admin', 'super_admin']);
+    }
+
+    /**
      * Check if user has a specific role
      */
     public function hasRole(string $role): bool
     {
         return $this->role === $role;
+    }
+
+    /**
+     * Check if user can manage other users (only super admin)
+     */
+    public function canManageUsers(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    /**
+     * Check if user can see super admins (only super admins can see other super admins)
+     */
+    public function canSeeSuperAdmins(): bool
+    {
+        return $this->role === 'super_admin';
     }
 }
