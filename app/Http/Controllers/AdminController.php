@@ -147,7 +147,7 @@ class AdminController extends Controller
 
     public function categories()
     {
-        $categories = Category::withCount('products')->get();
+        $categories = Category::withCount('products')->paginate(15);
         return view('admin.categories', compact('categories'));
     }
 
@@ -202,6 +202,57 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             Log::error('Error deleting category: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => 'Error deleting category: ' . $e->getMessage()]);
+        }
+    }
+
+    public function editCategory(Category $category)
+    {
+        return view('admin.edit-category', compact('category'));
+    }
+
+    public function updateCategory(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'slug' => Str::slug($request->name),
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+
+        $category->update($data);
+
+        return redirect()->route('admin.categories')->with('success', 'Category updated successfully!');
+    }
+
+    public function toggleCategoryStatus(Category $category)
+    {
+        try {
+            $category->update(['is_active' => !$category->is_active]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Category status updated successfully!',
+                'is_active' => $category->is_active
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating category status: ' . $e->getMessage()
+            ], 500);
         }
     }
 
