@@ -292,13 +292,11 @@ class AdminController extends Controller
                 $imagePaths = $imageService->storeProductImages($request->file('images'));
                 
                 if (!empty($imagePaths)) {
-                    // Delete old images
                     foreach ($product->images as $oldImage) {
                         $imageService->deleteImage($oldImage->image_path);
                         $oldImage->delete();
                     }
 
-                    // Add new images
                     foreach ($imagePaths as $index => $imagePath) {
                         $product->images()->create([
                             'image_path' => $imagePath,
@@ -307,12 +305,10 @@ class AdminController extends Controller
                         ]);
                     }
 
-                    // Update main image reference
                     $product->update(['image' => $imagePaths[0]]);
                 }
             }
 
-            // Update product details
             $product->update([
                 'name' => $request->name,
                 'description' => $request->description,
@@ -337,10 +333,8 @@ class AdminController extends Controller
                 'request_headers' => $request->headers->all()
             ]);
 
-            // Force HTML redirect response - never return JSON for product updates
             $redirect = redirect()->route('admin.products')->with('success', 'Product updated successfully!');
             
-            // Explicitly set content type to prevent JSON response
             $redirect->header('Content-Type', 'text/html');
             
             return $redirect;
@@ -350,7 +344,6 @@ class AdminController extends Controller
                 'product_id' => $product->id
             ]);
             
-            // Always redirect for form submissions, never return JSON for product updates
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['error' => 'Error updating product: ' . $e->getMessage()]);
@@ -359,7 +352,6 @@ class AdminController extends Controller
 
     public function updateProductForm(Request $request, Product $product, ImageUploadService $imageService)
     {
-        // This method is specifically for form submissions - NEVER returns JSON
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
@@ -381,7 +373,6 @@ class AdminController extends Controller
                 'review_count' => 'nullable|integer|min:0',
             ]);
 
-            // Handle new image uploads
             if ($request->hasFile('new_images')) {
                 $currentImageCount = $product->images->count();
                 $newImageCount = count($request->file('new_images'));
@@ -520,7 +511,6 @@ class AdminController extends Controller
             // Set this image as primary
             $image->update(['is_primary' => true]);
             
-            // Update product's main image reference
             $product->update(['image' => $image->image_path]);
             
             Log::info('Primary product image updated', [
@@ -549,7 +539,6 @@ class AdminController extends Controller
     {
         $product->load('category', 'images');
         
-        // Get real analytics data from database
         $analytics = [
             'cart_additions' => ProductInteraction::forProduct($product->id)->cartAdditions()->count(),
             'wishlist_additions' => ProductInteraction::forProduct($product->id)->wishlistAdditions()->count(),
@@ -558,7 +547,7 @@ class AdminController extends Controller
             'daily_wishlist_data' => $this->getDailyData($product->id, 30, ProductInteraction::TYPE_WISHLIST_ADD),
             'weekly_summary' => $this->getWeeklySummary($product->id),
             'conversion_rate' => $this->calculateConversionRate($product->id),
-            'bounce_rate' => rand(20, 40), // This would need session tracking for real data
+            'bounce_rate' => rand(20, 40), 
         ];
         
         return view('admin.product-analytics', compact('product', 'analytics'));
