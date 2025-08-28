@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $product->name }} - l3ochaq Store</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title><?php echo e($product->name); ?> - l3ochaq Store</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logos/faicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/logos/faicon.png')); ?>">
+    <link rel="shortcut icon" type="image/png" href="<?php echo e(asset('images/logos/faicon.png')); ?>">
+    <link rel="apple-touch-icon" href="<?php echo e(asset('images/logos/faicon.png')); ?>">
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -347,7 +347,26 @@
 </head>
 <body class="antialiased bg-gray-50">
     <!-- Navigation -->
-    <x-navbar active-page="products" />
+    <?php if (isset($component)) { $__componentOriginala591787d01fe92c5706972626cdf7231 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginala591787d01fe92c5706972626cdf7231 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.navbar','data' => ['activePage' => 'products']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('navbar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['active-page' => 'products']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginala591787d01fe92c5706972626cdf7231)): ?>
+<?php $attributes = $__attributesOriginala591787d01fe92c5706972626cdf7231; ?>
+<?php unset($__attributesOriginala591787d01fe92c5706972626cdf7231); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginala591787d01fe92c5706972626cdf7231)): ?>
+<?php $component = $__componentOriginala591787d01fe92c5706972626cdf7231; ?>
+<?php unset($__componentOriginala591787d01fe92c5706972626cdf7231); ?>
+<?php endif; ?>
 
     <!-- Breadcrumb -->
     <div class="bg-gradient-to-r from-blue-50 to-indigo-100 border-b">
@@ -358,16 +377,16 @@
                     <li><span class="text-gray-400 mx-2">/</span></li>
                     <li><a href="/products" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">Products</a></li>
                     <li><span class="text-gray-400 mx-2">/</span></li>
-                    <li><a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">{{ $product->category->name ?? 'Category' }}</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium"><?php echo e($product->category->name ?? 'Category'); ?></a></li>
                     <li><span class="text-gray-400 mx-2">/</span></li>
-                    <li class="text-gray-900 font-semibold">{{ $product->name }}</li>
+                    <li class="text-gray-900 font-semibold"><?php echo e($product->name); ?></li>
                 </ol>
             </nav>
             
             <!-- Page Title -->
             <div class="mb-2">
-                <h1 class="text-3xl font-bold text-gray-900 font-playfair">{{ $product->name }}</h1>
-                <p class="text-gray-600 mt-2">{{ $product->category->name ?? 'Product' }} • SKU: {{ $product->sku ?? 'N/A' }}</p>
+                <h1 class="text-3xl font-bold text-gray-900 font-playfair"><?php echo e($product->name); ?></h1>
+                <p class="text-gray-600 mt-2"><?php echo e($product->category->name ?? 'Product'); ?> • SKU: <?php echo e($product->sku ?? 'N/A'); ?></p>
             </div>
         </div>
     </div>
@@ -381,32 +400,32 @@
                     <div class="image-gallery">
                         <!-- Thumbnails -->
                         <div class="thumbnail-grid">
-                            @if($product->images && $product->images->count() > 0)
-                                @foreach($product->images as $index => $image)
-                                    <img src="{{ Storage::url($image->image_path) }}" 
-                                         alt="{{ $product->name }}" 
-                                         class="thumbnail {{ $index === 0 ? 'active' : '' }}"
-                                         onclick="changeMainImage('{{ Storage::url($image->image_path) }}', {{ $index }})">
-                                @endforeach
-                            @else
-                                <img src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
-                                     alt="{{ $product->name }}" 
+                            <?php if($product->images && $product->images->count() > 0): ?>
+                                <?php $__currentLoopData = $product->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <img src="<?php echo e(Storage::url($image->image_path)); ?>" 
+                                         alt="<?php echo e($product->name); ?>" 
+                                         class="thumbnail <?php echo e($index === 0 ? 'active' : ''); ?>"
+                                         onclick="changeMainImage('<?php echo e(Storage::url($image->image_path)); ?>', <?php echo e($index); ?>)">
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php else: ?>
+                                <img src="<?php echo e($product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'); ?>" 
+                                     alt="<?php echo e($product->name); ?>" 
                                      class="thumbnail active"
-                                     onclick="changeMainImage('{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}', 0)">
-                            @endif
+                                     onclick="changeMainImage('<?php echo e($product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'); ?>', 0)">
+                            <?php endif; ?>
                         </div>
                         
                         <!-- Main Image -->
                         <div class="relative">
-                            @if($product->images && $product->images->count() > 0)
-                                <img id="main-image" src="{{ Storage::url($product->images->first()->image_path) }}" 
-                                     alt="{{ $product->name }}" 
+                            <?php if($product->images && $product->images->count() > 0): ?>
+                                <img id="main-image" src="<?php echo e(Storage::url($product->images->first()->image_path)); ?>" 
+                                     alt="<?php echo e($product->name); ?>" 
                                      class="main-image">
-                            @else
-                                <img id="main-image" src="{{ $product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
-                                     alt="{{ $product->name }}" 
+                            <?php else: ?>
+                                <img id="main-image" src="<?php echo e($product->image ? Storage::url($product->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'); ?>" 
+                                     alt="<?php echo e($product->name); ?>" 
                                      class="main-image">
-                            @endif
+                            <?php endif; ?>
                             
                             <!-- Image Zoom -->
                             <div class="absolute top-4 right-4">
@@ -418,18 +437,18 @@
                             </div>
                             
                             <!-- Discount Badge -->
-                            @if($product->original_price && $product->original_price > $product->price)
+                            <?php if($product->original_price && $product->original_price > $product->price): ?>
                                 <div class="absolute top-4 left-4">
                                     <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                                        -{{ $product->discount_percentage }}%
+                                        -<?php echo e($product->discount_percentage); ?>%
                                     </span>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
                     
                     <!-- Customization Input - Bottom of Images (Desktop Only) -->
-                    @if($product->is_customizable)
+                    <?php if($product->is_customizable): ?>
                         <div class="customization-card hidden md:block" style="padding: 8px; margin-top: 10px;">
                             <h4 class="text-xs font-medium text-gray-800 mb-1 flex items-center">
                                 <svg class="w-3 h-3 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -449,7 +468,7 @@
                                 </p>
                             </div>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <!-- Product Information -->
@@ -457,75 +476,75 @@
                 <!-- Product Category & Status -->
                 <div>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="badge badge-green">{{ $product->category->name ?? 'Uncategorized' }}</span>
-                        @if($product->is_featured)
+                        <span class="badge badge-green"><?php echo e($product->category->name ?? 'Uncategorized'); ?></span>
+                        <?php if($product->is_featured): ?>
                             <span class="badge badge-yellow">Featured</span>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     
                     <!-- Rating & Reviews -->
                     <div class="flex items-center space-x-4 mb-4">
-                        @if($product->rating)
+                        <?php if($product->rating): ?>
                             <div class="flex items-center">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <svg class="w-5 h-5 {{ $i <= floor($product->rating) ? 'text-yellow-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20">
+                                <?php for($i = 1; $i <= 5; $i++): ?>
+                                    <svg class="w-5 h-5 <?php echo e($i <= floor($product->rating) ? 'text-yellow-400' : 'text-gray-300'); ?>" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                     </svg>
-                                @endfor
-                                <span class="ml-2 text-gray-600">{{ $product->rating }} ({{ $product->review_count }} {{ $product->review_count == 1 ? 'review' : 'reviews' }})</span>
+                                <?php endfor; ?>
+                                <span class="ml-2 text-gray-600"><?php echo e($product->rating); ?> (<?php echo e($product->review_count); ?> <?php echo e($product->review_count == 1 ? 'review' : 'reviews'); ?>)</span>
                             </div>
-                        @else
+                        <?php else: ?>
                             <span class="text-gray-500">No reviews yet</span>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- Price -->
                 <div class="price-card">
                     <div class="flex items-baseline space-x-4 mb-2">
-                        <span class="text-4xl font-bold text-green-600 font-playfair gradient-text">{{ number_format($product->price) }} DH</span>
-                        @if($product->original_price && $product->original_price > $product->price)
-                            <span class="text-xl text-gray-500 line-through">{{ number_format($product->original_price) }} DH</span>
+                        <span class="text-4xl font-bold text-green-600 font-playfair gradient-text"><?php echo e(number_format($product->price)); ?> DH</span>
+                        <?php if($product->original_price && $product->original_price > $product->price): ?>
+                            <span class="text-xl text-gray-500 line-through"><?php echo e(number_format($product->original_price)); ?> DH</span>
                             <span class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                                Save {{ number_format($product->original_price - $product->price) }} DH
+                                Save <?php echo e(number_format($product->original_price - $product->price)); ?> DH
                             </span>
-                        @endif
+                        <?php endif; ?>
                     </div>
-                    @if($product->original_price && $product->original_price > $product->price)
+                    <?php if($product->original_price && $product->original_price > $product->price): ?>
                         <p class="text-green-700 text-base font-semibold flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
-                            You save {{ $product->discount_percentage }}% on this item!
+                            You save <?php echo e($product->discount_percentage); ?>% on this item!
                         </p>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <!-- Stock Status -->
                 <div class="flex items-center space-x-2">
-                    @if($product->stock > 0)
+                    <?php if($product->stock > 0): ?>
                         <span class="badge badge-green floating-element">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
-                            In Stock ({{ $product->stock }} available)
+                            In Stock (<?php echo e($product->stock); ?> available)
                         </span>
-                        @if($product->is_low_stock)
+                        <?php if($product->is_low_stock): ?>
                             <span class="badge badge-yellow floating-element">
                                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                 </svg>
                                 Low Stock
                             </span>
-                        @endif
-                    @else
+                        <?php endif; ?>
+                    <?php else: ?>
                         <span class="badge badge-red">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
                             </svg>
                             Out of Stock
                         </span>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <!-- Description (Desktop Only) -->
@@ -536,11 +555,11 @@
                         </svg>
                         Description
                     </h3>
-                    <p class="text-gray-700 leading-relaxed text-base">{{ $product->description }}</p>
+                    <p class="text-gray-700 leading-relaxed text-base"><?php echo e($product->description); ?></p>
                 </div>
 
                 <!-- Specifications -->
-                @if($product->specifications)
+                <?php if($product->specifications): ?>
                     <div class="info-card hidden md:block">
                         <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair flex items-center">
                             <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -549,28 +568,28 @@
                             Specifications
                         </h3>
                         <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-4 border border-indigo-200">
-                            <pre class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed font-mono">{{ $product->specifications }}</pre>
+                            <pre class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed font-mono"><?php echo e($product->specifications); ?></pre>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Quantity & Add to Cart -->
-                @if($product->stock > 0)
+                <?php if($product->stock > 0): ?>
                     <div class="action-card">
                         <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 mb-6">
                             <label class="text-base sm:text-lg font-bold text-gray-900 font-playfair">Quantity:</label>
                             <div class="flex items-center space-x-3 sm:space-x-0">
                                 <div class="quantity-control">
                                     <button type="button" class="quantity-btn" onclick="decreaseQuantity()">−</button>
-                                    <input type="number" id="quantity" value="1" min="1" max="{{ $product->stock }}" class="quantity-input">
+                                    <input type="number" id="quantity" value="1" min="1" max="<?php echo e($product->stock); ?>" class="quantity-input">
                                     <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
                                 </div>
-                                <span class="text-xs sm:text-sm text-gray-600 ml-3 sm:ml-4">{{ $product->stock }} available</span>
+                                <span class="text-xs sm:text-sm text-gray-600 ml-3 sm:ml-4"><?php echo e($product->stock); ?> available</span>
                             </div>
                         </div>
                         
                         <!-- Mobile Customization Section - Above Buy Now -->
-                        @if($product->is_customizable)
+                        <?php if($product->is_customizable): ?>
                             <div class="md:hidden customization-card" style="padding: 8px; margin-bottom: 16px;">
                                 <h4 class="text-xs font-medium text-gray-800 mb-1 flex items-center">
                                     <svg class="w-3 h-3 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -590,24 +609,24 @@
                                     </p>
                                 </div>
                             </div>
-                        @endif
+                        <?php endif; ?>
                         
                         <div class="flex space-x-3">
-                            <button onclick="buyNow({{ $product->id }})" class="btn-primary flex-1 flex items-center justify-center">
+                            <button onclick="buyNow(<?php echo e($product->id); ?>)" class="btn-primary flex-1 flex items-center justify-center">
                                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
                                 </svg>
                                 <span>Buy Now</span>
                             </button>
                             
-                            <button onclick="addToWishlist({{ $product->id }})" class="bg-white border-2 border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 p-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                            <button onclick="addToWishlist(<?php echo e($product->id); ?>)" class="bg-white border-2 border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 p-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
                             </button>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Description (Mobile Only - After Buy Section) -->
                 <div class="w-full bg-white rounded-lg shadow-md p-6 border border-gray-200 md:hidden">
@@ -617,11 +636,11 @@
                         </svg>
                         Description
                     </h3>
-                    <p class="text-gray-700 leading-relaxed text-base">{{ $product->description }}</p>
+                    <p class="text-gray-700 leading-relaxed text-base"><?php echo e($product->description); ?></p>
                 </div>
 
                 <!-- Specifications (Mobile Only - After Description) -->
-                @if($product->specifications)
+                <?php if($product->specifications): ?>
                     <div class="w-full bg-white rounded-lg shadow-md p-6 border border-gray-200 md:hidden">
                         <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair flex items-center">
                             <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -630,37 +649,37 @@
                             Specifications
                         </h3>
                         <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-4 border border-indigo-200">
-                            <pre class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed font-mono">{{ $product->specifications }}</pre>
+                            <pre class="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed font-mono"><?php echo e($product->specifications); ?></pre>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
         </div>
 
         <!-- Related Products -->
-        @if($relatedProducts->count() > 0)
+        <?php if($relatedProducts->count() > 0): ?>
             <div class="mt-16">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4 font-playfair">You May Also Like</h2>
                     <p class="text-gray-600 text-lg">Discover more products from the same category</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    @foreach($relatedProducts as $relatedProduct)
-                        <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden cursor-pointer transform hover:scale-105" onclick="window.location.href='{{ route('product.show', $relatedProduct->slug) }}'">
+                    <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $relatedProduct): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden cursor-pointer transform hover:scale-105" onclick="window.location.href='<?php echo e(route('product.show', $relatedProduct->slug)); ?>'">
                             <div class="relative h-64 overflow-hidden">
-                                @if($relatedProduct->images && $relatedProduct->images->count() > 0)
-                                    <img src="{{ Storage::url($relatedProduct->images->first()->image_path) }}" 
-                                         alt="{{ $relatedProduct->name }}" 
+                                <?php if($relatedProduct->images && $relatedProduct->images->count() > 0): ?>
+                                    <img src="<?php echo e(Storage::url($relatedProduct->images->first()->image_path)); ?>" 
+                                         alt="<?php echo e($relatedProduct->name); ?>" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                @else
-                                    <img src="{{ $relatedProduct->image ? Storage::url($relatedProduct->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop' }}" 
-                                         alt="{{ $relatedProduct->name }}" 
+                                <?php else: ?>
+                                    <img src="<?php echo e($relatedProduct->image ? Storage::url($relatedProduct->image) : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'); ?>" 
+                                         alt="<?php echo e($relatedProduct->name); ?>" 
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                @endif
+                                <?php endif; ?>
                                 
                                 <!-- Quick Add to Wishlist -->
-                                <button onclick="event.stopPropagation(); addToWishlist({{ $relatedProduct->id }})" class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <button onclick="event.stopPropagation(); addToWishlist(<?php echo e($relatedProduct->id); ?>)" class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                     </svg>
@@ -669,41 +688,43 @@
                             
                             <div class="p-6">
                                 <h3 class="font-bold text-xl mb-3 text-gray-900 group-hover:text-blue-600 transition duration-300 font-playfair">
-                                    {{ $relatedProduct->name }}
+                                    <?php echo e($relatedProduct->name); ?>
+
                                 </h3>
                                 
                                 <!-- Category -->
                                 <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-3">
-                                    {{ $relatedProduct->category->name ?? 'Category' }}
+                                    <?php echo e($relatedProduct->category->name ?? 'Category'); ?>
+
                                 </span>
                                 
                                 <!-- Rating -->
-                                @if($relatedProduct->rating)
+                                <?php if($relatedProduct->rating): ?>
                                     <div class="flex items-center mb-3">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <svg class="w-4 h-4 {{ $i <= floor($relatedProduct->rating) ? 'text-yellow-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20">
+                                        <?php for($i = 1; $i <= 5; $i++): ?>
+                                            <svg class="w-4 h-4 <?php echo e($i <= floor($relatedProduct->rating) ? 'text-yellow-400' : 'text-gray-300'); ?>" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                             </svg>
-                                        @endfor
-                                        <span class="ml-2 text-sm text-gray-600">({{ $relatedProduct->review_count }})</span>
+                                        <?php endfor; ?>
+                                        <span class="ml-2 text-sm text-gray-600">(<?php echo e($relatedProduct->review_count); ?>)</span>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                                 
                                 <!-- Price -->
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <span class="text-2xl font-bold text-green-600 font-playfair">{{ number_format($relatedProduct->price) }} DH</span>
-                                        @if($relatedProduct->original_price && $relatedProduct->original_price > $relatedProduct->price)
-                                            <span class="text-gray-500 line-through text-sm ml-2">{{ number_format($relatedProduct->original_price) }} DH</span>
-                                        @endif
+                                        <span class="text-2xl font-bold text-green-600 font-playfair"><?php echo e(number_format($relatedProduct->price)); ?> DH</span>
+                                        <?php if($relatedProduct->original_price && $relatedProduct->original_price > $relatedProduct->price): ?>
+                                            <span class="text-gray-500 line-through text-sm ml-2"><?php echo e(number_format($relatedProduct->original_price)); ?> DH</span>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 
     <!-- Footer -->
@@ -712,7 +733,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Company Info -->
                 <div>
-                    <img src="{{ asset('images/logos/logo.png') }}" alt="l3ochaq Logo" class="h-8 w-auto mb-4">
+                    <img src="<?php echo e(asset('images/logos/logo.png')); ?>" alt="l3ochaq Logo" class="h-8 w-auto mb-4">
                     <p class="text-gray-400 mb-4">Premium jewelry and accessories for those who appreciate quality and elegance.</p>
                 </div>
 
@@ -757,7 +778,7 @@
     <!-- Image Modal -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-75 p-4" style="display: none; align-items: center; justify-content: center;">
         <div class="relative max-w-4xl max-h-full">
-            <img id="modalImage" src="" alt="{{ $product->name }}" class="max-w-full max-h-full object-contain rounded-lg">
+            <img id="modalImage" src="" alt="<?php echo e($product->name); ?>" class="max-w-full max-h-full object-contain rounded-lg">
             <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -1139,7 +1160,7 @@
                 let totalPrice = 0;
                 itemsList.innerHTML = '';
 
-                const allProducts = @json($allProducts ?? []);
+                const allProducts = <?php echo json_encode($allProducts ?? [], 15, 512) ?>;
 
                 cart.forEach(item => {
                     const product = allProducts.find(p => p.id == item.id);
@@ -1233,7 +1254,7 @@
 
         function removeFromCartModal(productId) {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const allProducts = @json($allProducts ?? []);
+            const allProducts = <?php echo json_encode($allProducts ?? [], 15, 512) ?>;
             const product = allProducts.find(p => p.id == productId);
             cart = cart.filter(item => item.id != productId);
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -1357,3 +1378,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/product-detail.blade.php ENDPATH**/ ?>

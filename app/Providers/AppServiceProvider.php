@@ -27,8 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register model observers
-        // Temporarily disabled to debug order status update issue
-        // Order::observe(OrderObserver::class);
+        Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
     }
 }

@@ -39,13 +39,20 @@ class Order extends Model
         parent::boot();
         
         static::created(function ($order) {
-            if (empty($order->order_number)) {
-                $order->order_number = 'ORD-' . date('Y') . '-' . str_pad($order->id, 6, '0', STR_PAD_LEFT);
-                $order->save();
+            try {
+                if (empty($order->order_number)) {
+                    $order->order_number = 'ORD-' . date('Y') . '-' . str_pad($order->id, 6, '0', STR_PAD_LEFT);
+                    $order->save();
+                }
+                
+                // Automatically collect phone number
+                if (!empty($order->phone)) {
+                    \App\Models\PhoneNumber::collectFromOrder($order);
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Order boot error: ' . $e->getMessage());
+                // Don't throw the exception to prevent order creation failure
             }
-            
-            // Automatically collect phone number
-            \App\Models\PhoneNumber::collectFromOrder($order);
         });
     }
 

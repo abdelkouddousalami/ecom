@@ -170,6 +170,34 @@ Route::post('/admin/debug-json', function(\Illuminate\Http\Request $request) {
 
 Route::get('/order-success/{order}', [OrderController::class, 'success'])->name('order.success');
 
+// Test route
+Route::get('/test-page', function() {
+    return view('test-page');
+})->name('test-page');
+
+// Simple admin test
+Route::get('/admin-test', function() {
+    try {
+        $data = [
+            'users_count' => \App\Models\User::count(),
+            'products_count' => \App\Models\Product::count(),
+            'categories_count' => \App\Models\Category::count(),
+            'orders_count' => \App\Models\Order::count(),
+        ];
+        return response()->json([
+            'success' => true,
+            'message' => 'Admin test successful',
+            'data' => $data
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+})->name('admin-test');
+
 // SEO Routes
 Route::get('/sitemap.xml', [App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [App\Http\Controllers\SeoController::class, 'robots'])->name('robots');

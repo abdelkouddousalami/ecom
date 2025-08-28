@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductInteraction;
@@ -12,41 +13,57 @@ class ProductController extends Controller
 {
     public function welcome()
     {
-        $seoService = new SeoService();
-        
-        // Get featured products for the home page
-        $products = Product::with(['category', 'images'])
-            ->where('is_active', true)
-            ->where('is_featured', true)
-            ->take(6)
-            ->get();
-        
-        // If no featured products, get random products
-        if ($products->isEmpty()) {
+        try {
+            // Get featured products for the home page
             $products = Product::with(['category', 'images'])
                 ->where('is_active', true)
-                ->inRandomOrder()
+                ->where('is_featured', true)
                 ->take(6)
                 ->get();
+            
+            // If no featured products, get random products
+            if ($products->isEmpty()) {
+                $products = Product::with(['category', 'images'])
+                    ->where('is_active', true)
+                    ->inRandomOrder()
+                    ->take(6)
+                    ->get();
+            }
+            
+            // Get categories for the Shop by Category section
+            $categories = Category::where('is_active', true)
+                ->orderBy('sort_order', 'asc')
+                ->orderBy('name', 'asc')
+                ->take(3) // Limit to 3 categories for the home page
+                ->get();
+            
+            // Generate SEO meta for homepage
+            $seoMeta = [
+                'title' => 'L3OCHAQ - Meilleurs Cadeaux Couples & Bijoux | www.l3ochaq.ma',
+                'description' => 'L3OCHAQ - Le meilleur magasin marocain pour cadeaux couples et bijoux. Découvrez nos collections uniques parfaites pour couples. Livraison gratuite au Maroc.',
+                'keywords' => 'L3OCHAQ, cadeaux couples, bijoux Maroc, meilleurs cadeaux, bracelets couples, montres assorties, cadeau saint valentin, l3ochaq.ma, livraison gratuite',
+                'canonical' => url('/'),
+                'ogImage' => asset('images/l3ochaq-homepage.jpg')
+            ];
+            
+            return view('welcome', compact('products', 'categories', 'seoMeta'));
+        } catch (\Exception $e) {
+            Log::error('Welcome page error: ' . $e->getMessage());
+            
+            // Return with empty collections to prevent 500 error
+            $products = collect();
+            $categories = collect();
+            $seoMeta = [
+                'title' => 'L3OCHAQ - Meilleurs Cadeaux Couples & Bijoux',
+                'description' => 'L3OCHAQ - Le meilleur magasin marocain pour cadeaux couples et bijoux.',
+                'keywords' => 'L3OCHAQ, cadeaux couples, bijoux Maroc',
+                'canonical' => url('/'),
+                'ogImage' => asset('images/default.jpg')
+            ];
+            
+            return view('welcome', compact('products', 'categories', 'seoMeta'))
+                ->with('error', 'Some content could not be loaded.');
         }
-        
-        // Get categories for the Shop by Category section
-        $categories = Category::where('is_active', true)
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('name', 'asc')
-            ->take(3) // Limit to 3 categories for the home page
-            ->get();
-        
-        // Generate SEO meta for homepage
-        $seoMeta = [
-            'title' => 'L3OCHAQ - Meilleurs Cadeaux Couples & Bijoux | www.l3ochaq.ma',
-            'description' => 'L3OCHAQ - Le meilleur magasin marocain pour cadeaux couples et bijoux. Découvrez nos collections uniques parfaites pour couples. Livraison gratuite au Maroc.',
-            'keywords' => 'L3OCHAQ, cadeaux couples, bijoux Maroc, meilleurs cadeaux, bracelets couples, montres assorties, cadeau saint valentin, l3ochaq.ma, livraison gratuite',
-            'canonical' => url('/'),
-            'ogImage' => asset('images/l3ochaq-homepage.jpg')
-        ];
-        
-        return view('welcome', compact('products', 'categories', 'seoMeta'));
     }
     
     public function index(Request $request)

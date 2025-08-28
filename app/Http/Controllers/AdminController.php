@@ -23,28 +23,49 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $stats = [
-            'total_products' => Product::count(),
-            'total_categories' => Category::count(),
-            'total_orders' => Order::count(),
-            'pending_orders' => Order::where('status', Order::STATUS_PENDING)->count(),
-            'revenue' => Order::sum('total'),
-            'total_users' => User::count(),
-            'total_phone_numbers' => PhoneNumber::count()
-        ];
-        
-        $categories = Category::where('is_active', true)->get();
-        
-        // Get recent orders
-        $recentOrders = Order::with(['items.product'])
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
-        
-        // Get recent activities from database
-        $recentActivities = Activity::recent(6)->get();
-        
-        return view('admin.dashboard', compact('stats', 'categories', 'recentOrders', 'recentActivities'));
+        try {
+            $stats = [
+                'total_products' => Product::count(),
+                'total_categories' => Category::count(),
+                'total_orders' => Order::count(),
+                'pending_orders' => Order::where('status', Order::STATUS_PENDING)->count(),
+                'revenue' => Order::sum('total') ?? 0,
+                'total_users' => User::count(),
+                'total_phone_numbers' => PhoneNumber::count()
+            ];
+            
+            $categories = Category::where('is_active', true)->get();
+            
+            // Get recent orders
+            $recentOrders = Order::with(['items.product'])
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+            
+            // Get recent activities from database
+            $recentActivities = Activity::recent(6)->get();
+            
+            return view('admin.dashboard', compact('stats', 'categories', 'recentOrders', 'recentActivities'));
+        } catch (\Exception $e) {
+            Log::error('Dashboard error: ' . $e->getMessage());
+            
+            // Fallback with minimal data
+            $stats = [
+                'total_products' => 0,
+                'total_categories' => 0,
+                'total_orders' => 0,
+                'pending_orders' => 0,
+                'revenue' => 0,
+                'total_users' => 0,
+                'total_phone_numbers' => 0
+            ];
+            $categories = collect();
+            $recentOrders = collect();
+            $recentActivities = collect();
+            
+            return view('admin.dashboard', compact('stats', 'categories', 'recentOrders', 'recentActivities'))
+                ->with('error', 'Some dashboard data could not be loaded.');
+        }
     }
 
     public function products()
