@@ -151,8 +151,8 @@
         
         .quantity-btn {
             padding: 0.875rem 1.125rem;
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            border: none;
+            background: white;
+            border: 1px solid #d1d5db;
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 1.25rem;
@@ -161,10 +161,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: black;
+            border-radius: 0.375rem;
         }
         
         .quantity-btn:hover {
-            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            background: #f9fafb;
+            border-color: #9ca3af;
             transform: scale(1.05);
         }
         
@@ -573,63 +576,78 @@
                     </div>
                 <?php endif; ?>
 
+                
+
                 <!-- Quantity & Add to Cart -->
                 <?php if($product->stock > 0): ?>
-                    <div class="action-card">
-                        <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 mb-6">
-                            <label class="text-base sm:text-lg font-bold text-gray-900 font-playfair">Quantity:</label>
-                            <div class="flex items-center space-x-3 sm:space-x-0">
-                                <div class="quantity-control">
-                                    <button type="button" class="quantity-btn" onclick="decreaseQuantity()">−</button>
-                                    <input type="number" id="quantity" value="1" min="1" max="<?php echo e($product->stock); ?>" class="quantity-input">
-                                    <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
-                                </div>
-                                <span class="text-xs sm:text-sm text-gray-600 ml-3 sm:ml-4"><?php echo e($product->stock); ?> available</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Mobile Customization Section - Above Buy Now -->
-                        <?php if($product->is_customizable): ?>
-                            <div class="md:hidden customization-card" style="padding: 8px; margin-bottom: 16px;">
-                                <h4 class="text-xs font-medium text-gray-800 mb-1 flex items-center">
-                                    <svg class="w-3 h-3 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                    </svg>
-                                    Customize Product
-                                </h4>
-                                <p class="text-gray-600 mb-1 text-xs">Add custom text to this item.</p>
-                                <div>
-                                    <label for="custom_name_mobile" class="block text-xs font-medium text-gray-700 mb-1">Custom Text</label>
-                                    <input type="text" id="custom_name_mobile" name="custom_name_mobile" maxlength="50" 
-                                           class="customization-input w-full text-xs" style="padding: 4px 6px; font-size: 11px;"
-                                           placeholder="Enter custom text (max 50 chars)"
-                                           onchange="document.getElementById('custom_name').value = this.value">
-                                    <p class="mt-1 text-xs text-gray-500" style="font-size: 10px;">
-                                        Leave empty if no customization needed.
-                                    </p>
+                    <div class="md:action-card md:mx-0 -mx-8 sm:-mx-6 bg-white p-8 mb-6 shadow-lg border-t-4 border-emerald-500" style="margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); width: 100vw;">
+                        <div class="max-w-lg mx-auto">
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 mb-6">
+                                <label class="text-base sm:text-lg font-bold text-emerald-700 font-playfair text-center sm:text-left">Quantity:</label>
+                                <div class="flex items-center justify-center space-x-3 sm:space-x-0">
+                                    <div class="quantity-control">
+                                        <button type="button" class="quantity-btn bg-gray-800 hover:bg-black text-white border-gray-800" onclick="decreaseQuantity()">−</button>
+                                        <input type="number" id="quantity" value="1" min="1" max="<?php echo e($product->stock); ?>" class="quantity-input border-emerald-300 focus:border-emerald-500">
+                                        <button type="button" class="quantity-btn bg-gray-800 hover:bg-black text-white border-gray-800" onclick="increaseQuantity()">+</button>
+                                    </div>
+                                    <span class="text-xs sm:text-sm text-emerald-600 ml-3 sm:ml-4 font-medium"><?php echo e($product->stock); ?> available</span>
                                 </div>
                             </div>
-                        <?php endif; ?>
-                        
-                        <div class="flex space-x-3">
-                            <button onclick="buyNow(<?php echo e($product->id); ?>)" class="btn-primary flex-1 flex items-center justify-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
-                                </svg>
-                                <span>Buy Now</span>
-                            </button>
                             
-                            <button onclick="addToWishlist(<?php echo e($product->id); ?>)" class="bg-white border-2 border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 p-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </button>
+                            <!-- Mobile Customization Section - Above Buy Now -->
+                            <?php if($product->is_customizable): ?>
+                                <div class="md:hidden -mx-8 sm:-mx-6 bg-gradient-to-br from-emerald-50 via-green-50 to-blue-50 p-8 mb-6 border-l-4 border-emerald-500 shadow-lg" style="margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); width: 100vw;">
+                                    <div class="max-w-lg mx-auto">
+                                        <div class="text-center mb-6">
+                                            <h4 class="text-2xl font-bold text-emerald-700 mb-3">
+                                                خصص المنتج ديالك
+                                            </h4>
+                                            <div class="w-24 h-1 bg-gradient-to-r from-emerald-500 to-blue-600 mx-auto rounded-full"></div>
+                                        </div>
+                                        <p class="text-gray-700 mb-6 text-lg text-center leading-relaxed font-medium">
+                                            زيد اللمسة ديالك الشخصية! كتب شي كلمة أو اسم باش يبقى المنتج غير ديالك
+                                        </p>
+                                        <div class="bg-white rounded-xl p-6 shadow-inner border-2 border-emerald-200">
+                                            <label for="custom_name_mobile" class="block text-xl font-bold text-emerald-700 mb-4 text-center">
+                                                اكتب النص اللي بغيتي
+                                            </label>
+                                            <input type="text" id="custom_name_mobile" name="custom_name_mobile" maxlength="50" 
+                                                   class="w-full px-6 py-4 border-3 border-emerald-300 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-200 text-lg bg-emerald-50 text-center font-semibold placeholder-emerald-400"
+                                                   placeholder="اكتب هنا..."
+                                                   onchange="document.getElementById('custom_name').value = this.value">
+                                            <div class="mt-4 bg-gradient-to-r from-emerald-100 to-blue-100 rounded-lg p-4">
+                                                <p class="text-base text-emerald-700 text-center font-medium">
+                                                    حتى 50 حرف • خلي فارغ إلا ما بغيتيش تخصصو
+                                                </p>
+                                                <p class="text-sm text-blue-600 text-center mt-2">
+                                                    النص ديالك غيتكتب أو غيتحفر على المنتج بشكل جميل
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="flex space-x-3">
+                                <button onclick="buyNow(<?php echo e($product->id); ?>)" class="btn-primary flex-1 flex items-center justify-center">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                                    </svg>
+                                    <span>Buy Now</span>
+                                </button>
+                                
+                                <button onclick="addToWishlist(<?php echo e($product->id); ?>)" class="bg-white border-2 border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 p-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 <?php endif; ?>
 
                 <!-- Description (Mobile Only - After Buy Section) -->
-                <div class="w-full bg-white rounded-lg shadow-md p-6 border border-gray-200 md:hidden">
+                <div class="info-card md:hidden">
                     <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair flex items-center">
                         <svg class="w-6 h-6 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -641,7 +659,7 @@
 
                 <!-- Specifications (Mobile Only - After Description) -->
                 <?php if($product->specifications): ?>
-                    <div class="w-full bg-white rounded-lg shadow-md p-6 border border-gray-200 md:hidden">
+                    <div class="info-card md:hidden">
                         <h3 class="text-xl font-bold text-gray-900 mb-3 font-playfair flex items-center">
                             <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
