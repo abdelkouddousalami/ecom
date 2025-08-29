@@ -11,7 +11,17 @@ use App\Http\Controllers\Auth\AuthController;
 Route::get('/', [ProductController::class, 'welcome']);
 
 Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('product.show');
+
+// Handle image files being accessed as product URLs (Instagram bot issue)
+Route::get('/products/{slug}', function($slug) {
+    // If the slug looks like an image file, redirect to products page
+    if (preg_match('/\.(jpg|jpeg|png|gif|webp|svg|bmp|tiff)$/i', $slug)) {
+        return redirect()->route('products')->with('info', 'Product not found');
+    }
+    
+    // Otherwise, handle as normal product route
+    return app(ProductController::class)->show($slug);
+})->name('product.show');
 
 // Category redirect route
 Route::get('/category/{category}', [ProductController::class, 'categoryRedirect'])->name('category.redirect');

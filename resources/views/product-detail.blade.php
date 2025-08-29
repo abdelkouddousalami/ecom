@@ -6,6 +6,39 @@
     <title>{{ $product->name }} - l3ochaq Store</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ $seoMeta['description'] ?? $product->description }}">
+    <meta name="keywords" content="{{ $seoMeta['keywords'] ?? '' }}">
+    
+    <!-- Open Graph Meta Tags for Social Media (Instagram, Facebook, etc.) -->
+    <meta property="og:title" content="{{ $product->name }} - l3ochaq Store">
+    <meta property="og:description" content="{{ $product->description }}">
+    <meta property="og:image" content="{{ $product->images && $product->images->count() > 0 ? url(Storage::url($product->images->first()->image_path)) : ($product->image ? url(Storage::url($product->image)) : asset('images/default-product.jpg')) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $product->name }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="l3ochaq Store">
+    <meta property="og:locale" content="fr_MA">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $product->name }} - l3ochaq Store">
+    <meta name="twitter:description" content="{{ $product->description }}">
+    <meta name="twitter:image" content="{{ $product->images && $product->images->count() > 0 ? url(Storage::url($product->images->first()->image_path)) : ($product->image ? url(Storage::url($product->image)) : asset('images/default-product.jpg')) }}">
+    
+    <!-- Product Specific Meta Tags -->
+    <meta property="product:brand" content="l3ochaq">
+    <meta property="product:availability" content="{{ $product->stock > 0 ? 'in stock' : 'out of stock' }}">
+    <meta property="product:condition" content="new">
+    <meta property="product:price:amount" content="{{ $product->price }}">
+    <meta property="product:price:currency" content="MAD">
+    <meta property="product:retailer_item_id" content="{{ $product->id }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/faicon.png') }}">

@@ -118,37 +118,92 @@ class ProductController extends Controller
         return view('products', compact('products', 'categories', 'allProducts', 'seoMeta'));
     }
 
-    public function show(Product $product)
+    public function show($slug)
     {
-        $seoService = new SeoService();
+        try {
+            // Handle invalid slugs gracefully for social media bots
+            $product = Product::where('slug', $slug)->where('is_active', true)->first();
+            
+            if (!$product) {
+                // If the slug looks like an image file, redirect to products page
+                if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $slug)) {
+                    return redirect()->route('products')->with('error', 'Product not found');
+                }
+                
+                // For other invalid slugs, throw 404
+                abort(404);
+            }
+            
+            $seoService = new SeoService();
+            
+            // Load product with all relationships
+            $product->load(['category', 'images']);
+            
+            // Track product view (only if not a bot)
+            $userAgent = request()->header('User-Agent', '');
+            $isBotRequest = $this->isBotRequest($userAgent);
+            
+            if (!$isBotRequest) {
+                ProductInteraction::trackView($product->id);
+            }
+            
+            // Get related products from the same category
+            $relatedProducts = Product::with(['category', 'images'])
+                ->where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->where('is_active', true)
+                ->limit(4)
+                ->get();
+            
+            // Get all products for cart modal functionality
+            $allProducts = Product::select('id', 'name', 'price', 'image', 'slug')
+                ->where('is_active', true)
+                ->get();
+            
+            // Generate SEO meta for product with Instagram optimization
+            $seoMeta = $seoService->generateProductMeta($product);
+            
+            // Add Instagram-specific meta tags
+            $seoMeta['og:type'] = 'product';
+            $seoMeta['og:price:amount'] = $product->price;
+            $seoMeta['og:price:currency'] = 'MAD';
+            $seoMeta['product:brand'] = 'l3ochaq';
+            $seoMeta['product:availability'] = $product->stock > 0 ? 'in stock' : 'out of stock';
+            $seoMeta['product:condition'] = 'new';
+            $seoMeta['product:retailer_item_id'] = $product->id;
+            
+            // Generate breadcrumbs
+            $breadcrumbs = $seoService->getProductBreadcrumbs($product);
+            $breadcrumbData = $seoService->generateBreadcrumbStructuredData($breadcrumbs);
+            
+            return view('product-detail', compact('product', 'relatedProducts', 'allProducts', 'seoMeta', 'breadcrumbs', 'breadcrumbData'));
+            
+        } catch (\Exception $e) {
+            Log::error('Product show error: ' . $e->getMessage() . ' - Slug: ' . $slug);
+            
+            // If there's any error, redirect to products page instead of showing 500
+            return redirect()->route('products')->with('error', 'Product could not be loaded');
+        }
+    }
+    
+    /**
+     * Check if the request is from a bot/crawler
+     */
+    private function isBotRequest($userAgent)
+    {
+        $bots = [
+            'facebookexternalhit', 'Facebot', 'Twitterbot', 'LinkedInBot',
+            'WhatsApp', 'TelegramBot', 'SkypeUriPreview', 'SlackBot',
+            'Instagram', 'Googlebot', 'Bingbot', 'YandexBot'
+        ];
         
-        // Load product with all relationships
-        $product->load(['category', 'images']);
+        foreach ($bots as $bot) {
+            if (stripos($userAgent, $bot) !== false) {
+                return true;
+            }
+        }
         
-        // Track product view
-        ProductInteraction::trackView($product->id);
-        
-        // Get related products from the same category
-        $relatedProducts = Product::with(['category', 'images'])
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->limit(4)
-            ->get();
-        
-        // Get all products for cart modal functionality
-        $allProducts = Product::select('id', 'name', 'price', 'image', 'slug')
-            ->where('is_active', true)
-            ->get();
-        
-        // Generate SEO meta for product
-        $seoMeta = $seoService->generateProductMeta($product);
-        
-        // Generate breadcrumbs
-        $breadcrumbs = $seoService->getProductBreadcrumbs($product);
-        $breadcrumbData = $seoService->generateBreadcrumbStructuredData($breadcrumbs);
-        
-        return view('product-detail', compact('product', 'relatedProducts', 'allProducts', 'seoMeta', 'breadcrumbs', 'breadcrumbData'));
+        return false;
     }
     
     public function cart()

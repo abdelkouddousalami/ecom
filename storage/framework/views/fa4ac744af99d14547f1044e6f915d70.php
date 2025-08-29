@@ -6,6 +6,39 @@
     <title><?php echo e($product->name); ?> - l3ochaq Store</title>
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<?php echo e($seoMeta['description'] ?? $product->description); ?>">
+    <meta name="keywords" content="<?php echo e($seoMeta['keywords'] ?? ''); ?>">
+    
+    <!-- Open Graph Meta Tags for Social Media (Instagram, Facebook, etc.) -->
+    <meta property="og:title" content="<?php echo e($product->name); ?> - l3ochaq Store">
+    <meta property="og:description" content="<?php echo e($product->description); ?>">
+    <meta property="og:image" content="<?php echo e($product->images && $product->images->count() > 0 ? url(Storage::url($product->images->first()->image_path)) : ($product->image ? url(Storage::url($product->image)) : asset('images/default-product.jpg'))); ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="<?php echo e($product->name); ?>">
+    <meta property="og:url" content="<?php echo e(url()->current()); ?>">
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="l3ochaq Store">
+    <meta property="og:locale" content="fr_MA">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo e($product->name); ?> - l3ochaq Store">
+    <meta name="twitter:description" content="<?php echo e($product->description); ?>">
+    <meta name="twitter:image" content="<?php echo e($product->images && $product->images->count() > 0 ? url(Storage::url($product->images->first()->image_path)) : ($product->image ? url(Storage::url($product->image)) : asset('images/default-product.jpg'))); ?>">
+    
+    <!-- Product Specific Meta Tags -->
+    <meta property="product:brand" content="l3ochaq">
+    <meta property="product:availability" content="<?php echo e($product->stock > 0 ? 'in stock' : 'out of stock'); ?>">
+    <meta property="product:condition" content="new">
+    <meta property="product:price:amount" content="<?php echo e($product->price); ?>">
+    <meta property="product:price:currency" content="MAD">
+    <meta property="product:retailer_item_id" content="<?php echo e($product->id); ?>">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<?php echo e(url()->current()); ?>">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?php echo e(asset('images/logos/faicon.png')); ?>">
     <link rel="shortcut icon" type="image/png" href="<?php echo e(asset('images/logos/faicon.png')); ?>">

@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
+        
+        // Add bot request handling middleware to web routes
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleBotRequests::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Custom exception handling

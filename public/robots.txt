@@ -1,11 +1,48 @@
 User-agent: *
 Allow: /
+Allow: /products/
+Allow: /products
+Allow: /sitemap.xml
+
+# Block access to admin areas
 Disallow: /admin/
 Disallow: /samad
 Disallow: /samad1
+
+# Block access to user-specific areas
 Disallow: /cart/
 Disallow: /checkout/
 Disallow: /orders/
 Disallow: /profile/
 
+# Block access to Laravel specific directories
+Disallow: /storage/
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /database/
+Disallow: /vendor/
+
+# Prevent indexing of image files as product pages (Instagram bot fix)
+Disallow: /products/*.jpg
+Disallow: /products/*.jpeg  
+Disallow: /products/*.png
+Disallow: /products/*.gif
+Disallow: /products/*.webp
+Disallow: /products/*.svg
+Disallow: /products/*.bmp
+
+# Sitemap location
 Sitemap: https://l3ochaq.ma/sitemap.xml
+
+# Crawl delay for social media bots to prevent 500 errors
+User-agent: facebookexternalhit
+Crawl-delay: 2
+
+User-agent: Twitterbot
+Crawl-delay: 2
+
+User-agent: Instagram
+Crawl-delay: 2
+
+User-agent: Facebot
+Crawl-delay: 2
