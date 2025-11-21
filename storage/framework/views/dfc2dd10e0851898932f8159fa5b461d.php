@@ -1361,4 +1361,4 @@
     </script>
 
 </body>
-</html><?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/welcome.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\welcome.blade.php ENDPATH**/ ?>

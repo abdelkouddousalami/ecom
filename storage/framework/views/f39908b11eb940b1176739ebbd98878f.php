@@ -55,4 +55,4 @@
         </div>
     </div>
 </footer>
-<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/components/footer.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\components\footer.blade.php ENDPATH**/ ?>

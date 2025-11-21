@@ -2370,4 +2370,4 @@
 
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/products.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\products.blade.php ENDPATH**/ ?>

@@ -1,0 +1,1 @@
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\layouts\optimized.blade.php ENDPATH**/ ?>

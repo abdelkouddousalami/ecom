@@ -36,20 +36,17 @@ class AdminController extends Controller
             
             $categories = Category::where('is_active', true)->get();
             
-            // Get recent orders
             $recentOrders = Order::with(['items.product'])
                 ->orderBy('created_at', 'desc')
                 ->take(5)
                 ->get();
             
-            // Get recent activities from database
             $recentActivities = Activity::recent(6)->get();
             
             return view('admin.dashboard', compact('stats', 'categories', 'recentOrders', 'recentActivities'));
         } catch (\Exception $e) {
             Log::error('Dashboard error: ' . $e->getMessage());
             
-            // Fallback with minimal data
             $stats = [
                 'total_products' => 0,
                 'total_categories' => 0,

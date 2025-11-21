@@ -366,4 +366,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/components/navbar.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\components\navbar.blade.php ENDPATH**/ ?>

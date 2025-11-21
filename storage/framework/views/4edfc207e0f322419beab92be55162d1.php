@@ -1,0 +1,1 @@
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\components\product-structured-data.blade.php ENDPATH**/ ?>

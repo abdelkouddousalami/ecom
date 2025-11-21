@@ -1429,4 +1429,4 @@
 
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/product-detail.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\product-detail.blade.php ENDPATH**/ ?>

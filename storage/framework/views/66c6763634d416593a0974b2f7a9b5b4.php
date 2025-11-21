@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page non trouvée - L3OCHAQ</title>
+    <title>Erreur 500 - L3OCHAQ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,13 +56,14 @@
 </head>
 <body>
     <div class="error-container">
-        <h1 class="error-code">404</h1>
-        <h2 class="error-message">Page non trouvée</h2>
+        <h1 class="error-code">500</h1>
+        <h2 class="error-message">Erreur du serveur</h2>
         <p class="error-description">
-            La page que vous recherchez n'existe pas ou a été déplacée.
+            Désolé, une erreur s'est produite sur notre serveur. 
+            Notre équipe technique a été notifiée et travaille à résoudre le problème.
         </p>
         <a href="<?php echo e(url('/')); ?>" class="back-button">Retour à l'accueil</a>
     </div>
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/errors/404.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\errors\500.blade.php ENDPATH**/ ?>

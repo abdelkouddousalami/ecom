@@ -95,4 +95,4 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <!-- Theme Color -->
 <meta name="theme-color" content="#dc2626">
-<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views/components/seo-meta.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Breifs\l3och\ecommerce\resources\views\components\seo-meta-safe.blade.php ENDPATH**/ ?>
